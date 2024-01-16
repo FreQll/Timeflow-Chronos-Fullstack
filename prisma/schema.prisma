@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int             @id @default(autoincrement())
+  login     String          @unique
+  email     String          @unique
+  password  String
+  full_name String
+  calendars UserCalendars[]
+  events    UserEvents[]
+}
+
+model Calendar {
+  id             Int              @id @default(autoincrement())
+  name           String
+  color          String
+  description    String?
+  createdAt      DateTime         @default(now())
+  calendars      UserCalendars[]
+  calendarEvents CalendarEvents[]
+}
+
+model Event {
+  id             Int              @id @default(autoincrement())
+  name           String
+  color          String
+  content        String?
+  start          DateTime
+  end            DateTime
+  type           EventType
+  createdAt      DateTime         @default(now())
+  events         UserEvents[]
+  calendarEvents CalendarEvents[]
+}
+
+model UserCalendars {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  calendar    Calendar @relation(fields: [calendarId], references: [id])
+  calendarId  Int
+  role        Role
+  isConfirmed Boolean  @default(false)
+}
+
+model UserEvents {
+  id          Int     @id @default(autoincrement())
+  user        User    @relation(fields: [userId], references: [id])
+  userId      Int
+  event       Event   @relation(fields: [eventId], references: [id])
+  eventId     Int
+  role        Role
+  isConfirmed Boolean @default(false)
+}
+
+model CalendarEvents {
+  id         Int      @id @default(autoincrement())
+  calendar   Calendar @relation(fields: [calendarId], references: [id])
+  calendarId Int
+  event      Event    @relation(fields: [eventId], references: [id])
+  eventId    Int
+}
+
+enum Role {
+  GUEST
+  MODERATOR
+  ADMIN
+}
+
+enum EventType {
+  ARRANGMENT
+  REMINDER
+  TASK
+  BIRTHDAY
+}
