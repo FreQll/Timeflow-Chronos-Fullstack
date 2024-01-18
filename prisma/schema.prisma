@@ -8,7 +8,8 @@ datasource db {
 }
 
 model User {
-  id        Int             @id @default(autoincrement())
+  // id        BigInt          @id @default(autoincrement())
+  id        String          @id @default(cuid())
   login     String          @unique
   email     String          @unique
   password  String
@@ -18,7 +19,7 @@ model User {
 }
 
 model Calendar {
-  id             Int              @id @default(autoincrement())
+  id             String           @id @default(cuid())
   name           String
   color          String
   description    String?
@@ -28,7 +29,7 @@ model Calendar {
 }
 
 model Event {
-  id             Int              @id @default(autoincrement())
+  id             String           @id @default(cuid())
   name           String
   color          String
   content        String?
@@ -41,31 +42,31 @@ model Event {
 }
 
 model UserCalendars {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(cuid())
   user        User     @relation(fields: [userId], references: [id])
-  userId      Int
+  userId      String
   calendar    Calendar @relation(fields: [calendarId], references: [id])
-  calendarId  Int
+  calendarId  String
   role        Role
   isConfirmed Boolean  @default(false)
 }
 
 model UserEvents {
-  id          Int     @id @default(autoincrement())
+  id          String  @id @default(cuid())
   user        User    @relation(fields: [userId], references: [id])
-  userId      Int
+  userId      String
   event       Event   @relation(fields: [eventId], references: [id])
-  eventId     Int
+  eventId     String
   role        Role
   isConfirmed Boolean @default(false)
 }
 
 model CalendarEvents {
-  id         Int      @id @default(autoincrement())
+  id         String   @id @default(cuid())
   calendar   Calendar @relation(fields: [calendarId], references: [id])
-  calendarId Int
+  calendarId String
   event      Event    @relation(fields: [eventId], references: [id])
-  eventId    Int
+  eventId    String
 }
 
 enum Role {

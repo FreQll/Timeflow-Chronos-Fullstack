@@ -12,7 +12,7 @@ export const getUserById = async (req, res) => {
 
   const user = await prisma.user.findUnique({
     where: {
-      id: +userId,
+      id: userId,
     },
   });
 
@@ -20,14 +20,12 @@ export const getUserById = async (req, res) => {
     return res.status(404).json({ message: "User not found." });
   }
 
-  return res
-    .status(200)
-    .json({
-      id: user.id,
-      login: user.login,
-      email: user.email,
-      full_name: user.full_name,
-    });
+  return res.status(200).json({
+    id: user.id,
+    login: user.login,
+    email: user.email,
+    full_name: user.full_name,
+  });
 };
 
 export const createUser = async (req, res) => {
@@ -85,7 +83,7 @@ export const updateUser = async (req, res) => {
 
   await prisma.user.update({
     where: {
-      id: +userId,
+      id: userId,
     },
     data: {
       login: login,
@@ -103,7 +101,7 @@ export const deleteUser = async (req, res) => {
 
   await prisma.user.delete({
     where: {
-      id: +userId,
+      id: userId,
     },
   });
 
