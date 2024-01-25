@@ -16,7 +16,7 @@ export const sendEmail = (email, subject, text) => {
     from: process.env.EMAIL,
     to: email,
     subject: subject,
-    text: text,
+    html: text,
   };
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {

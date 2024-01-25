@@ -59,7 +59,7 @@ export const register = async (req, res) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  await prisma.user.create({
+  const user = await prisma.user.create({
     data: {
       login: login,
       email: email,
@@ -67,6 +67,23 @@ export const register = async (req, res) => {
       full_name: full_name,
     },
   });
+
+  const calendar = await prisma.calendar.create({
+    data: {
+      name: user.email,
+      color: "#00BFFF",
+      description: "Default calendar for user",
+    },
+  });
+
+  await prisma.userCalendars.create({
+    data: {
+      userId: user.id,
+      calendarId: calendar.id,
+      role: "ADMIN",
+    },
+  });
+
   return res.status(201).json({ message: "Registration successful!" });
 };
 
@@ -125,10 +142,9 @@ export const resetPassword = async (req, res) => {
   };
   const token = await jwt.sign(payload, secret, { expiresIn: "1h" });
 
-  const link = `http://${process.env.HOST}:${process.env.PORT}/reset-password/${user.id}/${token}`;
-  const message =
-    "Here is your link to reset password, remember it is valid for 1 hour and can be used only once";
-  await sendEmail(email, "Password Reset", message + "\n" + link);
+  const link = `http://${process.env.HOST}:${process.env.PORT}/api/auth/reset-password/${user.id}/${token}`;
+  const message = `Here is your <a href="${link}">link to reset password</a>, remember it is valid for 1 hour and can be used only once.`;
+  await sendEmail(email, "Password Reset", message);
   return res.status(200).json({ message: "Email sent." });
 };
 

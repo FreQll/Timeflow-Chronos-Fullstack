@@ -1,4 +1,5 @@
 import prisma from "../DB/db.config.js";
+import moment from "moment";
 
 export const getUserCalendars = async (req, res) => {
   const userId = req.params.id;
@@ -22,16 +23,65 @@ export const getUserCalendars = async (req, res) => {
 export const getCalendarEvents = async (req, res) => {
   const calendarId = req.params.id;
 
-  console.log(calendarId);
+  const timeSegment = req.query.timeSegment;
+  let startDate, endDate;
+  const momentDate = moment(new Date());
 
-  const calendar = await prisma.calendarEvents.findMany({
-    where: {
-      calendarId: calendarId,
-    },
-    select: {
-      event: true,
-    },
-  });
+  if (timeSegment) {
+    switch (timeSegment) {
+      case "day":
+        startDate = momentDate.clone().startOf("day");
+        endDate = momentDate.clone().endOf("day");
+        break;
+      case "week":
+        startDate = momentDate.clone().startOf("week");
+        endDate = momentDate.clone().endOf("week");
+        break;
+      case "month":
+        startDate = momentDate.clone().startOf("month");
+        endDate = momentDate.clone().endOf("month");
+        break;
+      case "year":
+        startDate = momentDate.clone().startOf("year");
+        endDate = momentDate.clone().endOf("year");
+        break;
+      default:
+        startDate = momentDate.clone().startOf("day");
+        endDate = momentDate.clone().endOf("day");
+        break;
+    }
+  }
+
+  console.log(startDate.format(), endDate.format());
+
+  let calendar;
+
+  if (timeSegment) {
+    calendar = await prisma.calendarEvents.findMany({
+      where: {
+        calendarId: calendarId,
+        event: {
+          AND: [
+            { start: { gte: startDate, lte: endDate } },
+            // Uncomment the line below if you want to include events that started before the start date but end within the range
+            // { end: { gte: startDate.toDate(), lte: endDate.toDate() } },
+          ],
+        },
+      },
+      select: {
+        event: true,
+      },
+    });
+  } else {
+    calendar = await prisma.calendarEvents.findMany({
+      where: {
+        calendarId: calendarId,
+      },
+      select: {
+        event: true,
+      },
+    });
+  }
 
   if (!calendar) {
     return res.status(404).json({ message: "Calendar not found." });
@@ -61,7 +111,7 @@ export const createCalendar = async (req, res) => {
     return res.status(404).json({ message: "User not found." });
   }
 
-  const userCalendar = await prisma.userCalendars.create({
+  await prisma.userCalendars.create({
     data: {
       userId: user.id,
       calendarId: calendar.id,
