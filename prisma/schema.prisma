@@ -24,6 +24,8 @@ model Calendar {
   color          String
   description    String?
   createdAt      DateTime         @default(now())
+  isMain         Boolean          @default(false)
+  isHidden       Boolean          @default(false)
   calendars      UserCalendars[]
   calendarEvents CalendarEvents[]
 }

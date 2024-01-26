@@ -8,7 +8,7 @@ import { sendEmail } from "../tools/sendEmail.js";
 
 dotenv.config();
 
-const jwtGenerator = (id, email, login) => {
+export const jwtGenerator = (id, email, login) => {
   return jwt.sign(
     { id: id, email: email, login: login },
     process.env.SECRET_KEY,
@@ -73,6 +73,7 @@ export const register = async (req, res) => {
       name: user.email,
       color: "#00BFFF",
       description: "Default calendar for user",
+      isMain: true,
     },
   });
 

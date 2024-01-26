@@ -6,6 +6,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
+    "studio": "npx prisma studio",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "prisma": {

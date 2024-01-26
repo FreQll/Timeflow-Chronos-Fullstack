@@ -1,5 +1,8 @@
 import prisma from "../DB/db.config.js";
 import moment from "moment";
+import { jwtGenerator } from "./AuthController.js";
+import jwt from "jsonwebtoken";
+import { sendEmail } from "../tools/sendEmail.js";
 
 export const getUserCalendars = async (req, res) => {
   const userId = req.params.id;
@@ -52,7 +55,7 @@ export const getCalendarEvents = async (req, res) => {
     }
   }
 
-  console.log(startDate.format(), endDate.format());
+  //console.log(startDate.format(), endDate.format());
 
   let calendar;
 
@@ -153,6 +156,10 @@ export const deleteCalendar = async (req, res) => {
     return res.status(404).json({ message: "Calendar not found." });
   }
 
+  if (calendar.isMain) {
+    return res.status(400).json({ message: "Cannot delete main calendar." });
+  }
+
   await prisma.userCalendars.deleteMany({
     where: {
       calendarId: calendarId,
@@ -172,4 +179,125 @@ export const deleteCalendar = async (req, res) => {
   });
 
   return res.status(200).json({ message: "Calendar deleted." });
+};
+
+export const addUserToCalendar = async (req, res) => {
+  const { email, ownerId, calendarId, role } = req.body;
+
+  const userToAdd = await prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+  });
+
+  const owner = await prisma.user.findUnique({
+    where: {
+      id: ownerId,
+    },
+  });
+
+  if (!owner) {
+    return res.status(404).json({ message: "Owner not found." });
+  }
+
+  if (!userToAdd) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  const calendar = await prisma.calendar.findUnique({
+    where: {
+      id: calendarId,
+    },
+  });
+
+  if (!calendar) {
+    return res.status(404).json({ message: "Calendar not found." });
+  }
+
+  // Send email
+
+  const secret = process.env.SECRET_KEY + userToAdd.password;
+  const payload = {
+    email: userToAdd.email,
+    id: userToAdd.id,
+    calendarId: calendar.id,
+  };
+  const token = await jwt.sign(payload, secret, { expiresIn: "1h" });
+
+  console.log(token);
+
+  const link = `http://${process.env.HOST}:${process.env.PORT}/api/calendar/addUserToCalendar/${userToAdd.id}/${token}`;
+  const message = `<b>${owner.login}</b> wants to add you to the calendar <b>"${calendar.name}"</b>. 
+  Here is <a href="${link}">link to confirm adding to the calendar</a>, remember it is valid for 1 hour and can be used only once.`;
+  await sendEmail(
+    userToAdd.email,
+    `${owner.login} wants to add you to the calendar.`,
+    message
+  );
+
+  await prisma.userCalendars.create({
+    data: {
+      userId: userToAdd.id,
+      calendarId: calendar.id,
+      role: role,
+    },
+  });
+
+  return res
+    .status(200)
+    .json({ message: "User added. Waiting for confirmation." });
+};
+
+export const confirmAddingToCalendar = async (req, res) => {
+  const { id, token } = req.params;
+
+  if (!id || !token) {
+    return res.status(400).json({ message: "Missing parameters." });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: id,
+    },
+  });
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  const secret = process.env.SECRET_KEY + user.password;
+  try {
+    const payload = jwt.verify(token, secret);
+    if (payload.id !== user.id) {
+      return res.status(401).json({ message: "Unauthorized." });
+    }
+
+    // console.log(payload);
+    // console.log(user.id + " " + payload.calendarId);
+
+    const userCalendar = await prisma.userCalendars.findFirst({
+      where: {
+        userId: user.id,
+        calendarId: payload.calendarId,
+      },
+    });
+
+    await prisma.userCalendars.update({
+      where: {
+        id: userCalendar.id,
+      },
+      data: {
+        isConfirmed: true,
+      },
+    });
+
+    // console.log(userCalendar);
+
+    return res
+      .status(200)
+      .json({ message: "User confirmed adding to the calendar." });
+  } catch (error) {
+    console.error(error);
+    return res.status(401).json({ message: "Unauthorized." });
+  }
 };
