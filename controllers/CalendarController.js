@@ -1,6 +1,5 @@
 import prisma from "../DB/db.config.js";
 import moment from "moment";
-import { jwtGenerator } from "./AuthController.js";
 import jwt from "jsonwebtoken";
 import { sendEmail } from "../tools/sendEmail.js";
 
@@ -190,6 +189,10 @@ export const addUserToCalendar = async (req, res) => {
     },
   });
 
+  if (!userToAdd) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
   const owner = await prisma.user.findUnique({
     where: {
       id: ownerId,
@@ -200,8 +203,17 @@ export const addUserToCalendar = async (req, res) => {
     return res.status(404).json({ message: "Owner not found." });
   }
 
-  if (!userToAdd) {
-    return res.status(404).json({ message: "User not found." });
+  const userCalendar = await prisma.userCalendars.findFirst({
+    where: {
+      userId: userToAdd.id,
+      calendarId: calendarId,
+    },
+  });
+
+  if (userCalendar) {
+    return res
+      .status(400)
+      .json({ message: "User is already in the calendar." });
   }
 
   const calendar = await prisma.calendar.findUnique({
@@ -214,7 +226,7 @@ export const addUserToCalendar = async (req, res) => {
     return res.status(404).json({ message: "Calendar not found." });
   }
 
-  // Send email
+  // *Send email
 
   const secret = process.env.SECRET_KEY + userToAdd.password;
   const payload = {
@@ -224,7 +236,7 @@ export const addUserToCalendar = async (req, res) => {
   };
   const token = await jwt.sign(payload, secret, { expiresIn: "1h" });
 
-  console.log(token);
+  // console.log(token);
 
   const link = `http://${process.env.HOST}:${process.env.PORT}/api/calendar/addUserToCalendar/${userToAdd.id}/${token}`;
   const message = `<b>${owner.login}</b> wants to add you to the calendar <b>"${calendar.name}"</b>. 
@@ -245,7 +257,7 @@ export const addUserToCalendar = async (req, res) => {
 
   return res
     .status(200)
-    .json({ message: "User added. Waiting for confirmation." });
+    .json({ message: "User added to calendar. Waiting for confirmation." });
 };
 
 export const confirmAddingToCalendar = async (req, res) => {
@@ -297,7 +309,6 @@ export const confirmAddingToCalendar = async (req, res) => {
       .status(200)
       .json({ message: "User confirmed adding to the calendar." });
   } catch (error) {
-    console.error(error);
-    return res.status(401).json({ message: "Unauthorized." });
+    return res.status(401).json({ message: error.message });
   }
 };
