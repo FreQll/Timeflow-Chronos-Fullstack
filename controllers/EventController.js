@@ -11,13 +11,19 @@ export const getAllEvents = async (req, res) => {
 export const getUserEvents = async (req, res) => {
   const userId = req.params.id;
 
+  // const user = await prisma.user.findUnique({
+  //   where: {
+  //     id: userId,
+  //   },
+  //   select: {
+  //     events: true,
+  //     calendars: true,
+  //   },
+  // });
+
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
-    },
-    select: {
-      events: true,
-      calendars: true,
     },
   });
 
@@ -25,12 +31,65 @@ export const getUserEvents = async (req, res) => {
     return res.status(404).json({ message: "User not found." });
   }
 
-  return res.status(200).json(user.events);
+  // ? User can see only confirmed events? Right?
+
+  const events = await prisma.userEvents.findMany({
+    where: {
+      userId: userId,
+      isConfirmed: true,
+    },
+    select: {
+      event: true,
+    },
+  });
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  return res.status(200).json(events);
 };
 
 export const createEvent = async (req, res) => {
-  const { name, color, content, start, end, type, role, userId, calendarId } =
+  const { name, color, content, start, end, type, userId, calendarId } =
     req.body;
+
+  const calendar = await prisma.calendar.findUnique({
+    where: {
+      id: calendarId,
+    },
+  });
+
+  if (!calendar) {
+    return res.status(404).json({ message: "Calendar not found." });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  const userCalendar = await prisma.userCalendars.findFirst({
+    where: {
+      userId: userId,
+      calendarId: calendarId,
+    },
+  });
+
+  if (!userCalendar) {
+    return res.status(404).json({ message: "User is not in the calendar." });
+  }
+
+  if (userCalendar.role === "GUEST") {
+    return res
+      .status(403)
+      .json({ message: "User is not allowed to add events." });
+  }
 
   const event = await prisma.event.create({
     data: {
@@ -52,7 +111,7 @@ export const createEvent = async (req, res) => {
 
   const userEvent = await prisma.userEvents.create({
     data: {
-      role,
+      role: userCalendar.role,
       userId,
       eventId: event.id,
     },
@@ -194,6 +253,7 @@ export const addUserToEvent = async (req, res) => {
 
 export const confirmAddingUserToEvent = async (req, res) => {
   const { id, token } = req.params;
+  const { calendarId } = req.body;
 
   if (!id || !token) {
     return res.status(400).json({ message: "Invalid data." });
@@ -207,6 +267,16 @@ export const confirmAddingUserToEvent = async (req, res) => {
 
   if (!user) {
     return res.status(404).json({ message: "User not found." });
+  }
+
+  const calendar = await prisma.calendar.findUnique({
+    where: {
+      id: calendarId,
+    },
+  });
+
+  if (!calendar) {
+    return res.status(404).json({ message: "Calendar not found." });
   }
 
   const secret = process.env.SECRET_KEY + user.password;
@@ -228,6 +298,13 @@ export const confirmAddingUserToEvent = async (req, res) => {
       },
       data: {
         isConfirmed: true,
+      },
+    });
+
+    await prisma.calendarEvents.create({
+      data: {
+        calendarId: calendarId,
+        eventId: payload.eventId,
       },
     });
 

@@ -13,7 +13,7 @@ const router = Router();
 
 router.get("/", getAllEvents);
 router.get("/:id", getUserEvents);
-router.get("/addUserToEvent/:id/:token", confirmAddingUserToEvent);
+router.post("/addUserToEvent/:id/:token", confirmAddingUserToEvent);
 router.post("/", createEvent);
 router.post("/addUserToEvent", addUserToEvent);
 router.patch("/:id", updateEvent);

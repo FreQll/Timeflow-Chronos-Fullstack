@@ -6,12 +6,18 @@ import { sendEmail } from "../tools/sendEmail.js";
 export const getUserCalendars = async (req, res) => {
   const userId = req.params.id;
 
+  // const user = await prisma.user.findUnique({
+  //   where: {
+  //     id: userId,
+  //   },
+  //   include: {
+  //     calendars: true,
+  //   },
+  // });
+
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
-    },
-    include: {
-      calendars: true,
     },
   });
 
@@ -19,7 +25,17 @@ export const getUserCalendars = async (req, res) => {
     return res.status(404).json({ message: "User not found." });
   }
 
-  return res.status(200).json(user.calendars);
+  const calendars = await prisma.userCalendars.findMany({
+    where: {
+      userId: userId,
+      isConfirmed: true,
+    },
+    select: {
+      calendar: true,
+    },
+  });
+
+  return res.status(200).json(calendars);
 };
 
 export const getCalendarEvents = async (req, res) => {

@@ -82,6 +82,7 @@ export const register = async (req, res) => {
       userId: user.id,
       calendarId: calendar.id,
       role: "ADMIN",
+      isConfirmed: true,
     },
   });
 
