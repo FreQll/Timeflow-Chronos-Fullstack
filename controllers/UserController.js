@@ -1,8 +1,18 @@
 import prisma from "../DB/db.config.js";
 import bcrypt from "bcrypt";
+import path from "path";
+import Jimp from "jimp";
+import fs from "fs";
 
 export const getAllUsers = async (req, res) => {
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      login: true,
+      email: true,
+      full_name: true,
+    },
+  });
 
   return res.status(200).json(users);
 };
@@ -14,18 +24,19 @@ export const getUserById = async (req, res) => {
     where: {
       id: userId,
     },
+    select: {
+      id: true,
+      login: true,
+      email: true,
+      full_name: true,
+    },
   });
 
   if (!user) {
     return res.status(404).json({ message: "User not found." });
   }
 
-  return res.status(200).json({
-    id: user.id,
-    login: user.login,
-    email: user.email,
-    full_name: user.full_name,
-  });
+  return res.status(200).json(user);
 };
 
 export const createUser = async (req, res) => {
@@ -106,4 +117,78 @@ export const deleteUser = async (req, res) => {
   });
 
   return res.status(200).json({ message: "User deleted successfully." });
+};
+
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "images/avatars"); // Specify the directory where you want to save the files
+//   },
+//   filename: (req, file, cb) => {
+//     const userId = req.params.userId;
+//     const avatarFilename = `${userId}.png`; // Save the file with a .png extension
+//     cb(null, avatarFilename);
+//   },
+// });
+
+// const upload = multer({ storage: storage });
+
+export const getUserAvatar = async (req, res) => {
+  const { login } = req.params;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      login: login,
+    },
+  });
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  const avatarPath = path.join(
+    process.cwd(),
+    "images",
+    "avatars",
+    `${user.id}.png`
+  );
+
+  if (fs.existsSync(avatarPath)) {
+    return res.status(200).sendFile(avatarPath);
+  }
+
+  const defaultAvatarPath = path.join(process.cwd(), "images", "default.png");
+
+  return res.status(200).sendFile(defaultAvatarPath);
+};
+
+export const updateUserAvatar = async (req, res) => {
+  const { userId } = req.params;
+
+  if (!req.file) {
+    return res.status(400).json({ message: "No file provided." });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  const avatarPath = path.join(
+    process.cwd(),
+    "images",
+    "avatars",
+    `${userId}.png`
+  );
+
+  const resizeSize = 512;
+
+  const avatarImage = await Jimp.read(req.file.path);
+  await avatarImage.resize(resizeSize, resizeSize).write(avatarPath);
+
+  return res.status(200).json({ message: "Avatar updated successfully." });
 };

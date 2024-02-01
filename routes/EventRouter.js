@@ -8,10 +8,11 @@ import {
   updateEvent,
   deleteEvent,
 } from "../controllers/EventController.js";
+import { isAuth } from "../middleware/isAuth.js";
 
 const router = Router();
 
-router.get("/", getAllEvents);
+router.get("/", isAuth, getAllEvents);
 router.get("/:id", getUserEvents);
 router.post("/addUserToEvent/:id/:token", confirmAddingUserToEvent);
 router.post("/", createEvent);
