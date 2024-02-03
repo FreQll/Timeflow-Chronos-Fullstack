@@ -119,19 +119,6 @@ export const deleteUser = async (req, res) => {
   return res.status(200).json({ message: "User deleted successfully." });
 };
 
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, "images/avatars"); // Specify the directory where you want to save the files
-//   },
-//   filename: (req, file, cb) => {
-//     const userId = req.params.userId;
-//     const avatarFilename = `${userId}.png`; // Save the file with a .png extension
-//     cb(null, avatarFilename);
-//   },
-// });
-
-// const upload = multer({ storage: storage });
-
 export const getUserAvatar = async (req, res) => {
   const { login } = req.params;
 

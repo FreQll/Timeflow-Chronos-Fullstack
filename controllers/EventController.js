@@ -1,6 +1,8 @@
 import prisma from "../DB/db.config.js";
 import jwt from "jsonwebtoken";
 import { sendEmail } from "../tools/sendEmail.js";
+import cron from "node-cron";
+import moment from "moment";
 
 export const getAllEvents = async (req, res) => {
   const events = await prisma.event.findMany();
@@ -10,16 +12,6 @@ export const getAllEvents = async (req, res) => {
 
 export const getUserEvents = async (req, res) => {
   const userId = req.params.id;
-
-  // const user = await prisma.user.findUnique({
-  //   where: {
-  //     id: userId,
-  //   },
-  //   select: {
-  //     events: true,
-  //     calendars: true,
-  //   },
-  // });
 
   const user = await prisma.user.findUnique({
     where: {
@@ -51,8 +43,17 @@ export const getUserEvents = async (req, res) => {
 };
 
 export const createEvent = async (req, res) => {
-  const { name, color, content, start, end, type, userId, calendarId } =
-    req.body;
+  const {
+    name,
+    color,
+    content,
+    start,
+    end,
+    type,
+    userId,
+    calendarId,
+    remindDelay,
+  } = req.body;
 
   const calendar = await prisma.calendar.findUnique({
     where: {
@@ -91,13 +92,23 @@ export const createEvent = async (req, res) => {
       .json({ message: "User is not allowed to add events." });
   }
 
+  let startDate;
+  let endDate;
+
+  if (type === "BIRTHDAY") {
+    startDate = moment(start).startOf("day");
+    endDate = moment(start).endOf("day");
+  }
+
+  //console.log(startDate, endDate);
+
   const event = await prisma.event.create({
     data: {
       name,
       color,
       content,
-      start,
-      end,
+      start: startDate || start,
+      end: endDate || end,
       type,
     },
   });
@@ -116,6 +127,65 @@ export const createEvent = async (req, res) => {
       eventId: event.id,
     },
   });
+
+  if (type === "REMINDER") {
+    const delay = remindDelay || "15 minutes"; //! remindDelay should be in format "15 minutes", "2 hours", "2 days", "2 weeks", "2 months", "2 years"
+    const delayArray = delay.split(" ");
+
+    // console.log(delayArray);
+
+    const scheduledTime = moment(start)
+      .subtract(delayArray[0], delayArray[1])
+      .format();
+    const reminderDate = moment(scheduledTime).toDate();
+
+    const month = reminderDate.getMonth() + 1;
+    const day = reminderDate.getDate();
+    const hour = reminderDate.getUTCHours();
+    const minute = reminderDate.getUTCMinutes();
+
+    const cronExpression = `${minute} ${hour} ${day} ${month} *`;
+
+    // console.log(cronExpression);
+    // console.log(start);
+    // console.log(moment(start).utc().format("DD.MM.YYYY [at] HH:mm"));
+    //! make it in html
+    cron.schedule(cronExpression, async () => {
+      await sendEmail(
+        user.email,
+        `🔔 ${name} reminder 🔔`,
+        `You have a reminder <b>${name}</b> at <b>${moment(start)
+          .utc()
+          .format("DD.MM.YYYY [at] HH:mm")}</b>. Don't forget!`
+      );
+      cron.cancel(cronExpression);
+    });
+  }
+
+  if (type === "BIRTHDAY") {
+    const scheduledTime = moment(start).format();
+    const reminderDate = moment(scheduledTime).toDate();
+
+    console.log(reminderDate);
+
+    const month = reminderDate.getMonth() + 1;
+    const day = reminderDate.getDate();
+    // const hour = reminderDate.getUTCHours();
+    // const minute = reminderDate.getUTCMinutes();
+
+    const cronExpression = `0 10 ${day} ${month} *`;
+
+    console.log(cronExpression);
+
+    cron.schedule(cronExpression, async () => {
+      await sendEmail(
+        user.email,
+        `🎂 ${name} Birthday 🎂`,
+        `It's ${name}'s birthday today! Don't forget to congratulate him and give him something interesting 🎁.`
+      );
+      cron.cancel(cronExpression);
+    });
+  }
 
   return res.status(201).json({ event, userEvent, calendarEvent });
 };
