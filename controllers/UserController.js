@@ -134,7 +134,7 @@ export const getUserAvatar = async (req, res) => {
 
   const avatarPath = path.join(
     process.cwd(),
-    "images",
+    "public",
     "avatars",
     `${user.id}.png`
   );
@@ -143,7 +143,12 @@ export const getUserAvatar = async (req, res) => {
     return res.status(200).sendFile(avatarPath);
   }
 
-  const defaultAvatarPath = path.join(process.cwd(), "images", "default.png");
+  const defaultAvatarPath = path.join(
+    process.cwd(),
+    "public",
+    "avatars",
+    "default.png"
+  );
 
   return res.status(200).sendFile(defaultAvatarPath);
 };
@@ -167,7 +172,7 @@ export const updateUserAvatar = async (req, res) => {
 
   const avatarPath = path.join(
     process.cwd(),
-    "images",
+    "public",
     "avatars",
     `${userId}.png`
   );
@@ -175,7 +180,7 @@ export const updateUserAvatar = async (req, res) => {
   const resizeSize = 512;
 
   const avatarImage = await Jimp.read(req.file.path);
-  await avatarImage.resize(resizeSize, resizeSize).write(avatarPath);
+  await avatarImage.cover(resizeSize, resizeSize).write(avatarPath);
 
   return res.status(200).json({ message: "Avatar updated successfully." });
 };

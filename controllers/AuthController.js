@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 
 import { sendEmail } from "../tools/sendEmail.js";
+import { resetPasswordHTML } from "../public/emails/resetPasswordHTML.js";
 
 dotenv.config();
 
@@ -145,8 +146,13 @@ export const resetPassword = async (req, res) => {
   const token = await jwt.sign(payload, secret, { expiresIn: "1h" });
 
   const link = `http://${process.env.HOST}:${process.env.PORT}/api/auth/reset-password/${user.id}/${token}`;
-  const message = `Here is your <a href="${link}">link to reset password</a>, remember it is valid for 1 hour and can be used only once.`;
-  await sendEmail(email, "Password Reset", message);
+  // const message = `Here is your <a href="${link}">link to reset password</a>, remember it is valid for 1 hour and can be used only once.`;
+  // await sendEmail(email, "Password Reset", message);
+  await sendEmail(
+    email,
+    "🔒 Password Reset 🔒",
+    resetPasswordHTML(user.full_name, link)
+  );
   return res.status(200).json({ message: "Email sent." });
 };
 

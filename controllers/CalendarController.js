@@ -2,6 +2,7 @@ import prisma from "../DB/db.config.js";
 import moment from "moment";
 import jwt from "jsonwebtoken";
 import { sendEmail } from "../tools/sendEmail.js";
+import { addToCalendarHTML } from "../public/emails/addToCalendarHTML.js";
 
 export const getUserCalendars = async (req, res) => {
   const userId = req.params.id;
@@ -255,12 +256,18 @@ export const addUserToCalendar = async (req, res) => {
   // console.log(token);
 
   const link = `http://${process.env.HOST}:${process.env.PORT}/api/calendar/addUserToCalendar/${userToAdd.id}/${token}`;
-  const message = `<b>${owner.login}</b> wants to add you to the calendar <b>"${calendar.name}"</b>. 
-  Here is <a href="${link}">link to confirm adding to the calendar</a>, remember it is valid for 1 hour and can be used only once.`;
+  // const message = `<b>${owner.login}</b> wants to add you to the calendar <b>"${calendar.name}"</b>.
+  // Here is <a href="${link}">link to confirm adding to the calendar</a>, remember it is valid for 1 hour and can be used only once.`;
+  // await sendEmail(
+  //   userToAdd.email,
+  //   `${owner.login} wants to add you to the calendar.`,
+  //   message
+  // );
+
   await sendEmail(
     userToAdd.email,
-    `${owner.login} wants to add you to the calendar.`,
-    message
+    `🗓️ ${owner.login} wants to add you to the calendar 🗓️`,
+    addToCalendarHTML(userToAdd.full_name, owner.login, calendar.name, link)
   );
 
   await prisma.userCalendars.create({

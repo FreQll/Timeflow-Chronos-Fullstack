@@ -15,7 +15,7 @@ const upload = multer({ dest: "/images/avatars" });
 
 const router = Router();
 
-router.get("/", isAuth, getAllUsers);
+router.get("/", getAllUsers);
 router.get("/:id", getUserById);
 router.post("/", createUser);
 router.patch("/:id", updateUser);

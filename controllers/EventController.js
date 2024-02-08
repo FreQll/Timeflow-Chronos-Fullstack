@@ -3,6 +3,9 @@ import jwt from "jsonwebtoken";
 import { sendEmail } from "../tools/sendEmail.js";
 import cron from "node-cron";
 import moment from "moment";
+import { reminderHTML } from "../public/emails/reminderHTML.js";
+import { birthdayHTML } from "../public/emails/birthdayHTML.js";
+import { addToEventHTML } from "../public/emails/addToEventHTML.js";
 
 export const getAllEvents = async (req, res) => {
   const events = await prisma.event.findMany();
@@ -132,31 +135,31 @@ export const createEvent = async (req, res) => {
     const delay = remindDelay || "15 minutes"; //! remindDelay should be in format "15 minutes", "2 hours", "2 days", "2 weeks", "2 months", "2 years"
     const delayArray = delay.split(" ");
 
-    // console.log(delayArray);
-
     const scheduledTime = moment(start)
-      .subtract(delayArray[0], delayArray[1])
+      .subtract(parseInt(delayArray[0]), delayArray[1])
       .format();
-    const reminderDate = moment(scheduledTime).toDate();
+    const reminderDate = new Date(
+      moment(scheduledTime).utc().format("YYYY-MM-DDTHH:mm:ss")
+    ); //! need to test this times more
 
     const month = reminderDate.getMonth() + 1;
     const day = reminderDate.getDate();
-    const hour = reminderDate.getUTCHours();
+    const hour = reminderDate.getHours();
     const minute = reminderDate.getUTCMinutes();
 
     const cronExpression = `${minute} ${hour} ${day} ${month} *`;
 
-    // console.log(cronExpression);
-    // console.log(start);
-    // console.log(moment(start).utc().format("DD.MM.YYYY [at] HH:mm"));
-    //! make it in html
     cron.schedule(cronExpression, async () => {
       await sendEmail(
         user.email,
         `🔔 ${name} reminder 🔔`,
-        `You have a reminder <b>${name}</b> at <b>${moment(start)
-          .utc()
-          .format("DD.MM.YYYY [at] HH:mm")}</b>. Don't forget!`
+        reminderHTML(
+          user.full_name,
+          name,
+          content,
+          moment(start).utc().format("DD.MM.YYYY [at] HH:mm"),
+          "google.com"
+        )
       );
       cron.cancel(cronExpression);
     });
@@ -166,22 +169,16 @@ export const createEvent = async (req, res) => {
     const scheduledTime = moment(start).format();
     const reminderDate = moment(scheduledTime).toDate();
 
-    console.log(reminderDate);
-
     const month = reminderDate.getMonth() + 1;
     const day = reminderDate.getDate();
-    // const hour = reminderDate.getUTCHours();
-    // const minute = reminderDate.getUTCMinutes();
 
-    const cronExpression = `0 10 ${day} ${month} *`;
-
-    console.log(cronExpression);
+    const cronExpression = `0 9 ${day} ${month} *`;
 
     cron.schedule(cronExpression, async () => {
       await sendEmail(
         user.email,
         `🎂 ${name} Birthday 🎂`,
-        `It's ${name}'s birthday today! Don't forget to congratulate him and give him something interesting 🎁.`
+        birthdayHTML(user.full_name, name)
       );
       cron.cancel(cronExpression);
     });
@@ -300,12 +297,18 @@ export const addUserToEvent = async (req, res) => {
   // console.log(token);
 
   const link = `http://${process.env.HOST}:${process.env.PORT}/api/event/addUserToEvent/${userToAdd.id}/${token}`;
-  const message = `<b>${owner.login}</b> wants to add you to the event <b>"${event.name}"</b>. 
-  Here is <a href="${link}">link to confirm adding to the event</a>, remember it is valid for 1 hour and can be used only once.`;
+  // const message = `<b>${owner.login}</b> wants to add you to the event <b>"${event.name}"</b>.
+  // Here is <a href="${link}">link to confirm adding to the event</a>, remember it is valid for 1 hour and can be used only once.`;
+  // await sendEmail(
+  //   userToAdd.email,
+  //   `${owner.login} wants to add you to the event.`,
+  //   message
+  // );
+
   await sendEmail(
     userToAdd.email,
-    `${owner.login} wants to add you to the event.`,
-    message
+    `📅 ${owner.login} wants to add you to the event 📅`,
+    addToEventHTML(userToAdd.full_name, owner.login, event.name, link)
   );
 
   await prisma.userEvents.create({
