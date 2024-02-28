@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
 import { enumScheduleModes } from '../helper/enumScheduleModes';
+import moment from 'moment';
 
 const Header = () => {
     const [ menuViewOpen, setMenuViewOpen ] = useState(false);
-    const [ scheduleMode, setScheduleMode ] = useState(enumScheduleModes.MONTH)
+    const [ scheduleMode, setScheduleMode ] = useState(enumScheduleModes.MONTH);
+
+    const currentMonth = moment().format('MMMM');
+    const currentDateFormat = moment().format('YYYY-MM');
 
     const handleClickMenu = () => {
         setMenuViewOpen(menuViewOpen => !menuViewOpen);
@@ -17,7 +21,7 @@ const Header = () => {
     return (
         <header className="flex items-center justify-between border-b border-gray-200 px-6 py-4 lg:flex-none">
             <h1 className="text-base font-semibold leading-6 text-gray-900">
-                <time dateTime="2022-01">January 2022</time>
+                <time dateTime={currentDateFormat}>{currentMonth}</time>
             </h1>
             <div className="flex items-center">
                 <div className="relative flex items-center rounded-md bg-white shadow-sm md:items-stretch">
