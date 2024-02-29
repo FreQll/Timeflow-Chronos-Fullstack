@@ -1,8 +1,37 @@
 import React from 'react'
+import { getCalendarDates, getStartAndEndDateOfMonth, getTodayDate, isDateBeforeDate, isCurrentDate } from '../helper/momentFunc';
 
-const GridMobile = () => {
+const GridMobile = ({ today, startOfCalendar }) => {
+  const totalDays = 42;
+
+  const day = startOfCalendar.clone().subtract(1, 'day')
+  const datesArray = [...Array(totalDays)].map(() => day.add(1, 'day').clone());
+  const startOfMonth = getStartAndEndDateOfMonth(today).start;
+  const endOfMonth = getStartAndEndDateOfMonth(today).end;
+
   return (
-    <div className="isolate grid w-full grid-cols-7 grid-rows-6 gap-px lg:hidden">
+
+    <div className="isolate grid w-full grid-cols-7 grid-rows-5 gap-px lg:hidden">
+      {datesArray.map((date) => (
+        <button key={date} type="button" 
+          className={`flex h-14 flex-col px-3 py-2 hover:bg-gray-100 focus:z-10
+          ${isDateBeforeDate(date, startOfMonth) || isDateBeforeDate(endOfMonth, date) ? 'bg-gray-50 text-gray-500' : 'bg-white text-gray-900'} 
+          `}>
+          <time dateTime="2021-12-27" className={`ml-auto ${isCurrentDate(date) && 'text-indigo-600'}`}>{date.date()}</time>
+          <span className="sr-only">0 events</span>
+          <span className="-mx-0.5 mt-auto flex flex-wrap-reverse">
+            <span className="mx-0.5 mb-1 h-1.5 w-1.5 rounded-full bg-gray-400"></span>
+          </span>
+        </button>
+      ))}
+    </div>
+  )
+}
+
+export default GridMobile
+
+
+    {/* <div className="isolate grid w-full grid-cols-7 grid-rows-6 gap-px lg:hidden">
       <button type="button" className="flex h-14 flex-col bg-gray-50 px-3 py-2 text-gray-500 hover:bg-gray-100 focus:z-10">
         <time dateTime="2021-12-27" className="ml-auto">27</time>
         <span className="sr-only">0 events</span>
@@ -188,8 +217,4 @@ const GridMobile = () => {
         <time dateTime="2022-02-06" className="ml-auto">6</time>
         <span className="sr-only">0 events</span>
       </button>
-    </div>
-  )
-}
-
-export default GridMobile
+    </div> */}
