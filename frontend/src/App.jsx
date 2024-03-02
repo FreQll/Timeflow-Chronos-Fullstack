@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './App.css'
-import Calendar from './components/Calendar';
+import Calendar from './pages/Calendar';
 import Panel from './components/Panel';
 import { Routes, Route } from 'react-router-dom';
 import Layout from './pages/Layout';
@@ -10,12 +10,15 @@ import axios from '../API/axios';
 function App() {
   const [ calendars, setCalendars ] = useState();
   const [ activeEventTypes, setActiveEventTypes ] = useState([]);
+  const [ activeCalendar, setActiveCalendar ] = useState([]);
 
   const getCalendarsByUserId = async (userId) => {
-    const response = await axios.get(`/api/calendar/${userId}`, { withCredentials: true });
-    console.log(response);
-    if (response) { setCalendars(response.data); } 
-    else { console.log('Error getting calendars'); }
+    try {
+      const response = await axios.get(`/api/calendar/${userId}`, { withCredentials: true });
+      setCalendars(response.data);
+    } catch (error) {
+      console.log('Error getting calendars');
+    }
   }
 
   const changeActiveEventTypes = (typeName) => {
@@ -26,9 +29,20 @@ function App() {
     }
   }
 
+  const changeActiveCalendar = async (calendarId) => {
+    try {
+      const response = await axios.get(`/api/calendar/calendarInfo/${calendarId}`, { withCredentials: true });
+      setActiveCalendar(response.data);
+    } catch (error) {
+      console.log('Error getting calendars');
+    }
+  }
+
   useEffect(() => {
-    const id = 'clrryqxh60000su3y7hxk1br8';
-    getCalendarsByUserId(id)
+    const id = 'clt9zw5rx0002a8mausu1v1lj';
+    // const calendar_id = 
+    getCalendarsByUserId(id);
+    // setActiveCalendar()
   }, [])
 
   return (
@@ -37,8 +51,8 @@ function App() {
       <Route path='/registration' element={<Registration />} />
       <Route path='/reset-password' element={<ResetPasswordPage />} /> */}
 
-      <Route path='/' element={<Layout calendars={calendars} changeActiveEventTypes={changeActiveEventTypes} />}>
-        <Route path='/' element={<Calendar activeEventTypes={activeEventTypes} />} />
+      <Route path='/' element={<Layout calendars={calendars} changeActiveEventTypes={changeActiveEventTypes} activeCalendar={activeCalendar} changeActiveCalendar={changeActiveCalendar} />}>
+        <Route path='/' element={<Calendar activeEventTypes={activeEventTypes} calendarId={activeCalendar.id}  />} />
         <Route path='/add-event' element={<AddEvent />} />
 
         {/* <Route path='/settings' element={<Settings />}>

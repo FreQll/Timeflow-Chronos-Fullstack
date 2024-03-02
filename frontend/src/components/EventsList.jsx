@@ -2,22 +2,21 @@ import React, { useEffect, useState } from 'react'
 import axios from '../../API/axios';
 import { cutString } from '../../helper/stringFunc';
 
-const EventsList = ({ date, currentEvent, setCurrentEvent, activeEventTypes }) => {
+const EventsList = ({ date, currentEvent, setCurrentEvent, activeEventTypes, calendarId }) => {
     const [ events, setEvents ] = useState();
-
+    
     const getEventByDay = async (date) => {
         const options = {
             startDay: date,
             endDay: date
         }
-        const response = await axios.get(`/api/calendar/events/clrryqxhp000bsu3y1q0aebnd`, { withCredentials: true, options });
+        const response = await axios.get(`/api/calendar/events/${calendarId}`, { withCredentials: true, options });
         if (response) { setEvents(response.data); } 
         else { console.log('Error getting day events'); }
     }
 
     const getEventById = async (id) => {
         const response = await axios.get(`/api/event/eventInfo/${id}`, { withCredentials: true });
-        console.log(response);
         if (response) { setCurrentEvent(response.data); } 
         else { console.log('Error getting day events'); }
     }
@@ -27,15 +26,17 @@ const EventsList = ({ date, currentEvent, setCurrentEvent, activeEventTypes }) =
         else getEventById(event.id);
     }
 
-    console.log(events);
+    events?.forEach(element => {
+        console.log(element.event.name);
+    });
 
     useEffect(() => {
         getEventByDay(date);
-    }, [])
+    }, [calendarId, activeEventTypes])
     
     return (
         <ol className="mt-2">
-            {events?.map(element => {
+            {events?.map(element => (
                 activeEventTypes.includes(element?.event.type) && (
                     <li key={element} onClick={() => handleClickEvent(element.event)}>
                         <a href="#" className="hidden lg:flex group">
@@ -50,7 +51,7 @@ const EventsList = ({ date, currentEvent, setCurrentEvent, activeEventTypes }) =
                         </span>
                     </li>
                 )
-            })}
+            ))}
         </ol>
     )
 }

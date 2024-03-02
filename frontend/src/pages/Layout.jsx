@@ -3,11 +3,11 @@ import { createContext, useEffect, useState } from 'react';
 import Panel from '../components/Panel';
 import Monitor from '../components/Monitor';
 
-const Layout = ({ calendars, changeActiveEventTypes }) => {
+const Layout = ({ calendars, changeActiveEventTypes, activeCalendar, changeActiveCalendar }) => {
     return (
         <>
             <div className='flex h-[100vh]'>
-                <Panel calendars={calendars} changeActiveEventTypes={changeActiveEventTypes} />
+                <Panel calendars={calendars} changeActiveEventTypes={changeActiveEventTypes} activeCalendar={activeCalendar} changeActiveCalendar={changeActiveCalendar} />
                 <Outlet />
             </div>
         </>

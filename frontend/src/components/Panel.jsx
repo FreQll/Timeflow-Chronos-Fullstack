@@ -2,8 +2,17 @@ import React from 'react'
 import Checkbox from './Checkbox'
 import Button from './Button'
 import { enumEventTypes } from '../../helper/enumEventTypes'
+import RadioInput from './RadioInput'
 
-const Panel = ({ calendars, changeActiveEventTypes }) => {
+const Panel = ({ calendars, changeActiveEventTypes, activeCalendar, changeActiveCalendar }) => {
+
+  const clickCheckboxEventTypes = (keyTitle) => {
+    changeActiveEventTypes(keyTitle);
+  }
+
+  const clickCheckboxCalendars = (calendarId) => {
+    changeActiveCalendar(calendarId)
+  }
 
   return (
     <div className='min-w-[200px] bg-slate-100 h-[100%] p-[20px] border-r border-gray-200 z-30 flex flex-col gap-[20px]'>
@@ -12,7 +21,13 @@ const Panel = ({ calendars, changeActiveEventTypes }) => {
           <h3 className='mb-[10px] opacity-50'>Calendars</h3>
 
           {calendars?.map(element => (
-            <Checkbox key={element} title={element.calendar.name} color={element.calendar.color} />
+            <RadioInput 
+              key={element} 
+              id={element.calendar.id}
+              selected={activeCalendar.id}
+              onChange={clickCheckboxCalendars}
+              title={element.calendar.name} 
+              color={element.calendar.color} />
           ))}
         </div>
 
@@ -22,9 +37,13 @@ const Panel = ({ calendars, changeActiveEventTypes }) => {
       <div>
         <div>
           <h3 className='mb-[10px] opacity-50'>Events</h3>
-
+            
           {Object.keys(enumEventTypes).map(type => (
-            <Checkbox key={type} keyTitle={type} onClick={changeActiveEventTypes} title={enumEventTypes[type].title} color={enumEventTypes[type].color} />
+            <Checkbox key={type} 
+              keyTitle={type} 
+              clickCheckbox={clickCheckboxEventTypes} 
+              title={enumEventTypes[type].title} 
+              color={enumEventTypes[type].color} />
           ))}
         </div>
       </div>

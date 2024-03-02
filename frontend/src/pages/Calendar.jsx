@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import Monitor from './Monitor'
-import ScheduleHeader from './ScheduleHeader'
-import Grid from './Grid'
+import Monitor from '../components/Monitor'
+import ScheduleHeader from '../components/ScheduleHeader'
+import Grid from '../components/Grid'
 import moment from 'moment/moment'
 import { getStartAndEndDateOfCalendar, getTodayDate } from '../../helper/momentFunc';
 import axios from '../../API/axios';
-import EventDetails from './EventDetails'
-import AddEvent from '../pages/AddEvent'
+import EventDetails from '../components/EventDetails'
+import AddEvent from './AddEvent'
 
-const Calendar = ({ activeEventTypes }) => {
+const Calendar = ({ activeEventTypes, calendarId }) => {
     moment.updateLocale('en', {week: {dow: 1}});
 
     const [ today, setToday ] = useState(moment());
@@ -35,7 +35,8 @@ const Calendar = ({ activeEventTypes }) => {
             startDay: startDay,
             endDay: endDay
         }
-        const response = await axios.get(`/api/calendar/events/clrryqxhp000bsu3y1q0aebnd`, { withCredentials: true, options });
+        const response = await axios.get(`/api/calendar/events/${calendarId}`, { withCredentials: true, options });
+        console.log(response);
         if (response) { setEvents(response.data); } 
         else { console.log('Error getting calendar events'); }
     }
@@ -46,10 +47,10 @@ const Calendar = ({ activeEventTypes }) => {
 
     useEffect(() => {
         getCalendarEvents();
-    }, [])
+    }, [calendarId, activeEventTypes])
 
     return (
-        <div className='flex'>
+        <div className='flex w-[-webkit-fill-available]'>
             {isAddEventOpen && (
                 <AddEvent />
             )}
@@ -69,7 +70,8 @@ const Calendar = ({ activeEventTypes }) => {
                             startOfCalendar={startDay}
                             currentEvent={currentEvent}
                             setCurrentEvent={setCurrentEvent}
-                            activeEventTypes={activeEventTypes} />
+                            activeEventTypes={activeEventTypes}
+                            calendarId={calendarId} />
                     </div>
                 </div>
                 {/* {currentEvent && (

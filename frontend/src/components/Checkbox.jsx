@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 
-const Checkbox = ({ keyTitle, title, color, onClick }) => {
+const Checkbox = ({ keyTitle, title, color, clickCheckbox }) => {
     const [ isChecked, setIsChecked ] = useState(false);
 
-    const clickCheckbox = () => {
+    const onClick = () => {
         setIsChecked(isChecked => !isChecked);
-        onClick(keyTitle);
+        clickCheckbox(keyTitle);
     }
 
     return (
-        <div onClick={clickCheckbox} className="cursor-pointer flex items-center">
+        <div onClick={onClick} className="cursor-pointer flex items-center">
             <input type="checkbox" checked={isChecked} onChange={() => {}} className="hidden" />
             <label htmlFor="myCheckbox" className="cursor-pointer flex items-center">
                 <div style={{ backgroundColor: color }} className={`w-4 h-4 border rounded-[4px] mr-2 flex-shrink-0`}>

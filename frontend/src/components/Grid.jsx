@@ -3,7 +3,7 @@ import { getCalendarDates, getStartAndEndDateOfMonth, getTodayDate, isDateBefore
 import moment from 'moment';
 import EventsList from './EventsList';
 
-const Grid = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent, activeEventTypes }) => {
+const Grid = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent, activeEventTypes, calendarId }) => {
     const totalDays = 42;
 
     const day = startOfCalendar.clone().subtract(1, 'day')
@@ -40,7 +40,8 @@ const Grid = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent, a
                                 date={date} 
                                 currentEvent={currentEvent}
                                 setCurrentEvent={setCurrentEvent}
-                                activeEventTypes={activeEventTypes} />
+                                activeEventTypes={activeEventTypes}
+                                calendarId={calendarId} />
                         )}
                 </div>
             ))}
