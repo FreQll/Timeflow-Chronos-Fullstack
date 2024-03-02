@@ -1,16 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Monitor from './Monitor'
 import ScheduleHeader from './ScheduleHeader'
-import GridDesktop from './GridDesktop'
-import GridMobile from './GridMobile'
+import Grid from './Grid'
 import moment from 'moment/moment'
-import { getStartAndEndDateOfCalendar, getTodayDate } from '../helper/momentFunc';
+import { getStartAndEndDateOfCalendar, getTodayDate } from '../../helper/momentFunc';
+import axios from '../../API/axios';
+import EventDetails from './EventDetails'
+import AddEvent from '../pages/AddEvent'
 
-const Calendar = () => {
+const Calendar = ({ activeEventTypes }) => {
     moment.updateLocale('en', {week: {dow: 1}});
 
     const [ today, setToday ] = useState(moment());
     const startDay = getStartAndEndDateOfCalendar(today).start;
+    const endDay = getStartAndEndDateOfCalendar(today).end;
+    const [ events, setEvents ] = useState([]);
+    const [ currentEvent, setCurrentEvent ] = useState(null);
+    const [ isAddEventOpen, setIsAddEventOpen ] = useState(false);
 
     const prevHandler = () => {
         setToday(prev => prev.clone().subtract(1, 'month'))
@@ -24,24 +30,53 @@ const Calendar = () => {
         setToday(prev => prev.clone().add(1, 'month'))
     }
 
+    const getCalendarEvents = async () => {
+        const options = {
+            startDay: startDay,
+            endDay: endDay
+        }
+        const response = await axios.get(`/api/calendar/events/clrryqxhp000bsu3y1q0aebnd`, { withCredentials: true, options });
+        if (response) { setEvents(response.data); } 
+        else { console.log('Error getting calendar events'); }
+    }
+
+    const handleOpenAddEvent = () => {
+        setIsAddEventOpen(isAddEventOpen => !isAddEventOpen);
+    }
+
+    useEffect(() => {
+        getCalendarEvents();
+    }, [])
+
     return (
-        <div className="lg:flex lg:h-full lg:flex-col">
-            <Monitor
-                today={today}
-                prevHandler={prevHandler}
-                todayHandler={todayHandler}
-                nextHandler={nextHandler} />
-            <div className="shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col">
-                <ScheduleHeader />
-                <div className="flex bg-gray-200 text-xs leading-6 text-gray-700 lg:flex-auto">
-                    <GridDesktop 
-                        today={today} 
-                        startOfCalendar={startDay} />
-                    <GridMobile 
-                        today={today} 
-                        startOfCalendar={startDay} />
+        <div className='flex'>
+            {isAddEventOpen && (
+                <AddEvent />
+            )}
+            <div className="lg:flex lg:flex-col lg:h-full w-[-webkit-fill-available]">
+                <Monitor
+                    today={today}
+                    prevHandler={prevHandler}
+                    todayHandler={todayHandler}
+                    nextHandler={nextHandler}
+                    handleOpenAddEvent={handleOpenAddEvent} />
+                <div className="shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col relative">
+                    <ScheduleHeader />
+                    <div className="flex bg-gray-200 text-xs leading-6 text-gray-700 lg:flex-auto">
+                        <Grid 
+                            events={events}
+                            today={today} 
+                            startOfCalendar={startDay}
+                            currentEvent={currentEvent}
+                            setCurrentEvent={setCurrentEvent}
+                            activeEventTypes={activeEventTypes} />
+                    </div>
                 </div>
+                {/* {currentEvent && (
+                    <EventDetails currentEvent={currentEvent} />
+                )} */}
             </div>
+
         </div>
     )
 }

@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
-import { enumScheduleModes } from '../helper/enumScheduleModes';
-import moment from 'moment';
+import { enumScheduleModes } from '../../helper/enumScheduleModes';
+import { Link } from 'react-router-dom';
+import Button from './Button';
 
-const Monitor = ({ today, prevHandler, todayHandler, nextHandler }) => {
+const Monitor = ({ today, prevHandler, todayHandler, nextHandler, handleOpenAddEvent }) => {
     const [ menuViewOpen, setMenuViewOpen ] = useState(false);
     const [ scheduleMode, setScheduleMode ] = useState(enumScheduleModes.MONTH);
 
-    const currentMonth = today.format('MMMM');
+    const currentMonth = today.format('MMMM YYYY');
     const currentDateFormat = today.format('YYYY-MM');
 
     const handleClickMenu = () => {
@@ -20,7 +21,7 @@ const Monitor = ({ today, prevHandler, todayHandler, nextHandler }) => {
 
     return (
         <header className="flex items-center justify-between border-b border-gray-200 px-6 py-4 lg:flex-none">
-            <h1 className="text-base font-semibold leading-6 text-gray-900">
+            <h1 className="text-base font-semibold leading-6 text-gray-900 lg:text-[24px]">
                 <time dateTime={currentDateFormat}>{currentMonth}</time>
             </h1>
             <div className="flex items-center">
@@ -64,7 +65,12 @@ const Monitor = ({ today, prevHandler, todayHandler, nextHandler }) => {
                         )}
                     </div>
                     <div className="ml-6 h-6 w-px bg-gray-300"></div>
-                    <button type="button" className="ml-6 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Add event</button>
+                    <Link className="add_event-link lg:hidden" to="/add-event">
+                        <Button text={'Add event'} className={'ml-6'} />
+                    </Link>
+                    <div className="add_event-link hidden lg:flex" onClick={handleOpenAddEvent}>
+                        <Button text={'Add event'} className={'ml-6'} />
+                    </div>
                 </div>
 
                 <div className="relative ml-6 md:hidden">

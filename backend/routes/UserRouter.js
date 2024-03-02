@@ -11,7 +11,7 @@ import {
 import { isAuth } from "../middleware/isAuth.js";
 import multer from "multer";
 
-const upload = multer({ dest: "/images/avatars" });
+const upload = multer({ dest: "public/avatars" });
 
 const router = Router();
 

@@ -1,44 +1,54 @@
-import React from 'react'
-import { getCalendarDates, getStartAndEndDateOfMonth, getTodayDate, isDateBeforeDate, isCurrentDate } from '../helper/momentFunc';
+import React, { useEffect, useState } from 'react'
+import { getCalendarDates, getStartAndEndDateOfMonth, getTodayDate, isDateBeforeDate, isCurrentDate } from '../../helper/momentFunc';
+import moment from 'moment';
+import EventsList from './EventsList';
 
-const GridDesktop = ({ today, startOfCalendar }) => {
+const Grid = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent, activeEventTypes }) => {
     const totalDays = 42;
 
     const day = startOfCalendar.clone().subtract(1, 'day')
     const datesArray = [...Array(totalDays)].map(() => day.add(1, 'day').clone());
     const startOfMonth = getStartAndEndDateOfMonth(today).start;
     const endOfMonth = getStartAndEndDateOfMonth(today).end;
-    
+
+    const isEventOnDay = (date) => {
+        let flag = false;
+        events.forEach(element => {
+            const start = moment(element.event.start);
+            const end = moment(element.event.end);
+            
+            if (isDateBeforeDate(start, date) && isDateBeforeDate(date, end)) {
+                flag = true;
+                return true;
+            }
+        });
+        return flag;
+    } 
+
     return (
-        <div className="hidden w-full lg:grid lg:grid-cols-7 lg:grid-rows-6 lg:gap-px">
+        <div className="w-full grid grid-cols-7 grid-rows-6 gap-px">
             {datesArray.map((date) => (
                 <div key={date} className={`relative px-3 py-2
                     ${isDateBeforeDate(date, startOfMonth) || isDateBeforeDate(endOfMonth, date) ? 'bg-gray-50 text-gray-500' : 'bg-white text-gray-900'} 
                 `}>
-                    <time dateTime="2022-01-03"
-                        className={`${isCurrentDate(date) && 'flex h-6 w-6 items-center justify-center rounded-full bg-indigo-600 font-semibold text-white'}`}
-                    >{date.date()}</time>
-                    <ol className="mt-2">
-                        <li>
-                            <a href="#" className="group flex">
-                                <p className="flex-auto truncate font-medium text-gray-900 group-hover:text-indigo-600">Design review</p>
-                                <time dateTime="2022-01-03T10:00" className="ml-3 hidden flex-none text-gray-500 group-hover:text-indigo-600 xl:block">10AM</time>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" className="group flex">
-                                <p className="flex-auto truncate font-medium text-gray-900 group-hover:text-indigo-600">Sales meeting</p>
-                                <time dateTime="2022-01-03T14:00" className="ml-3 hidden flex-none text-gray-500 group-hover:text-indigo-600 xl:block">2PM</time>
-                            </a>
-                        </li>
-                    </ol>
+                    <time className={`flex justify-end items-center md:justify-start 
+                        ${isCurrentDate(date) && 'md:h-6 md:w-6 md:justify-center rounded-full md:bg-indigo-600 font-semibold md:text-white text-indigo-600'}
+                    `}>{date.date()}</time>
+                    
+                        {isEventOnDay(date) && (
+                            <EventsList 
+                                date={date} 
+                                currentEvent={currentEvent}
+                                setCurrentEvent={setCurrentEvent}
+                                activeEventTypes={activeEventTypes} />
+                        )}
                 </div>
             ))}
         </div>
     )
 }
 
-export default GridDesktop
+export default Grid
 
 
 // <div className="hidden w-full lg:grid lg:grid-cols-7 lg:grid-rows-6 lg:gap-px">

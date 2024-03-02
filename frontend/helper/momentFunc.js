@@ -36,9 +36,13 @@ export const getCalendarDates = ({start}) => {
 }
 
 export const isDateBeforeDate = (start, end) => {
-    return start.format('YYYY-MM-DD') < end.format('YYYY-MM-DD');
+    return moment(start).isSameOrBefore(moment(end));
 }
 
 export const isCurrentDate = (date) => {
     return moment().isSame(date, 'day');
+}
+
+export const formatDate = (date, formatString) => {
+    return moment(date).format(formatString);
 }

@@ -13,6 +13,13 @@ export const getAllEvents = async (req, res) => {
   return res.status(200).json(events);
 };
 
+export const getEventById = async (req, res) => {
+  const eventId = req.params.eventId;
+  const event = await prisma.event.findUnique({where: {id: eventId}})
+
+  return res.status(200).json(event);
+}
+
 export const getUserEvents = async (req, res) => {
   const userId = req.params.id;
 

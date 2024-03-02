@@ -78,7 +78,7 @@ enum Role {
 }
 
 enum EventType {
-  ARRANGMENT
+  ARRANGEMENT
   REMINDER
   TASK
   BIRTHDAY

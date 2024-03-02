@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.box_shadow {
+    box-shadow: 0px 1px 12px 6px #595d6a12
+}
+
+input[type='checkbox']:not(:checked) + label span {
+    background-color: transparent;
+  }
+  
+  /* Стили для проверенного состояния */
+  input[type='checkbox']:checked + label span {
+    background-color: black;
+  }
