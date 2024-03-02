@@ -17,3 +17,8 @@ export const enumEventTypes = {
         color: '#E6AA36',
     },
 }
+
+export const enumEventTypesArray = Object.entries(enumEventTypes).map(([key, value]) => ({
+    key,
+    ...value
+}));

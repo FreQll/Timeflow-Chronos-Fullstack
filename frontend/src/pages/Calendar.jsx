@@ -7,6 +7,7 @@ import { getStartAndEndDateOfCalendar, getTodayDate } from '../../helper/momentF
 import axios from '../../API/axios';
 import EventDetails from '../components/EventDetails'
 import AddEvent from './AddEvent'
+import { Input } from '@/components/ui/input'
 
 const Calendar = ({ activeEventTypes, calendarId }) => {
     moment.updateLocale('en', {week: {dow: 1}});
@@ -36,7 +37,6 @@ const Calendar = ({ activeEventTypes, calendarId }) => {
             endDay: endDay
         }
         const response = await axios.get(`/api/calendar/events/${calendarId}`, { withCredentials: true, options });
-        console.log(response);
         if (response) { setEvents(response.data); } 
         else { console.log('Error getting calendar events'); }
     }
@@ -52,7 +52,7 @@ const Calendar = ({ activeEventTypes, calendarId }) => {
     return (
         <div className='flex w-[-webkit-fill-available]'>
             {isAddEventOpen && (
-                <AddEvent />
+                <AddEvent handleOpenAddEvent={handleOpenAddEvent} />
             )}
             <div className="lg:flex lg:flex-col lg:h-full w-[-webkit-fill-available]">
                 <Monitor

@@ -1,8 +1,8 @@
 import React from 'react'
 import Checkbox from './Checkbox'
-import Button from './Button'
 import { enumEventTypes } from '../../helper/enumEventTypes'
 import RadioInput from './RadioInput'
+import { Button } from './ui/button'
 
 const Panel = ({ calendars, changeActiveEventTypes, activeCalendar, changeActiveCalendar }) => {
 
@@ -16,9 +16,9 @@ const Panel = ({ calendars, changeActiveEventTypes, activeCalendar, changeActive
 
   return (
     <div className='min-w-[200px] bg-slate-100 h-[100%] p-[20px] border-r border-gray-200 z-30 flex flex-col gap-[20px]'>
-      <div>
-        <div>
-          <h3 className='mb-[10px] opacity-50'>Calendars</h3>
+      <div className='flex flex-col gap-[15px]'>
+        <div className='flex flex-col gap-[10px]'>
+          <h3 className='opacity-50'>Calendars</h3>
 
           {calendars?.map(element => (
             <RadioInput 
@@ -31,7 +31,7 @@ const Panel = ({ calendars, changeActiveEventTypes, activeCalendar, changeActive
           ))}
         </div>
 
-        <Button text={'New calendar'} className={'w-[100%] mt-[20px]'} />
+        <Button className='w-[100%] bg-indigo-600 hover:bg-indigo-500'>New calendar</Button>
       </div>
 
       <div>

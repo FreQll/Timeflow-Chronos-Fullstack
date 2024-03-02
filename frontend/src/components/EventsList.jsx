@@ -26,10 +26,6 @@ const EventsList = ({ date, currentEvent, setCurrentEvent, activeEventTypes, cal
         else getEventById(event.id);
     }
 
-    events?.forEach(element => {
-        console.log(element.event.name);
-    });
-
     useEffect(() => {
         getEventByDay(date);
     }, [calendarId, activeEventTypes])
