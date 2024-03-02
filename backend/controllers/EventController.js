@@ -15,10 +15,14 @@ export const getAllEvents = async (req, res) => {
 
 export const getEventById = async (req, res) => {
   const eventId = req.params.eventId;
-  const event = await prisma.event.findUnique({where: {id: eventId}})
+  const event = await prisma.event.findUnique({ where: { id: eventId } });
+
+  if (!event) {
+    return res.status(404).json({ message: "Event not found." });
+  }
 
   return res.status(200).json(event);
-}
+};
 
 export const getUserEvents = async (req, res) => {
   const userId = req.params.id;
