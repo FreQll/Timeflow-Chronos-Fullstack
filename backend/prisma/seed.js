@@ -40,7 +40,7 @@ async function main() {
         color: faker.internet.color(),
         start: faker.date.future(),
         end: faker.date.future(),
-        type: "ARRANGMENT",
+        type: "ARRANGEMENT",
       },
     });
     events.push(event);
