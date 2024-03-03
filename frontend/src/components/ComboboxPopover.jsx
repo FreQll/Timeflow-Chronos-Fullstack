@@ -15,16 +15,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-const ComboboxPopover = ({ statuses }) => {
-    const [open, setOpen] = useState(false)
-    const [selectedStatus, setSelectedStatus] = useState(null)
+const ComboboxPopover = ({ statuses, selectedStatus, title, setSelectedStatus }) => {
+    const [open, setOpen] = useState(false);
   
     return (
       <div className="flex items-center space-x-4">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="w-[150px] justify-start">
-              {selectedStatus ? <>{selectedStatus.title}</> : <>+ Set type</>}
+            <Button variant="outline" className="w-auto justify-start bg-transparent">
+              {selectedStatus ? <>{selectedStatus.title || selectedStatus.name}</> : <>+ {title}</>}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="p-0" side="right" align="start">
@@ -35,14 +34,16 @@ const ComboboxPopover = ({ statuses }) => {
                 <CommandGroup>
                   {statuses.map((status) => (
                     <CommandItem
-                      key={status.title}
-                      value={status.title}
+                      key={status.title || status.calendar.id}
+                      value={status.title || status.calendar.id}
                       onSelect={(value) => {
-                        setSelectedStatus(statuses.find((priority) => priority.title.toLowerCase() === value.toLowerCase()) || null)
+                        setSelectedStatus(statuses.find((priority) => 
+                          priority?.title?.toLowerCase() === value.toLowerCase() || priority?.calendar?.id === value.toLowerCase() || null
+                          ))
                         setOpen(false)
                       }}
                     >
-                      {status.title}
+                      {status.title || status.calendar.name}
                     </CommandItem>
                   ))}
                 </CommandGroup>

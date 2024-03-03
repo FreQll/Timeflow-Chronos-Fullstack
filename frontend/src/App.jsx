@@ -6,6 +6,7 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './pages/Layout';
 import AddEvent from './pages/AddEvent';
 import axios from '../API/axios';
+import Auth from './pages/Auth';
 
 function App() {
   const [ calendars, setCalendars ] = useState();
@@ -16,6 +17,7 @@ function App() {
     try {
       const response = await axios.get(`/api/calendar/${userId}`, { withCredentials: true });
       setCalendars(response.data);
+      setActiveCalendar(response.data[0].calendar)
     } catch (error) {
       console.log('Error getting calendars');
     }
@@ -47,12 +49,12 @@ function App() {
 
   return (
     <Routes>
-      {/* <Route path='/login' element={<Login />} />
-      <Route path='/registration' element={<Registration />} />
-      <Route path='/reset-password' element={<ResetPasswordPage />} /> */}
+      <Route path='/login' element={<Auth />} />
+      {/* <Route path='/registration' element={<Registration />} />
+      <Route path='/reset-password' element={<ResetPasswordPage />} />  */}
 
       <Route path='/' element={<Layout calendars={calendars} changeActiveEventTypes={changeActiveEventTypes} activeCalendar={activeCalendar} changeActiveCalendar={changeActiveCalendar} />}>
-        <Route path='/' element={<Calendar activeEventTypes={activeEventTypes} calendarId={activeCalendar.id}  />} />
+        <Route path='/' element={<Calendar activeEventTypes={activeEventTypes} calendar={activeCalendar} calendars={calendars} />} />
         <Route path='/add-event' element={<AddEvent />} />
 
         {/* <Route path='/settings' element={<Settings />}>

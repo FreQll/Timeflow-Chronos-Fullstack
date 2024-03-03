@@ -9,7 +9,7 @@ import EventDetails from '../components/EventDetails'
 import AddEvent from './AddEvent'
 import { Input } from '@/components/ui/input'
 
-const Calendar = ({ activeEventTypes, calendarId }) => {
+const Calendar = ({ activeEventTypes, calendar, calendars }) => {
     moment.updateLocale('en', {week: {dow: 1}});
 
     const [ today, setToday ] = useState(moment());
@@ -36,7 +36,7 @@ const Calendar = ({ activeEventTypes, calendarId }) => {
             startDay: startDay,
             endDay: endDay
         }
-        const response = await axios.get(`/api/calendar/events/${calendarId}`, { withCredentials: true, options });
+        const response = await axios.get(`/api/calendar/events/${calendar.id}`, { withCredentials: true, options });
         if (response) { setEvents(response.data); } 
         else { console.log('Error getting calendar events'); }
     }
@@ -47,12 +47,12 @@ const Calendar = ({ activeEventTypes, calendarId }) => {
 
     useEffect(() => {
         getCalendarEvents();
-    }, [calendarId, activeEventTypes])
+    }, [calendar.id, activeEventTypes])
 
     return (
         <div className='flex w-[-webkit-fill-available]'>
             {isAddEventOpen && (
-                <AddEvent handleOpenAddEvent={handleOpenAddEvent} />
+                <AddEvent handleOpenAddEvent={handleOpenAddEvent} calendar={calendar} calendars={calendars} />
             )}
             <div className="lg:flex lg:flex-col lg:h-full w-[-webkit-fill-available]">
                 <Monitor
@@ -71,7 +71,7 @@ const Calendar = ({ activeEventTypes, calendarId }) => {
                             currentEvent={currentEvent}
                             setCurrentEvent={setCurrentEvent}
                             activeEventTypes={activeEventTypes}
-                            calendarId={calendarId} />
+                            calendarId={calendar.id} />
                     </div>
                 </div>
                 {/* {currentEvent && (

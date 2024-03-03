@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { enumScheduleModes } from '../../helper/enumScheduleModes';
 import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
+import { connect } from 'react-redux';
 // import Button from './Button';
 
 const Monitor = ({ today, prevHandler, todayHandler, nextHandler, handleOpenAddEvent }) => {
@@ -66,10 +67,7 @@ const Monitor = ({ today, prevHandler, todayHandler, nextHandler, handleOpenAddE
                         )}
                     </div>
                     <div className="ml-6 h-6 w-px bg-gray-300"></div>
-                    <div className="add_event-link" onClick={handleOpenAddEvent}>
-                        {/* <Button text={'Add event'} className={'ml-6'} /> */}
-                        <Button className='bg-indigo-600 hover:bg-indigo-500'>Add event</Button>
-                    </div>
+                    <Button className='bg-indigo-600 hover:bg-indigo-500' onClick={handleOpenAddEvent}>Add event</Button>
                 </div>
 
                 <div className="relative ml-6 md:hidden">
