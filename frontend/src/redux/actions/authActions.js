@@ -1,6 +1,6 @@
-export const login = ( email, password ) => ({
+export const login = ( email, login, full_name, id ) => ({
     type: 'LOGIN',
-    payload: { email, password },
+    payload: { email, login, full_name, id },
 })
 
 export const logout = () => ({

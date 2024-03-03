@@ -5,3 +5,5 @@ export default axios.create({
 });
 
 export const POST_CONFIG = { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
+
+export const GET_CONFIG = { withCredentials: true }

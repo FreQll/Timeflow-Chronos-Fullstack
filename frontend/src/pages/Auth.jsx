@@ -1,8 +1,8 @@
-import ButtonGradient from '@/components/ButtonGradient';
-import ButtonUnderscore from '@/components/ButtonUnderscore';
-import ResetPassword from '@/components/ResetPassword';
-import SignIn from '@/components/SignIn';
-import SignUp from '@/components/SignUp';
+import ButtonGradient from '@/components/buttons/ButtonGradient';
+import ButtonUnderscore from '@/components/buttons/ButtonUnderscore';
+import ResetPassword from '@/components/auth/ResetPassword';
+import SignIn from '@/components/auth/SignIn';
+import SignUp from '@/components/auth/SignUp';
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input';
 import React, { useState } from 'react'
@@ -23,7 +23,7 @@ const Auth = () => {
 
           <div className={`absolute top-0 left-[0] h-[100%] w-[100%] bg-white form_transition z-[2]`}></div>
 
-          <SignUp active={active} />
+          <SignUp active={active} setActive={setActive} />
           <SignIn active={active} handleClick={handleClick} />
           <ResetPassword active={active} />
 

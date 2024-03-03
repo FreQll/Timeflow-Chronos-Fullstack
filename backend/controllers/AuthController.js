@@ -91,13 +91,14 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const { login, password } = req.body;
-  if (!login || !password) {
+  const { email, password } = req.body;
+  if (!email || !password) {
     return res.status(400).json({ message: "Missing parameters." });
   }
+
   const user = await prisma.user.findUnique({
     where: {
-      login: login,
+      email: email,
     },
   });
 
@@ -113,7 +114,7 @@ export const login = async (req, res) => {
 
   const token = jwtGenerator(user.id, user.email, user.login);
   res.cookie("token", token, { httpOnly: true, expiresIn: "2h" });
-  return res.status(200).json({ message: "Login successful!" });
+  return res.status(200).json({ user: user, message: "Login successful!" });
 };
 
 export const logout = async (req, res) => {

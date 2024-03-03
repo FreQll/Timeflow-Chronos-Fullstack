@@ -40,9 +40,11 @@ export const getUserById = async (req, res) => {
 };
 
 export const createUser = async (req, res) => {
-  const { login, email, password, full_name } = req.body;
+  const { email, password, full_name } = req.body;
 
-  if (!login || !email || !password || !full_name) {
+  const login = full_name;
+
+  if (!email || !password || !full_name) {
     return res.status(400).json({ message: "Missing parameters." });
   }
 

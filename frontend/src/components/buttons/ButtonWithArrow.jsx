@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from './ui/button'
+import { Button } from '../ui/button'
 import {ChevronRightIcon, ChevronLeftIcon} from "@radix-ui/react-icons";
 
 const ButtonWithArrow = ({ text, className, arrowType }) => {

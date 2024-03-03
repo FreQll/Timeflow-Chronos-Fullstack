@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import ButtonGradient from './ButtonGradient'
-import { Input } from './ui/input'
-import ButtonWithArrow from './ButtonWithArrow';
+import ButtonGradient from '../buttons/ButtonGradient'
+import { Input } from '../ui/input'
+import ButtonWithArrow from '../buttons/ButtonWithArrow';
 
 const ResetPassword = ({ active }) => {
     const [ state, setState ] = useState('send_email');

@@ -4,6 +4,7 @@ const initialState = {
         id: 0,
         email: '',
         fullName: '',
+        login: ''
     }
 };
 
@@ -16,15 +17,13 @@ const authReducer = (state = initialState, action) => {
                     id: action.payload.id,
                     email: action.payload.email,
                     fullName: action.payload.full_name,
+                    login: action.payload.login
                 }
             }
-            break;
         case 'LOGOUT':
             return initialState;
-            break;
         default:
             return state;
-            break;
     }
 }
 
