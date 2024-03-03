@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 import './App.css'
 import Calendar from './pages/Calendar';
-import Panel from './components/Panel';
 import { Routes, Route } from 'react-router-dom';
 import Layout from './pages/Layout';
 import AddEvent from './pages/AddEvent';
 import axios from '../API/axios';
 import Auth from './pages/Auth';
+import store, { savedState } from './redux/store';
+import ErrorPage from './pages/ErrorPage';
 
 function App() {
   const [ calendars, setCalendars ] = useState();
@@ -49,7 +51,7 @@ function App() {
 
   return (
     <Routes>
-      <Route path='/login' element={<Auth />} />
+      <Route path='/authentication' element={<Auth />} />
       {/* <Route path='/registration' element={<Registration />} />
       <Route path='/reset-password' element={<ResetPasswordPage />} />  */}
 
@@ -70,4 +72,6 @@ function App() {
   );
 }
 
-export default App
+export default App;
+
+

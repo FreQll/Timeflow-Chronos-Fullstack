@@ -8,3 +8,4 @@ const rootReducer = combineReducers({
 const store = createStore(rootReducer);
 
 export default store
+export const savedState = JSON.parse(localStorage.getItem('authState'));

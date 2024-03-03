@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import DatePickerWithRange from '@/components/DatePicker';
 import ComboboxPopover from '@/components/ComboboxPopover';
 import { enumEventTypesArray } from '../../helper/enumEventTypes';
-import CloseButtonCircled from '@/components/CloseButtonCircled';
+import CloseButtonCircled from '@/components/buttons/CloseButtonCircled';
 import { getTodayDate } from '../../helper/momentFunc';
 import axios, { POST_CONFIG } from '../../API/axios';
 import { objToJson } from '../../helper/stringFunc';
@@ -94,7 +94,7 @@ const AddEvent = ({ handleOpenAddEvent, calendar, calendars }) => {
           </CardContent>
           <CardFooter className='border-t border-gray-200 pt-[15px] flex flex-col gap-[15px]'>
             <div className='flex gap-[20px] justify-between w-[100%]' onClick={handleSave}>
-              <Button className='bg-indigo-600 hover:bg-indigo-500 w-[100%]'>Save</Button>
+              <ButtonBlue text={'Save'} />
             </div>
           </CardFooter>
       </Card>

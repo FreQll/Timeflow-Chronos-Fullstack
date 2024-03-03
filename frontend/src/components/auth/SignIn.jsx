@@ -7,6 +7,7 @@ import axios, { GET_CONFIG, POST_CONFIG } from '../../../API/axios'
 import { objToJson } from '../../../helper/stringFunc'
 import { login } from '../../redux/actions/authActions';
 import { useNavigate } from 'react-router-dom';
+import { savedState } from '@/redux/store';
 
 const SignIn = ({ active, handleClick }) => {
   const dispatch = useDispatch();
@@ -33,7 +34,7 @@ const SignIn = ({ active, handleClick }) => {
       const response = await axios.post(`/api/auth/login`, objToJson(data), POST_CONFIG);
       if (response) {
         dispatch(login(response.data.user));
-        navigate('/')
+        if (savedState.isAuthenticated) navigate('/');
       }
     } catch (error) {
       console.log(error);

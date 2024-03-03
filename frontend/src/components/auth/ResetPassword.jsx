@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import ButtonGradient from '../buttons/ButtonGradient'
 import { Input } from '../ui/input'
-import ButtonWithArrow from '../buttons/ButtonWithArrow';
+import ButtonWithBorder from '../buttons/ButtonWithBorder';
 
 const ResetPassword = ({ active }) => {
     const [ state, setState ] = useState('send_email');
@@ -25,7 +25,7 @@ const ResetPassword = ({ active }) => {
                     <Input type="email" placeholder="Email" className='w-[100%]' onChange={handleChangeEmail} />
                 </form>
                 <div onClick={() => { if(email) setState('confirm_code')}}>
-                    <ButtonWithArrow arrowType={'right'} text={'Next'} className={'w-[100px]'} />
+                    <ButtonWithBorder arrowType={'right'} text={'Next'} className={'w-[100px]'} />
                 </div>
             </div>
 
@@ -43,7 +43,7 @@ const ResetPassword = ({ active }) => {
                 </form>
                 <div className='flex gap-[10px]'>
                     <div onClick={() => setState('send_email')}>
-                        <ButtonWithArrow arrowType={'left'} text={'Back'} className={'w-[100px]'} />
+                        <ButtonWithBorder arrowType={'left'} text={'Back'} className={'w-[100px]'} />
                     </div>
                     <ButtonGradient text={'Reset'} className={'w-[100px]'} />
                 </div>
