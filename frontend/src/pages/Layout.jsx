@@ -23,7 +23,7 @@ const Layout = ({ calendars, changeActiveEventTypes, activeCalendar, changeActiv
                     <ResizablePanel defaultSize={25} minSize={20} maxSize={30}>
                         <Panel calendars={calendars} changeActiveEventTypes={changeActiveEventTypes} activeCalendar={activeCalendar} changeActiveCalendar={changeActiveCalendar} />
                     </ResizablePanel>
-                    <ResizableHandle withHandle />
+                    <ResizableHandle withHandle className={'bg-white'} />
                     <ResizablePanel defaultSize={75}>
                         <Outlet />
                     </ResizablePanel>
