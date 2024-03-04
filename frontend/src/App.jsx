@@ -11,6 +11,8 @@ import store, { savedState } from './redux/store';
 import ErrorPage from './pages/ErrorPage';
 
 function App() {
+  const user = savedState?.user;
+
   const [ calendars, setCalendars ] = useState();
   const [ activeEventTypes, setActiveEventTypes ] = useState([]);
   const [ activeCalendar, setActiveCalendar ] = useState([]);
@@ -43,9 +45,9 @@ function App() {
   }
 
   useEffect(() => {
-    const id = 'clt9zw5rx0002a8mausu1v1lj';
     // const calendar_id = 
-    getCalendarsByUserId(id);
+    console.log(user);
+    getCalendarsByUserId(user.id);
     // setActiveCalendar()
   }, [])
 

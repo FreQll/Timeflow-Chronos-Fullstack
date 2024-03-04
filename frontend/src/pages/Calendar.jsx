@@ -50,7 +50,7 @@ const Calendar = ({ activeEventTypes, calendar, calendars }) => {
     }, [calendar.id, activeEventTypes])
 
     return (
-        <div className='flex w-[-webkit-fill-available]'>
+        <div className='flex w-[-webkit-fill-available] h-[-webkit-fill-available]'>
             {isAddEventOpen && (
                 <AddEvent handleOpenAddEvent={handleOpenAddEvent} calendar={calendar} calendars={calendars} />
             )}

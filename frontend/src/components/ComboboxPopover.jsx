@@ -32,7 +32,7 @@ const ComboboxPopover = ({ statuses, selectedStatus, title, setSelectedStatus })
               <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
-                  {statuses.map((status) => (
+                  {statuses?.map((status) => (
                     <CommandItem
                       key={status.title || status.calendar.id}
                       value={status.title || status.calendar.id}

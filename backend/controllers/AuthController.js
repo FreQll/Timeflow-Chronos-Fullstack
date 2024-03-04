@@ -20,7 +20,9 @@ export const jwtGenerator = (id, email, login) => {
 };
 
 export const register = async (req, res) => {
-  const { login, email, password, full_name } = req.body;
+  const { email, password, full_name } = req.body;
+
+  const login = full_name;
 
   if (!login || !email || !password || !full_name) {
     return res.status(400).json({ message: "Missing parameters." });

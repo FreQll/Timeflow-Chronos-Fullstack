@@ -4,7 +4,7 @@ import { cutString } from '../../helper/stringFunc';
 
 const EventsList = ({ date, currentEvent, setCurrentEvent, activeEventTypes, calendarId }) => {
     const [ events, setEvents ] = useState();
-    
+
     const getEventByDay = async (date) => {
         const options = {
             startDay: date,
@@ -32,9 +32,9 @@ const EventsList = ({ date, currentEvent, setCurrentEvent, activeEventTypes, cal
     
     return (
         <ol className="mt-2">
-            {events?.map(element => (
-                activeEventTypes.includes(element?.event.type) && (
-                    <li key={element} onClick={() => handleClickEvent(element.event)}>
+            {events?.map((element, id) => (
+                activeEventTypes?.includes(element?.event.type) && (
+                    <li key={id} onClick={() => handleClickEvent(element.event)}>
                         <a href="#" className="hidden lg:flex group">
                             <p className="flex-auto truncate font-medium text-gray-900 group-hover:text-indigo-600"> 
                                 <span className='hidden lg:flex'>{cutString(element?.event.name, 20, '...')}</span>

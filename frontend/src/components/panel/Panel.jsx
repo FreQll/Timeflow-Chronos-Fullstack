@@ -1,5 +1,4 @@
 import React from 'react'
-import Checkbox from '../Checkbox'
 import { enumEventTypes } from '../../../helper/enumEventTypes'
 import RadioInput from '../RadioInput'
 import { Button } from '../ui/button'
@@ -12,8 +11,6 @@ import { CalendarIcon, HomeIcon } from "@radix-ui/react-icons"
 import ProfileBlocks from './ProfileBlocks'
 
 const Panel = ({ calendars, changeActiveEventTypes, activeCalendar, changeActiveCalendar }) => {
-  const user = savedState?.user;
-
   return (
     <div className='min-w-[200px] bg_gradient_2 h-[100%] p-[20px] z-30 flex flex-col gap-[20px]'>
 
