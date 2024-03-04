@@ -16,10 +16,10 @@ const router = Router();
 router.get("/", getAllEvents);
 router.get("/eventInfo/:eventId", getEventById);
 router.get("/:id", getUserEvents);
-router.post("/addUserToEvent/:id/:token", confirmAddingUserToEvent);
-router.post("/", createEvent);
-router.post("/addUserToEvent", addUserToEvent);
-router.patch("/:id", updateEvent);
-router.delete("/:id", deleteEvent);
+router.post("/addUserToEvent/:id/:token", isAuth, confirmAddingUserToEvent);
+router.post("/", isAuth, createEvent);
+router.post("/addUserToEvent", isAuth, addUserToEvent);
+router.patch("/:id", isAuth, updateEvent);
+router.delete("/:id", isAuth, deleteEvent);
 
 export default router;

@@ -112,6 +112,16 @@ export const updateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
   const userId = req.params.id;
 
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
   await prisma.user.delete({
     where: {
       id: userId,
