@@ -87,7 +87,7 @@ export const resetPasswordHTML = (recipient, resetLink) => {
           <h2>${resetLink}</h2>
 
           <hr>
-          <p class="reminder">This link is valid for 1 hour and can be used only once.</p>
+          <p class="reminder">This code is valid for 1 hour and can be used only once.</p>
         </div>
         <div class="footer">
           <p>Best regards,<br>✨ ${process.env.PROJECT_NAME} ✨</p>
