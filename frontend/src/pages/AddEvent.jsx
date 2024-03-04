@@ -10,9 +10,11 @@ import { getTodayDate } from '../../helper/momentFunc';
 import axios, { POST_CONFIG } from '../../API/axios';
 import { objToJson } from '../../helper/stringFunc';
 import { useToast } from '@/components/ui/use-toast';
+import ButtonBlue from '@/components/buttons/ButtonBlue';
+import { savedState } from '@/redux/store';
 
 const AddEvent = ({ handleOpenAddEvent, calendar, calendars }) => {
-  const { toast } = useToast()
+  const user = savedState?.user;
   
   const [ title, setTitle ] = useState('New event');
   const [ description, setDescription ] = useState('');
@@ -35,7 +37,7 @@ const AddEvent = ({ handleOpenAddEvent, calendar, calendars }) => {
 
   const setEventCalendar = async (calendar) => {
     const response = await axios.get(`/api/calendar/calendarInfo/${calendar.calendar.id}`, { withCredentials: true });
-    if (response) { setSelectedCalendar(response.data); } 
+    if (response) { console.log(response); setSelectedCalendar(response.data); } 
     else { console.log('Error creating event'); }
   }
 
@@ -49,7 +51,7 @@ const AddEvent = ({ handleOpenAddEvent, calendar, calendars }) => {
       start: date.from,
       end: date.to,
       color: color,
-      userId: 'clt9zw5rx0002a8mausu1v1lj',
+      userId: user.id,
       calendarId: selectedCalendar.id
     }
     
@@ -57,8 +59,6 @@ const AddEvent = ({ handleOpenAddEvent, calendar, calendars }) => {
       const response = await axios.post(`/api/event`, objToJson(options), POST_CONFIG);
       console.log(response);
     } catch (error) {
-      console.log('aa');
-      toast();
     }
   }
 

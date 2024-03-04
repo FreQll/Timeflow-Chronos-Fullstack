@@ -30,7 +30,7 @@ const SignUp = ({ active, setActive }) => {
 
     if (checkFormData(data).message) {
       try {
-        const response = await axios.post(`/api/user`, objToJson(data), POST_CONFIG);
+        const response = await axios.post(`/api/auth/register`, objToJson(data), POST_CONFIG);
         if (response) setActive('login');
       } catch (error) {
         console.log(error.response.data.message);
