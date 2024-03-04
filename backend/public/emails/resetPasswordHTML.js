@@ -83,8 +83,9 @@ export const resetPasswordHTML = (recipient, resetLink) => {
       
         <div class="content">
           <p>Hello ${recipient},</p>
-          <p>We received a request to reset your password. Click the link below to set a new password 🔑</p>
-          <a href="${resetLink}" class="cta-button">Reset Password</a>
+          <p>We received a request to reset your password. To confirm your request, please use the 6-digit code below 🔑</p>
+          <h2>${resetLink}</h2>
+
           <hr>
           <p class="reminder">This link is valid for 1 hour and can be used only once.</p>
         </div>

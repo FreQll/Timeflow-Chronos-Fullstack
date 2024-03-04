@@ -9,13 +9,14 @@ datasource db {
 
 model User {
   // id        BigInt          @id @default(autoincrement())
-  id        String          @id @default(cuid())
-  login     String          @unique
-  email     String          @unique
-  password  String
-  full_name String
-  calendars UserCalendars[]
-  events    UserEvents[]
+  id            String               @id @default(cuid())
+  login         String               @unique
+  email         String               @unique
+  password      String
+  full_name     String
+  calendars     UserCalendars[]
+  events        UserEvents[]
+  resetPassword ResetPasswordCodes[]
 }
 
 model Calendar {
@@ -69,6 +70,15 @@ model CalendarEvents {
   calendarId String
   event      Event    @relation(fields: [eventId], references: [id])
   eventId    String
+}
+
+model ResetPasswordCodes {
+  id             String   @id @default(cuid())
+  user           User     @relation(fields: [userId], references: [id])
+  userId         String
+  token          String
+  expirationTime DateTime
+  createdAt      DateTime @default(now())
 }
 
 enum Role {
