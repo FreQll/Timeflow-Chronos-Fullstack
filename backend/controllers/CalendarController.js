@@ -47,7 +47,7 @@ export const getCalendarEvents = async (req, res) => {
   const calendarId = req.params.id;
 
   const timeSegment = req.query.timeSegment;
-  let startDate, endDate;
+  let { startDate, endDate } = req.query;
   const momentDate = moment(new Date());
 
   if (timeSegment) {
@@ -75,7 +75,12 @@ export const getCalendarEvents = async (req, res) => {
     }
   }
 
-  //console.log(startDate.format(), endDate.format());
+  if (startDate && endDate) {
+    startDate = moment(startDate, "DD-MM-YYYY").toDate();
+    endDate = moment(endDate, "DD-MM-YYYY").toDate();
+  }
+
+  console.log(startDate, endDate);
 
   let calendar;
 
@@ -89,6 +94,18 @@ export const getCalendarEvents = async (req, res) => {
             // Uncomment the line below if you want to include events that started before the start date but end within the range
             // { end: { gte: startDate.toDate(), lte: endDate.toDate() } },
           ],
+        },
+      },
+      select: {
+        event: true,
+      },
+    });
+  } else if (startDate && endDate) {
+    calendar = await prisma.calendarEvents.findMany({
+      where: {
+        calendarId: calendarId,
+        event: {
+          AND: [{ start: { gte: startDate, lte: endDate } }],
         },
       },
       select: {
