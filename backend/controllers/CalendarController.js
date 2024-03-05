@@ -6,26 +6,19 @@ import { addToCalendarHTML } from "../public/emails/addToCalendarHTML.js";
 
 export const getCalendarById = async (req, res) => {
   const calendarId = req.params.calendarId;
-  const calendar = await prisma.calendar.findUnique({ where: { id: calendarId } });
+  const calendar = await prisma.calendar.findUnique({
+    where: { id: calendarId },
+  });
 
   if (!calendar) {
     return res.status(404).json({ message: "Calendar not found." });
   }
 
   return res.status(200).json(calendar);
-}
+};
 
 export const getUserCalendars = async (req, res) => {
   const userId = req.params.id;
-
-  // const user = await prisma.user.findUnique({
-  //   where: {
-  //     id: userId,
-  //   },
-  //   include: {
-  //     calendars: true,
-  //   },
-  // });
 
   const user = await prisma.user.findUnique({
     where: {
@@ -264,21 +257,12 @@ export const addUserToCalendar = async (req, res) => {
   };
   const token = await jwt.sign(payload, secret, { expiresIn: "1h" });
 
-  // console.log(token);
-
   const link = `http://${process.env.HOST}:${process.env.PORT}/api/calendar/addUserToCalendar/${userToAdd.id}/${token}`;
-  // const message = `<b>${owner.login}</b> wants to add you to the calendar <b>"${calendar.name}"</b>.
-  // Here is <a href="${link}">link to confirm adding to the calendar</a>, remember it is valid for 1 hour and can be used only once.`;
-  // await sendEmail(
-  //   userToAdd.email,
-  //   `${owner.login} wants to add you to the calendar.`,
-  //   message
-  // );
 
   await sendEmail(
     userToAdd.email,
-    `🗓️ ${owner.login} wants to add you to the calendar 🗓️`,
-    addToCalendarHTML(userToAdd.full_name, owner.login, calendar.name, link)
+    `🗓️ ${owner.full_name} wants to add you to the calendar 🗓️`,
+    addToCalendarHTML(userToAdd.full_name, owner.full_name, calendar.name, link)
   );
 
   await prisma.userCalendars.create({

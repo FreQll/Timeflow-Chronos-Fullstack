@@ -318,8 +318,8 @@ export const addUserToEvent = async (req, res) => {
 
   await sendEmail(
     userToAdd.email,
-    `📅 ${owner.login} wants to add you to the event 📅`,
-    addToEventHTML(userToAdd.full_name, owner.login, event.name, link)
+    `📅 ${owner.full_name} wants to add you to the event 📅`,
+    addToEventHTML(userToAdd.full_name, owner.full_name, event.name, link)
   );
 
   await prisma.userEvents.create({

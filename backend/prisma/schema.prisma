@@ -8,10 +8,9 @@ datasource db {
 }
 
 model User {
-  // id        BigInt          @id @default(autoincrement())
   id            String               @id @default(cuid())
-  login         String               @unique
   email         String               @unique
+  login         String?
   password      String
   full_name     String
   calendars     UserCalendars[]

@@ -12,9 +12,9 @@ dotenv.config();
 export const register = async (req, res) => {
   const { email, password, full_name } = req.body;
 
-  const login = full_name;
+  // const login = full_name;
 
-  if (!login || !email || !password || !full_name) {
+  if (!email || !password || !full_name) {
     return res.status(400).json({ message: "Missing parameters." });
   }
 
@@ -34,27 +34,27 @@ export const register = async (req, res) => {
     },
   });
 
-  const findUserByLogin = await prisma.user.findUnique({
-    where: {
-      login: login,
-    },
-  });
+  // const findUserByLogin = await prisma.user.findUnique({
+  //   where: {
+  //     login: login,
+  //   },
+  // });
 
   if (findUserByEmail) {
     return res
       .status(400)
       .json({ message: "Email already taken, please try another one." });
   }
-  if (findUserByLogin) {
-    return res
-      .status(400)
-      .json({ message: "Login already taken, please try another one." });
-  }
+  // if (findUserByLogin) {
+  //   return res
+  //     .status(400)
+  //     .json({ message: "Login already taken, please try another one." });
+  // }
 
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await prisma.user.create({
     data: {
-      login: login,
+      // login: login,
       email: email,
       password: hashedPassword,
       full_name: full_name,
@@ -104,7 +104,7 @@ export const login = async (req, res) => {
     return res.status(401).json({ message: "Invalid password." });
   }
 
-  const token = jwtGenerator(user.id, user.email, user.login);
+  const token = jwtGenerator(user.id, user.email, user.full_name);
   res.cookie("token", token, { httpOnly: true, expiresIn: "2h" });
   return res.status(200).json({
     user: {
