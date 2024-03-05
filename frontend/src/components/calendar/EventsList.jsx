@@ -12,8 +12,6 @@ const EventsList = ({ date, currentEvent, setCurrentEvent, activeEventTypes, cal
 
     const getEventByDay = async (date) => {
         const response = await axios.get(`/api/calendar/events/${calendarId}?startDay=${date.format}&endDay=${date}&timeSegment=day`, GET_CONFIG);
-        console.log(date.format('DD MM'));
-        console.log(response.data);
         if (response) { setEvents(response.data); } 
         else { console.log('Error getting day events'); }
     }

@@ -10,7 +10,6 @@ import ComboboxPopover from '../ComboboxPopover'
 import { enumEventTypesArray } from '../../../helper/enumEventTypes'
 import { Input } from '../ui/input'
 import { DropdownMenuLabel } from '../ui/dropdown-menu'
-import { setEventCalendar } from '@/pages/AddEvent'
 import axios, { POST_CONFIG } from '../../../API/axios'
 import { useNavigate } from 'react-router-dom'
 import { TrashIcon } from "@radix-ui/react-icons"
@@ -25,6 +24,13 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
         from: currentEvent.start,
         to: currentEvent.end,
     });
+
+    const setEventCalendar = async (calendar) => {
+      const response = await axios.get(`/api/calendar/calendarInfo/${calendar.calendar.id}`, { withCredentials: true });
+      console.log(response);
+      if (response) { console.log(response); setSelectedCalendar(response.data); } 
+      else { console.log('Error creating event'); }
+    }
 
     const updateData = async (data) => {
       const response = await axios.patch(`/api/event/${currentEvent.id}`, data, POST_CONFIG);

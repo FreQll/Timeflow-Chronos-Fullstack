@@ -51,16 +51,18 @@ const Calendar = ({ activeEventTypes, calendar, calendars }) => {
 
     return (
         <div className='flex w-[-webkit-fill-available] h-[-webkit-fill-available]'>
-            {isAddEventOpen && (
+            {/* {isAddEventOpen && (
                 <AddEvent handleOpenAddEvent={handleOpenAddEvent} calendar={calendar} calendars={calendars} />
-            )}
+            )} */}
             <div className="lg:flex lg:flex-col lg:h-full w-[-webkit-fill-available]">
                 <Monitor
                     today={today}
                     prevHandler={prevHandler}
                     todayHandler={todayHandler}
                     nextHandler={nextHandler}
-                    handleOpenAddEvent={handleOpenAddEvent} />
+                    handleOpenAddEvent={handleOpenAddEvent}
+                    calendar={calendar} 
+                    calendars={calendars} />
                 <div className="shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col relative">
                     <ScheduleHeader />
                     <div className="flex bg-gray-200 text-xs leading-6 text-gray-700 lg:flex-auto">

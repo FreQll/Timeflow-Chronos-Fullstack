@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/popover"
 import { enumEventTypes } from '../../helper/enumEventTypes'
 
-const ComboboxPopover = ({ statuses, selectedStatus, title, setSelectedStatus, buttonColor }) => {
+const ComboboxPopover = ({ statuses, selectedStatus, placeholder, selectedStatusName, setSelectedStatus, buttonColor }) => {
     const [open, setOpen] = useState(false);
 
     return (
@@ -24,7 +24,7 @@ const ComboboxPopover = ({ statuses, selectedStatus, title, setSelectedStatus, b
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button variant="outline" className={`w-auto justify-start ${buttonColor ? buttonColor : 'bg-transparent'}` }>
-              {selectedStatus ? <>{selectedStatus.title || enumEventTypes[selectedStatus]?.title || selectedStatus?.name}</> : <>+ {title}</>}
+              {selectedStatus ? <>{selectedStatusName || selectedStatus.title || selectedStatus?.name || enumEventTypes[selectedStatus]?.title || selectedStatus?.name}</> : <>+ {placeholder}</>}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="p-0" side="right" align="start">
@@ -33,7 +33,7 @@ const ComboboxPopover = ({ statuses, selectedStatus, title, setSelectedStatus, b
               <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
-                  {statuses.map((status) => (
+                  {statuses?.map((status) => (
                     <CommandItem
                       key={status.title || status.calendar.id}
                       value={status.title || status.calendar.id}

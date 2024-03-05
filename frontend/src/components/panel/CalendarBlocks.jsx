@@ -43,11 +43,11 @@ const CalendarBlocks = ({ calendars, activeCalendar, changeActiveEventTypes, cha
             <div className='p-[10px] rounded-[10px] bg-[#ffffff99]'>
                 <div>
                     <h3 className='mb-[10px] opacity-50'>Events</h3>
-                    
+
                     <div className='flex flex-col gap-[5px]'>
                         {Object.keys(enumEventTypes).map(type => (
                             <div key={type} className="flex items-center space-x-2" onClick={() => clickCheckboxEventTypes(type)}>
-                                <Checkbox id={type} style={{ backgroundColor: enumEventTypes[type].color }} className='border-0 text-white' checked={true} />
+                                <Checkbox id={type} style={{ backgroundColor: enumEventTypes[type].color }} className='border-0 text-white' defaultChecked />
                                 <label
                                     htmlFor={type}
                                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
