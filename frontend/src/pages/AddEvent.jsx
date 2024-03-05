@@ -41,7 +41,6 @@ const AddEvent = ({ handleOpenAddEvent, calendars }) => {
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value)
-    console.log(selectedCalendar);
   }
 
   const handleDescriptionChange = (e) => {

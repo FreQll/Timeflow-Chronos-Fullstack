@@ -23,6 +23,7 @@ function App() {
   const getCalendarsByUserId = async (userId) => {
     try {
       const response = await axios.get(`/api/calendar/${userId}`, { withCredentials: true });
+      console.log(response);
       setCalendars(response.data);
       setActiveCalendar(response.data[0].calendar)
     } catch (error) {

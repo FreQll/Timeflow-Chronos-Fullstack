@@ -10,7 +10,7 @@ import ComboboxPopover from '../ComboboxPopover'
 import { enumEventTypesArray } from '../../../helper/enumEventTypes'
 import { Input } from '../ui/input'
 import { DropdownMenuLabel } from '../ui/dropdown-menu'
-import axios, { POST_CONFIG } from '../../../API/axios'
+import axios, { GET_CONFIG, POST_CONFIG } from '../../../API/axios'
 import { useNavigate } from 'react-router-dom'
 import { TrashIcon } from "@radix-ui/react-icons"
 
@@ -63,7 +63,7 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
     } 
 
     const eventDelete = async () => {
-      const response = await axios.delete(`api/event/${currentEvent.id}`)
+      const response = await axios.delete(`api/event/${currentEvent.id}`, GET_CONFIG)
       if (response.status == 200) navigate('/')
     }
 

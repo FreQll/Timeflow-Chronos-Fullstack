@@ -156,6 +156,7 @@ export const createCalendar = async (req, res) => {
       userId: user.id,
       calendarId: calendar.id,
       role: "ADMIN",
+      isConfirmed: true,
     },
   });
 
