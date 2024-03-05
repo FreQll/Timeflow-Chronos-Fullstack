@@ -36,7 +36,7 @@ export const getCalendarDates = ({start}) => {
 }
 
 export const isDateBeforeDate = (start, end) => {
-    return moment(start).isSameOrBefore(moment(end));
+    return moment(start).startOf('day').isSameOrBefore(moment(end).startOf('day'));
 }
 
 export const isCurrentDate = (date) => {

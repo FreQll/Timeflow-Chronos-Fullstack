@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { enumScheduleModes } from '../../helper/enumScheduleModes';
+import { enumScheduleModes } from '../../../helper/enumScheduleModes';
 import { Link } from 'react-router-dom';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import { connect } from 'react-redux';
-import { savedState } from '../redux/store';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import Dropdown from './profile/Dropdown';
-import ButtonBlue from './buttons/ButtonBlue';
+import { savedState } from '../../redux/store';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import Dropdown from '../profile/Dropdown';
+import ButtonBlue from '../buttons/ButtonBlue';
 // import Button from './Button';
 
 const Monitor = ({ today, prevHandler, todayHandler, nextHandler, handleOpenAddEvent }) => {

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { getCalendarDates, getStartAndEndDateOfMonth, getTodayDate, isDateBeforeDate, isCurrentDate } from '../../helper/momentFunc';
+import { getCalendarDates, getStartAndEndDateOfMonth, getTodayDate, isDateBeforeDate, isCurrentDate } from '../../../helper/momentFunc';
 import moment from 'moment';
 import EventsList from './EventsList';
 
-const Grid = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent, activeEventTypes, calendarId }) => {
+const Grid = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent, activeEventTypes, calendars, selectedCalendar }) => {
     const totalDays = 42;
+    const calendarId = selectedCalendar?.id;
 
     const day = startOfCalendar.clone().subtract(1, 'day')
     const datesArray = [...Array(totalDays)].map(() => day.add(1, 'day').clone());
@@ -16,6 +17,8 @@ const Grid = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent, a
         events.forEach(element => {
             const start = moment(element.event.start);
             const end = moment(element.event.end);
+
+            // console.log(date.format('DD MM') + ' ' + isDateBeforeDate(start, date));
             
             if (isDateBeforeDate(start, date) && isDateBeforeDate(date, end)) {
                 flag = true;
@@ -41,7 +44,9 @@ const Grid = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent, a
                                 currentEvent={currentEvent}
                                 setCurrentEvent={setCurrentEvent}
                                 activeEventTypes={activeEventTypes}
-                                calendarId={calendarId} />
+                                calendarId={calendarId}
+                                calendars={calendars} 
+                                selectedCalendar={selectedCalendar} />
                         )}
                 </div>
             ))}
