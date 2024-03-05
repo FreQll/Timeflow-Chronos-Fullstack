@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { createContext, useEffect, useState } from 'react';
 import Panel from '../components/panel/Panel';
-import Monitor from '../components/Monitor';
+import Monitor from '../components/calendar/Monitor';
 import {
     ResizableHandle,
     ResizablePanel,

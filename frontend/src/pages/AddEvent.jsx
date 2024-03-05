@@ -12,9 +12,17 @@ import { objToJson } from '../../helper/stringFunc';
 import { useToast } from '@/components/ui/use-toast';
 import ButtonBlue from '@/components/buttons/ButtonBlue';
 import { savedState } from '@/redux/store';
+import { useNavigate } from 'react-router-dom';
+
+export const setEventCalendar = async (calendar) => {
+  const response = await axios.get(`/api/calendar/calendarInfo/${calendar.calendar.id}`, { withCredentials: true });
+  if (response) { console.log(response); setSelectedCalendar(response.data); } 
+  else { console.log('Error creating event'); }
+}
 
 const AddEvent = ({ handleOpenAddEvent, calendar, calendars }) => {
   const user = savedState?.user;
+  const navigate = useNavigate();
   
   const [ title, setTitle ] = useState('New event');
   const [ description, setDescription ] = useState('');
@@ -35,14 +43,6 @@ const AddEvent = ({ handleOpenAddEvent, calendar, calendars }) => {
     setDescription(e.target.value)
   }
 
-  const setEventCalendar = async (calendar) => {
-    const response = await axios.get(`/api/calendar/calendarInfo/${calendar.calendar.id}`, { withCredentials: true });
-    if (response) { console.log(response); setSelectedCalendar(response.data); } 
-    else { console.log('Error creating event'); }
-  }
-
-  //TODO change userId
-
   const handleSave = async () => {
     const options = {
       name: title,
@@ -56,8 +56,8 @@ const AddEvent = ({ handleOpenAddEvent, calendar, calendars }) => {
     }
     
     try {
-      const response = await axios.post(`/api/event`, objToJson(options), POST_CONFIG);
-      console.log(response);
+      await axios.post(`/api/event`, objToJson(options), POST_CONFIG);
+      navigate('/');
     } catch (error) {
     }
   }

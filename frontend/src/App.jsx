@@ -9,12 +9,15 @@ import axios from '../API/axios';
 import Auth from './pages/Auth';
 import store, { savedState } from './redux/store';
 import ErrorPage from './pages/ErrorPage';
+import { enumEventTypes, enumEventTypesArray } from '../helper/enumEventTypes';
 
 function App() {
   const user = savedState?.user;
 
   const [ calendars, setCalendars ] = useState();
-  const [ activeEventTypes, setActiveEventTypes ] = useState([]);
+  const [ activeEventTypes, setActiveEventTypes ] = useState(() =>
+    Object.entries(enumEventTypes).map(([key]) => (key))
+  );
   const [ activeCalendar, setActiveCalendar ] = useState([]);
 
   const getCalendarsByUserId = async (userId) => {
