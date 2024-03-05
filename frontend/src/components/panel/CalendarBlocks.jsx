@@ -32,7 +32,7 @@ const CalendarBlocks = ({ calendars, activeCalendar, changeActiveEventTypes, cha
                             <div key={element.calendar.id} className="flex items-center space-x-2 max-w-[100%]" onClick={() => clickCheckboxCalendars(element.calendar.id)}>
                                 <RadioGroupItem value={element.calendar.name} id={element.calendar.name} style={{ backgroundColor: element.calendar.color }} className={`rounded-[4px] text-white border-0 box_shadow`} />
                                 <div  className='text-ellipsis max-w-[100%] overflow-hidden'>
-                                    <Label htmlFor="r1">{element.calendar.name}</Label>
+                                    <Label htmlFor={element.calendar.name}>{element.calendar.name}</Label>
                                 </div>
                             </div>
                         ))}
