@@ -22,15 +22,14 @@ const AddEvent = ({ handleOpenAddEvent, calendars }) => {
   
   const [ title, setTitle ] = useState('New event');
   const [ description, setDescription ] = useState('');
-  const [ type, setType] = useState(null);
+  const [ type, setType] = useState(enumEventTypes['ARRANGEMENT']);
   const [ date, setDate ] = useState({
     from: new Date(getTodayDate()),
     to: new Date(getTodayDate().add(1, 'month')),
   });
   const color = 'ffffff';
-  const [ selectedCalendar, setSelectedCalendar ] = useState(); 
+  const [ selectedCalendar, setSelectedCalendar ] = useState(null); 
 
-  
   const setEventCalendar = async (calendar) => {
     if (calendar) {
       const response = await axios.get(`/api/calendar/calendarInfo/${calendar.calendar.id}`, { withCredentials: true });
@@ -70,43 +69,42 @@ const AddEvent = ({ handleOpenAddEvent, calendars }) => {
   }
 
   return (
-    <DrawerContent>
-      <div className="mx-auto w-full max-w-lg h-[450px]">
-        <DrawerHeader>
-          <DrawerTitle>
-            <input type='text' value={title} onChange={handleTitleChange} className='outline-none bg-transparent text-[40px]' autoFocus />
-          </DrawerTitle>
-          <DrawerDescription className='mt-[5px]'>
-            <input type='text' value={description} placeholder='Description' onChange={handleDescriptionChange} className='outline-none bg-transparent text-[16px]' />
-          </DrawerDescription>
-        </DrawerHeader>
-        <Separator className='h-[1px] bg-gray-200' />
-        <table className=' border-separate border-spacing-[10px] py-[10px]'>
-          <tbody>
-            <tr>
-              <td className='text-right'><Label>Duration: </Label></td>
-              <td><DatePickerWithRange className={'bg-transparent w-max'} date={date} setDate={setDate} /></td>
-            </tr>
-            <tr>
-              <td className='text-right'><Label>Type: </Label></td>
-              <td><ComboboxPopover statuses={enumEventTypesArray} placeholder={'Set type'} selectedStatusName={enumEventTypes[type]?.title} selectedStatus={type} setSelectedStatus={setType} /></td>
-            </tr>
-            <tr>
-              <td className='text-right'><Label>Calendar: </Label></td>
-              <td><ComboboxPopover statuses={calendars} placeholder={'Set calendar'} selectedStatusName={selectedCalendar?.name} selectedStatus={selectedCalendar} setSelectedStatus={setEventCalendar} /></td>
-            </tr>
-          </tbody>
-        </table>
-        <Separator className='h-[1px] bg-gray-200' />
-        <DrawerFooter>
-          <div className='flex gap-[20px] justify-between w-[100%]' onClick={handleSave} >
-            <Button variant="outline" className='w-[-webkit-fill-available] bg-indigo-600 hover:bg-indigo-500 text-white hover:text-white'>Save</Button>
-          </div>
-          <DrawerClose className='w-100%' asChild>
-              <Button variant="outline" className='w-[-webkit-fill-available]'>Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter>
-      </div>
+    <DrawerContent className="bg-[url('public/images/form_bg.png')] bg-bottom bg-cover flex flex-col items-center">
+      {calendars && (
+        <div className="max-w-lg px-[20px] pt-[10px] pb-[40px] bg-[#f8f8f8a0] rounded-tl-[10px] rounded-tr-[10px] mt-[10px] backdrop-blur-[10px]">
+          <DrawerHeader>
+            <DrawerTitle>
+              <input type='text' value={title} onChange={handleTitleChange} className='outline-none bg-transparent text-[40px]' autoFocus />
+            </DrawerTitle>
+            <DrawerDescription className='mt-[5px]'>
+              <input type='text' value={description} placeholder='Description' onChange={handleDescriptionChange} className='outline-none bg-transparent text-[16px] text-black' />
+            </DrawerDescription>
+          </DrawerHeader>
+          <Separator className='h-[1px] bg-black opacity-10' />
+          <table className=' border-separate border-spacing-[10px] py-[10px]'>
+            <tbody>
+              <tr>
+                <td className='text-right'><Label>Duration: </Label></td>
+                <td><DatePickerWithRange bgColor={'#ffffffab'} className={'w-max'} date={date} setDate={setDate} /></td>
+              </tr>
+              <tr>
+                <td className='text-right'><Label>Type: </Label></td>
+                <td><ComboboxPopover buttonColor={'bg-[#ffffffab]'} statuses={enumEventTypesArray} placeholder={'Set type'} selectedStatusName={enumEventTypes[type]?.title} selectedStatus={type} setSelectedStatus={setType} /></td>
+              </tr>
+              <tr>
+                <td className='text-right'><Label>Calendar: </Label></td>
+                <td><ComboboxPopover buttonColor={'bg-[#ffffffab]'} statuses={calendars} placeholder={'Set calendar'} selectedStatusName={selectedCalendar?.name || calendars[0].calendar.name} selectedStatus={selectedCalendar} setSelectedStatus={setEventCalendar} /></td>
+              </tr>
+            </tbody>
+          </table>
+          <Separator className='h-[1px] bg-black opacity-10' />
+          <DrawerFooter>
+            <div className='flex gap-[20px] justify-between w-[100%]' onClick={handleSave} >
+              <Button variant="outline" className='w-[-webkit-fill-available] bg-indigo-600 hover:bg-indigo-500 text-white hover:text-white'>Save</Button>
+            </div>
+          </DrawerFooter>
+        </div>
+      )}
     </DrawerContent>
   )
 }

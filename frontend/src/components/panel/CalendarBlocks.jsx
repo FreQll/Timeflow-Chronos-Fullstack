@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import RadioInput from '../RadioInput'
 import { Button } from '../ui/button'
 import { enumEventTypes } from '../../../helper/enumEventTypes'
@@ -9,9 +9,11 @@ import { Label } from '../ui/label'
 import { Checkbox } from '../ui/checkbox'
 import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
 import AddCalendar from '@/pages/AddCalendar'
+import axios from '../../../API/axios'
 
 const CalendarBlocks = ({ calendars, activeCalendar, changeActiveEventTypes, changeActiveCalendar }) => {
     const user = savedState.user;
+    const [ defaultCalendar, setDefaultCalendar ] = useState();
 
     const clickCheckboxEventTypes = (keyTitle) => {
         changeActiveEventTypes(keyTitle);
@@ -21,22 +23,37 @@ const CalendarBlocks = ({ calendars, activeCalendar, changeActiveEventTypes, cha
         changeActiveCalendar(calendarId)
     }
 
+    const getDefaultCalendar = async () => {
+        try {
+          const response = await axios.get(`/api/calendar/${user.id}`, { withCredentials: true });
+          setDefaultCalendar(response.data[0].calendar)
+        } catch (error) {
+          console.log('Error getting calendars');
+        }
+    }
+
+    useEffect(() => {
+        getDefaultCalendar();
+    }, [])
+
     return (
         <div className='flex flex-col gap-[15px]'>
             <div className='flex flex-col gap-[15px] p-[10px] rounded-[10px] bg-[#ffffff99]'>
                 <div className='flex flex-col gap-[10px] w-[100%]'>
                     <h3 className='opacity-50'>Calendars</h3>
 
-                    <RadioGroup defaultValue={activeCalendar.name} className='flex max-w-[100%] flex-col gap-0'>
-                        {calendars?.map(element => (
-                            <div key={element.calendar.id} className="flex items-center space-x-2 max-w-[100%]" onClick={() => clickCheckboxCalendars(element.calendar.id)}>
-                                <RadioGroupItem value={element.calendar.name} id={element.calendar.name} style={{ backgroundColor: element.calendar.color }} className={`rounded-[4px] text-white border-0 box_shadow`} />
-                                <div  className='text-ellipsis max-w-[100%] overflow-hidden'>
-                                    <Label htmlFor={`'${element.calendar.name}'`}>{element.calendar.name}</Label>
+                    {calendars && (
+                        <RadioGroup defaultValue={calendars[0].calendar.name} className='flex max-w-[100%] flex-col gap-0'>
+                            {calendars.map(element => (
+                                <div key={element.calendar.id} className="flex items-center space-x-2 max-w-[100%]" onClick={() => clickCheckboxCalendars(element.calendar.id)}>
+                                    <RadioGroupItem value={element.calendar.name} id={element.calendar.name} style={{ backgroundColor: element.calendar.color }} className={`rounded-[4px] text-white border-0 box_shadow`} />
+                                    <div  className='text-ellipsis max-w-[100%] overflow-hidden'>
+                                        <Label htmlFor={element.calendar.name}>{element.calendar.name}</Label>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </RadioGroup>
+                            ))}
+                        </RadioGroup>
+                    )}
                 </div>
                 
 

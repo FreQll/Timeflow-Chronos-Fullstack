@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import axios, { GET_CONFIG } from '../../../API/axios';
-import { cutString } from '../../../helper/stringFunc';
+import axios, { GET_CONFIG, POST_CONFIG } from '../../../API/axios';
+import { cutString, objToJson } from '../../../helper/stringFunc';
 import { Drawer, DrawerContent, DrawerTrigger } from '../ui/drawer';
 import EventDetails from './EventDetails';
 import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover'
 import { useLocation } from 'react-router-dom';
+import { formatDate } from '../../../helper/momentFunc';
 
 const EventsList = ({ date, currentEvent, setCurrentEvent, activeEventTypes, calendarId, calendars, selectedCalendar }) => {
     const [ events, setEvents ] = useState();
     const location = useLocation();
 
     const getEventByDay = async (date) => {
-        const response = await axios.get(`/api/calendar/events/${calendarId}?startDay=${date.format}&endDay=${date}&timeSegment=day`, GET_CONFIG);
-        if (response) { setEvents(response.data); } 
-        else { console.log('Error getting day events'); }
+        try {
+            const response = await axios.get(`/api/calendar/getEventsByTime/${calendarId}?startDate=${formatDate(date, 'DD-MM-YYYY')}&endDate=${formatDate(date, 'DD-MM-YYYY')}`, GET_CONFIG);
+            if (response) { setEvents(response.data); } 
+        } catch (error) {
+            console.log('Error getting day events'); 
+        }
     }
 
     const getEventById = async (id) => {

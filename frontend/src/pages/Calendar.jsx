@@ -36,9 +36,12 @@ const Calendar = ({ activeEventTypes, calendar, calendars }) => {
             startDay: startDay,
             endDay: endDay
         }
-        const response = await axios.get(`/api/calendar/events/${calendar.id}`, { withCredentials: true, options });
-        if (response) { setEvents(response.data); } 
-        else { console.log('Error getting calendar events'); }
+        try {
+            const response = await axios.get(`/api/calendar/allEvents/${calendar.id}`, { withCredentials: true, options });
+            if (response) { setEvents(response.data); } 
+        } catch (error) {
+            console.log('Error getting calendar events');
+        }
     }
 
     const handleOpenAddEvent = () => {

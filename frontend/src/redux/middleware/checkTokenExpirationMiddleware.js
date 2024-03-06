@@ -3,7 +3,7 @@ import { savedState } from "../store"
 const checkTokenExpirationMiddleware = store => next => action => {
     console.log('CheckToken');
     if (action.type === 'CHECK_TOKEN_EXPIRATION') {
-        if (savedState.isAuth) {
+        if (savedState?.isAuth) {
             const tokenExpiration = Cookies.get('token');
             const currentTime = new Date().getTime();
             if (currentTime > tokenExpiration) {

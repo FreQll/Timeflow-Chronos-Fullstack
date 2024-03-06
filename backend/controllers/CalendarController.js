@@ -89,13 +89,17 @@ export const getCalendarEventsByTime = async (req, res) => {
   //   moment(endDate, "DD-MM-YYYY").toISOString()
   // );
 
+  console.log('\nDATE:');
+  console.log(moment(startDate, "DD-MM-YYYY").toDate());
+  console.log(moment(endDate, "DD-MM-YYYY").toDate());
+
   const calendarEvents = await prisma.calendarEvents.findMany({
     where: {
       calendarId: calendarId,
       event: {
         AND: [
-          { start: { gte: moment(startDate, "DD-MM-YYYY").toISOString() } },
-          { end: { lte: moment(endDate, "DD-MM-YYYY").toISOString() } },
+          { start: { lte: moment(endDate, "DD-MM-YYYY").add(1, 'day').toISOString() } }, 
+          { end: { gte: moment(startDate, "DD-MM-YYYY").toISOString() } },
         ],
       },
     },
