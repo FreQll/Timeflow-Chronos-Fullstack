@@ -32,6 +32,18 @@ const CalendarBlocks = ({ calendars, activeCalendar, changeActiveEventTypes, cha
         }
     }
 
+    const handleContextMenu = (event) => {
+        event.preventDefault();
+        console.log('open');
+      };
+    
+      // Обработчик для открытия дропдаун меню при касании на тачпаде двумя пальцами
+      const handleTouchStart = (event) => {
+        if (event.touches.length === 2) {
+            console.log('open');
+        }
+      };
+
     useEffect(() => {
         getDefaultCalendar();
     }, [])
@@ -45,7 +57,7 @@ const CalendarBlocks = ({ calendars, activeCalendar, changeActiveEventTypes, cha
                     {calendars && (
                         <RadioGroup defaultValue={calendars[0].calendar.name} className='flex max-w-[100%] flex-col gap-0'>
                             {calendars.map(element => (
-                                <div key={element.calendar.id} className="flex items-center space-x-2 max-w-[100%]" onClick={() => clickCheckboxCalendars(element.calendar.id)}>
+                                <div key={element.calendar.id} className="flex items-center space-x-2 max-w-[100%]" onClick={() => clickCheckboxCalendars(element.calendar.id)} onContextMenu={handleContextMenu} onTouchStart={handleTouchStart}>
                                     <RadioGroupItem value={element.calendar.name} id={element.calendar.name} style={{ backgroundColor: element.calendar.color }} className={`rounded-[4px] text-white border-0 box_shadow`} />
                                     <div  className='text-ellipsis max-w-[100%] overflow-hidden'>
                                         <Label htmlFor={element.calendar.name}>{element.calendar.name}</Label>

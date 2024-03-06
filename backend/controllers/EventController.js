@@ -200,7 +200,7 @@ export const createEvent = async (req, res) => {
 
 export const updateEvent = async (req, res) => {
   const eventId = req.params.id;
-  const { name, color, content, start, end, type } = req.body;
+  const { name, color, content, start, end, type, calendarId } = req.body;
 
   const event = await prisma.event.update({
     where: {
@@ -216,7 +216,16 @@ export const updateEvent = async (req, res) => {
     },
   });
 
-  return res.status(200).json(event);
+  const calendarEvent = await prisma.calendarEvents.updateMany({
+    where: {
+      eventId: eventId,
+    },
+    data: {
+      calendarId: calendarId
+    }
+  });
+
+  return res.status(200).json({event: event, calendarId: calendarId});
 };
 
 export const deleteEvent = async (req, res) => {

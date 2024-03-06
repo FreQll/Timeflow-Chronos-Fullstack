@@ -41,7 +41,7 @@ const authReducer = (state = initialState, action) => {
     }
 }
 
-const hasTokenExpired = (token) => {
+const hasTokenExpired = () => {
     const expirationDate = new Date(Cookies.get('token'));
     return expirationDate < new Date();
   };

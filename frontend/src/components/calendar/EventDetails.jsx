@@ -17,6 +17,7 @@ import { TrashIcon } from "@radix-ui/react-icons"
 const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
     const [ newTitle, setNewTitle ] = useState(currentEvent?.name);
     const [ newDescription, setNewDescription ] = useState(currentEvent?.content);
+    const [ eventCalendar, setEventCalendar ] = useState(selectedCalendar);
     const navigate = useNavigate();
 
     const [ type, setType ] = useState(currentEvent.type);
@@ -25,15 +26,15 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
         to: currentEvent.end,
     });
 
-    const setEventCalendar = async (calendar) => {
+    const setCalendar = async (calendar) => {
       const response = await axios.get(`/api/calendar/calendarInfo/${calendar.calendar.id}`, { withCredentials: true });
-      console.log(response);
-      if (response) { console.log(response); setSelectedCalendar(response.data); } 
+      if (response) { console.log(response); setEventCalendar(response.data); } 
       else { console.log('Error creating event'); }
     }
 
     const updateData = async (data) => {
       const response = await axios.patch(`/api/event/${currentEvent.id}`, data, POST_CONFIG);
+      console.log(response);
       if (response) navigate('/')
     }
 
@@ -62,6 +63,23 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
       updateData(data);
     } 
 
+    const handleTypeChange = (e) => {
+      setType(e);
+      const data = {
+        type: e.key,
+      }
+      updateData(data);
+    }
+
+    const handleCalendarChange = (e) => {
+      console.log(e);
+      setEventCalendar(e);
+      const data = {
+        calendarId: eventCalendar?.id
+      }
+      updateData(data);
+    }
+
     const eventDelete = async () => {
       const response = await axios.delete(`api/event/${currentEvent.id}`, GET_CONFIG)
       if (response.status == 200) navigate('/')
@@ -86,11 +104,11 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
           <div className="grid gap-2">
             <div className="grid grid-cols-3 items-center gap-4">
               <Label htmlFor="type">Type</Label>
-              <ComboboxPopover id='type' statuses={enumEventTypesArray} title={'Set type'} selectedStatus={type} setSelectedStatus={setType} buttonColor={'bg-white'} />
+              <ComboboxPopover id='type' statuses={enumEventTypesArray} title={'Set type'} selectedStatus={type} setSelectedStatus={handleTypeChange} buttonColor={'bg-white'} />
             </div>
             <div className="grid grid-cols-3 items-center gap-4">
               <Label htmlFor="calendar">Calendar</Label>
-              <ComboboxPopover id='calendar' statuses={calendars} title={'Set calendar'} selectedStatus={selectedCalendar} setSelectedStatus={setEventCalendar} buttonColor={'bg-white'} />
+              <ComboboxPopover id='calendar' statuses={calendars} title={'Set calendar'} selectedStatus={eventCalendar} setSelectedStatus={handleCalendarChange} buttonColor={'bg-white'} />
             </div>
           </div>
         </div>

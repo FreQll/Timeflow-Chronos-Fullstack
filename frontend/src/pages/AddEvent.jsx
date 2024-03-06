@@ -19,7 +19,7 @@ import { Separator } from '@radix-ui/react-separator';
 const AddEvent = ({ handleOpenAddEvent, calendars }) => {
   const user = savedState?.user;
   const navigate = useNavigate();
-  
+
   const [ title, setTitle ] = useState('New event');
   const [ description, setDescription ] = useState('');
   const [ type, setType] = useState(enumEventTypes['ARRANGEMENT']);
@@ -47,10 +47,11 @@ const AddEvent = ({ handleOpenAddEvent, calendars }) => {
   }
 
   const handleSave = async () => {
+    console.log(type);
     const options = {
       name: title,
       content: description,
-      type: type?.key,
+      type: type?.key || type.title.toUpperCase(),
       start: date.from,
       end: date.to,
       color: color,

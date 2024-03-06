@@ -10,11 +10,13 @@ import ButtonBlue from '@/components/buttons/ButtonBlue'
 import axios, { POST_CONFIG } from '../../API/axios'
 import { savedState } from '@/redux/store'
 import { DialogClose } from '@radix-ui/react-dialog'
+import { useNavigate } from 'react-router-dom'
 
 const AddCalendar = () => {
     const [ title, setTitle ] = useState('New calendar');
     const [ description, setDescription ] = useState('');
     const [ color, setColor ] = useState('#1677ff');
+    const navigate = useNavigate();
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value)
@@ -33,7 +35,7 @@ const AddCalendar = () => {
         }
 
         const response = await axios.post('/api/calendar', data, POST_CONFIG);
-        console.log(response);
+        if (response) navigate('/');
     }
 
     return (
