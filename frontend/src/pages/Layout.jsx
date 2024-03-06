@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { createContext, useEffect, useState } from 'react';
 import Panel from '../components/panel/Panel';
-import Monitor from '../components/Monitor';
+import Monitor from '../components/calendar/Monitor';
 import {
     ResizableHandle,
     ResizablePanel,
@@ -20,7 +20,7 @@ const Layout = ({ calendars, changeActiveEventTypes, activeCalendar, changeActiv
                     direction="horizontal"
                     className="min-h-[200px]"
                 >
-                    <ResizablePanel defaultSize={25} minSize={20} maxSize={30}>
+                    <ResizablePanel defaultSize={20} minSize={15} maxSize={25}>
                         <Panel calendars={calendars} changeActiveEventTypes={changeActiveEventTypes} activeCalendar={activeCalendar} changeActiveCalendar={changeActiveCalendar} />
                     </ResizablePanel>
                     <ResizableHandle withHandle className={'bg-white'} />

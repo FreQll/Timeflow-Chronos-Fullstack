@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import './App.css'
 import Calendar from './pages/Calendar';
 import { Routes, Route } from 'react-router-dom';
@@ -9,17 +9,23 @@ import axios from '../API/axios';
 import Auth from './pages/Auth';
 import store, { savedState } from './redux/store';
 import ErrorPage from './pages/ErrorPage';
+import { enumEventTypes, enumEventTypesArray } from '../helper/enumEventTypes';
+import { checkTokenExpiration } from './redux/actions/authActions';
 
 function App() {
   const user = savedState?.user;
+  const dispatch = useDispatch();
 
   const [ calendars, setCalendars ] = useState();
-  const [ activeEventTypes, setActiveEventTypes ] = useState([]);
+  const [ activeEventTypes, setActiveEventTypes ] = useState(() =>
+    Object.entries(enumEventTypes).map(([key]) => (key))
+  );
   const [ activeCalendar, setActiveCalendar ] = useState([]);
 
   const getCalendarsByUserId = async (userId) => {
     try {
       const response = await axios.get(`/api/calendar/${userId}`, { withCredentials: true });
+      console.log(response);
       setCalendars(response.data);
       setActiveCalendar(response.data[0].calendar)
     } catch (error) {
@@ -45,8 +51,7 @@ function App() {
   }
 
   useEffect(() => {
-    // const calendar_id = 
-    console.log(user);
+    dispatch(checkTokenExpiration());
     getCalendarsByUserId(user.id);
     // setActiveCalendar()
   }, [])

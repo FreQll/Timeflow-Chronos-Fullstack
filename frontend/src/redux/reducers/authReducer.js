@@ -1,3 +1,6 @@
+import { savedState } from "../store";
+import Cookies from 'js-cookie';
+
 const initialState = {
     isAuth: false,
     user: {
@@ -27,9 +30,20 @@ const authReducer = (state = initialState, action) => {
         case 'LOGOUT':
             localStorage.removeItem('authState');
             return initialState;
+        case 'CHECK_TOKEN_EXPIRATION':
+            if (hasTokenExpired()) {
+                localStorage.removeItem('authState');
+                return initialState;
+            }
+            return state;
         default:
             return state;
     }
 }
+
+const hasTokenExpired = (token) => {
+    const expirationDate = new Date(Cookies.get('token'));
+    return expirationDate < new Date();
+  };
 
 export default authReducer;
