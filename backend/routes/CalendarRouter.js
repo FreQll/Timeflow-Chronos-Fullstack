@@ -13,9 +13,9 @@ import { isAuth } from "../middleware/isAuth.js";
 
 const router = Router();
 
-router.get("/:id", getUserCalendars);
-router.get("/calendarInfo/:calendarId", getCalendarById);
-router.get("/events/:id", getCalendarEvents);
+router.get("/:id", isAuth, getUserCalendars);
+router.get("/calendarInfo/:calendarId", isAuth, getCalendarById);
+router.get("/events/:id", isAuth, getCalendarEvents);
 router.get("/addUserToCalendar/:id/:token", confirmAddingToCalendar);
 router.post("/", isAuth, createCalendar);
 router.post("/addUserToCalendar", isAuth, addUserToCalendar);

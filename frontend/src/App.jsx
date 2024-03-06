@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import './App.css'
 import Calendar from './pages/Calendar';
 import { Routes, Route } from 'react-router-dom';
@@ -10,9 +10,11 @@ import Auth from './pages/Auth';
 import store, { savedState } from './redux/store';
 import ErrorPage from './pages/ErrorPage';
 import { enumEventTypes, enumEventTypesArray } from '../helper/enumEventTypes';
+import { checkTokenExpiration } from './redux/actions/authActions';
 
 function App() {
   const user = savedState?.user;
+  const dispatch = useDispatch();
 
   const [ calendars, setCalendars ] = useState();
   const [ activeEventTypes, setActiveEventTypes ] = useState(() =>
@@ -49,8 +51,7 @@ function App() {
   }
 
   useEffect(() => {
-    // const calendar_id = 
-    console.log(user);
+    dispatch(checkTokenExpiration());
     getCalendarsByUserId(user.id);
     // setActiveCalendar()
   }, [])

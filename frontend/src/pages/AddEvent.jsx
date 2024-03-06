@@ -34,7 +34,7 @@ const AddEvent = ({ handleOpenAddEvent, calendars }) => {
   const setEventCalendar = async (calendar) => {
     if (calendar) {
       const response = await axios.get(`/api/calendar/calendarInfo/${calendar.calendar.id}`, { withCredentials: true });
-      if (response) { console.log(response); setSelectedCalendar(response.data); } 
+      if (response) { setSelectedCalendar(response.data); } 
       else { console.log('Error creating event'); }
     }
   }
@@ -60,8 +60,11 @@ const AddEvent = ({ handleOpenAddEvent, calendars }) => {
     }
     
     try {
-      await axios.post(`/api/event`, objToJson(options), POST_CONFIG);
-      navigate('/');
+      const resp = await axios.post(`/api/event`, objToJson(options), POST_CONFIG);
+      if (resp) {
+        console.log(resp);
+        navigate('/');
+      }
     } catch (error) {
     }
   }

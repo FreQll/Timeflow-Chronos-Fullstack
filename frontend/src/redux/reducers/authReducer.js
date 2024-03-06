@@ -1,4 +1,5 @@
 import { savedState } from "../store";
+import Cookies from 'js-cookie';
 
 const initialState = {
     isAuth: false,
