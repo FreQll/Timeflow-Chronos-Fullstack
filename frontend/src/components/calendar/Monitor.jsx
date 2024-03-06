@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
-import { enumScheduleModes } from '../../helper/enumScheduleModes';
+import { enumScheduleModes } from '../../../helper/enumScheduleModes';
 import { Link } from 'react-router-dom';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import { connect } from 'react-redux';
-import { savedState } from '../redux/store';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import Dropdown from './profile/Dropdown';
-import ButtonBlue from './buttons/ButtonBlue';
+import { savedState } from '../../redux/store';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import Dropdown from '../profile/Dropdown';
+import ButtonBlue from '../buttons/ButtonBlue';
+import { Drawer, DrawerContent, DrawerTrigger } from '../ui/drawer';
+import AddEvent from '@/pages/AddEvent';
 // import Button from './Button';
 
-const Monitor = ({ today, prevHandler, todayHandler, nextHandler, handleOpenAddEvent }) => {
-
+const Monitor = ({ today, prevHandler, todayHandler, nextHandler, handleOpenAddEvent, calendar, calendars }) => {
     const [ menuViewOpen, setMenuViewOpen ] = useState(false);
     const [ scheduleMode, setScheduleMode ] = useState(enumScheduleModes.MONTH);
 
@@ -72,7 +73,12 @@ const Monitor = ({ today, prevHandler, todayHandler, nextHandler, handleOpenAddE
                         )}
                     </div>
                     <div className="ml-6 h-6 w-px bg-gray-300"></div>
-                    <ButtonBlue text={'Add event'} onClick={handleOpenAddEvent} />
+                    <Drawer>
+                        <DrawerTrigger asChild>
+                            <ButtonBlue text={'Add event'} onClick={handleOpenAddEvent} />
+                        </DrawerTrigger>
+                        <AddEvent calendars={calendars} />
+                    </Drawer>
                 </div>
 
                 <div className="relative ml-6 md:hidden">

@@ -8,12 +8,12 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverTrigger, PopoverContent } from "./ui/popover"
 import moment from "moment"
 
-const DatePickerWithRange = ({ className, date, setDate }) => {
+const DatePickerWithRange = ({ className, date, setDate, onChange, bgColor }) => {
   
   return (
-    <div className={cn("grid gap-2", className)}>
+    <div className={cn("grid gap-2", className,)}>
       <Popover>
-        <PopoverTrigger asChild>
+        <PopoverTrigger style={{ backgroundColor: bgColor }} asChild>
           <Button
             id="date"
             variant={"outline"}
@@ -45,6 +45,7 @@ const DatePickerWithRange = ({ className, date, setDate }) => {
             selected={date}
             onSelect={setDate}
             numberOfMonths={2}
+            onClick={onChange}
           />
         </PopoverContent>
       </Popover>

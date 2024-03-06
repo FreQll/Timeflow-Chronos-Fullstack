@@ -13,9 +13,9 @@ import { isAuth } from "../middleware/isAuth.js";
 
 const router = Router();
 
-router.get("/", getAllEvents);
-router.get("/eventInfo/:eventId", getEventById);
-router.get("/:id", getUserEvents);
+router.get("/", isAuth, getAllEvents);
+router.get("/eventInfo/:eventId", isAuth, getEventById);
+router.get("/:id", isAuth, getUserEvents);
 router.post("/addUserToEvent/:id/:token", isAuth, confirmAddingUserToEvent);
 router.post("/", isAuth, createEvent);
 router.post("/addUserToEvent", isAuth, addUserToEvent);

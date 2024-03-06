@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import Monitor from '../components/Monitor'
-import ScheduleHeader from '../components/ScheduleHeader'
-import Grid from '../components/Grid'
+import Monitor from '../components/calendar/Monitor'
+import ScheduleHeader from '../components/calendar/ScheduleHeader'
+import Grid from '../components/calendar/Grid'
 import moment from 'moment/moment'
 import { getStartAndEndDateOfCalendar, getTodayDate } from '../../helper/momentFunc';
 import axios from '../../API/axios';
-import EventDetails from '../components/EventDetails'
+import EventDetails from '../components/calendar/EventDetails'
 import AddEvent from './AddEvent'
 import { Input } from '@/components/ui/input'
 
@@ -36,9 +36,12 @@ const Calendar = ({ activeEventTypes, calendar, calendars }) => {
             startDay: startDay,
             endDay: endDay
         }
-        const response = await axios.get(`/api/calendar/events/${calendar.id}`, { withCredentials: true, options });
-        if (response) { setEvents(response.data); } 
-        else { console.log('Error getting calendar events'); }
+        try {
+            const response = await axios.get(`/api/calendar/allEvents/${calendar.id}`, { withCredentials: true, options });
+            if (response) { setEvents(response.data); } 
+        } catch (error) {
+            console.log('Error getting calendar events');
+        }
     }
 
     const handleOpenAddEvent = () => {
@@ -51,16 +54,18 @@ const Calendar = ({ activeEventTypes, calendar, calendars }) => {
 
     return (
         <div className='flex w-[-webkit-fill-available] h-[-webkit-fill-available]'>
-            {isAddEventOpen && (
+            {/* {isAddEventOpen && (
                 <AddEvent handleOpenAddEvent={handleOpenAddEvent} calendar={calendar} calendars={calendars} />
-            )}
+            )} */}
             <div className="lg:flex lg:flex-col lg:h-full w-[-webkit-fill-available]">
                 <Monitor
                     today={today}
                     prevHandler={prevHandler}
                     todayHandler={todayHandler}
                     nextHandler={nextHandler}
-                    handleOpenAddEvent={handleOpenAddEvent} />
+                    handleOpenAddEvent={handleOpenAddEvent}
+                    calendar={calendar} 
+                    calendars={calendars} />
                 <div className="shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col relative">
                     <ScheduleHeader />
                     <div className="flex bg-gray-200 text-xs leading-6 text-gray-700 lg:flex-auto">
@@ -71,7 +76,8 @@ const Calendar = ({ activeEventTypes, calendar, calendars }) => {
                             currentEvent={currentEvent}
                             setCurrentEvent={setCurrentEvent}
                             activeEventTypes={activeEventTypes}
-                            calendarId={calendar.id} />
+                            calendars={calendars} 
+                            selectedCalendar={calendar} />
                     </div>
                 </div>
                 {/* {currentEvent && (

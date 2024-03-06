@@ -34,7 +34,8 @@ const SignIn = ({ active, handleClick }) => {
       const response = await axios.post(`/api/auth/login`, objToJson(data), POST_CONFIG);
       if (response) {
         dispatch(login(response.data.user));
-        if (savedState.isAuthenticated) navigate('/');
+        console.log(savedState);
+        if (savedState?.isAuthenticated) navigate('/');
       }
     } catch (error) {
       console.log(error);
