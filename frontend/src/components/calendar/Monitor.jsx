@@ -7,7 +7,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import Dropdown from '../profile/Dropdown';
 import ButtonBlue from '../buttons/ButtonBlue';
 import { Drawer, DrawerContent, DrawerTrigger } from '../ui/drawer';
-import AddEvent from '@/pages/AddEvent';
+import AddEvent from '@/components/calendar/AddEvent';
+import { Dialog, DialogTrigger } from '@radix-ui/react-dialog';
+import EditCalendar from './EditCalendar';
 // import Button from './Button';
 
 const Monitor = ({ today, prevHandler, todayHandler, nextHandler, handleOpenAddEvent, calendar, calendars }) => {

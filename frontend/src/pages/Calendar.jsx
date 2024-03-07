@@ -6,7 +6,7 @@ import moment from 'moment/moment'
 import { getStartAndEndDateOfCalendar, getTodayDate } from '../helper/momentFunc';
 import axios from '../../API/axios';
 import EventDetails from '../components/calendar/EventDetails'
-import AddEvent from './AddEvent'
+import AddEvent from '../components/calendar/AddEvent'
 import { Input } from '@/components/ui/input'
 
 const Calendar = ({ activeEventTypes, calendar, calendars }) => {

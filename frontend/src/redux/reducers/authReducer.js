@@ -24,8 +24,6 @@ const authReducer = (state = initialState, action) => {
               }
             };
             localStorage.setItem('authState', JSON.stringify(newState));
-            const token = Cookies.get('token');
-            console.log(token);
             return newState;
         case 'LOGOUT':
             localStorage.removeItem('authState');

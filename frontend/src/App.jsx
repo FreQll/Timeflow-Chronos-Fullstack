@@ -4,7 +4,7 @@ import './App.css'
 import Calendar from './pages/Calendar';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Layout from './pages/Layout';
-import AddEvent from './pages/AddEvent';
+import AddEvent from './components/calendar/AddEvent';
 import axios from '../API/axios';
 import Auth from './pages/Auth';
 import store, { getSavedState } from './redux/store';
@@ -53,7 +53,7 @@ function App() {
   useEffect(() => {
     dispatch(checkTokenExpiration());
     if (user) getCalendarsByUserId(user.id);
-  }, [])
+  }, [location])
 
   return (
     <Routes>

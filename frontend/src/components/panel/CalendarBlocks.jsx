@@ -8,8 +8,11 @@ import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import { Label } from '../ui/label'
 import { Checkbox } from '../ui/checkbox'
 import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
-import AddCalendar from '@/pages/AddCalendar'
+import AddCalendar from '@/components/calendar/AddCalendar'
 import axios from '../../../API/axios'
+import { Popover, PopoverTrigger, PopoverContent } from '@radix-ui/react-popover'
+import EditCalendar from '../calendar/EditCalendar'
+import { Pencil1Icon } from "@radix-ui/react-icons"
 
 const CalendarBlocks = ({ calendars, activeCalendar, changeActiveEventTypes, changeActiveCalendar }) => {
     const user = getSavedState()?.user;
@@ -33,16 +36,11 @@ const CalendarBlocks = ({ calendars, activeCalendar, changeActiveEventTypes, cha
           console.log('Error getting calendars');
         }
     }
-
-    const handleContextMenu = (event) => {
-        event.preventDefault();
-        console.log('open');
-      };
     
       // Обработчик для открытия дропдаун меню при касании на тачпаде двумя пальцами
       const handleTouchStart = (event) => {
         if (event.touches.length === 2) {
-            console.log('open');
+            console.log(event.target);
         }
       };
 
@@ -59,18 +57,27 @@ const CalendarBlocks = ({ calendars, activeCalendar, changeActiveEventTypes, cha
                     {calendars && (
                         <RadioGroup defaultValue={calendars[0].calendar.id} className='flex max-w-[100%] flex-col gap-0'>
                             {calendars.map(element => (
-                                <div key={element.calendar.id} className="flex items-center space-x-2 max-w-[100%]" onClick={() => clickCheckboxCalendars(element.calendar.id)} onContextMenu={handleContextMenu} onTouchStart={handleTouchStart}>
-                                    <RadioGroupItem value={element.calendar.id} id={element.calendar.name} style={{ backgroundColor: element.calendar.color }} className={`rounded-[4px] text-white border-0 box_shadow`} />
-                                    <div  className='text-ellipsis max-w-[100%] overflow-hidden'>
-                                        <Label htmlFor={element.calendar.name}>{element.calendar.name}</Label>
-                                    </div>
-                                </div>
+                                <Popover key={element.calendar.id}>
+                                        <div className="flex items-center justify-between max-w-[100%]" onClick={() => clickCheckboxCalendars(element.calendar.id)} onContextMenu={(event) => handleContextMenu(event, element.calendar)} onTouchStart={handleTouchStart}>
+                                            <div className='flex items-center gap-[10px] max-w-[90%]'>
+                                                <RadioGroupItem value={element.calendar.id} id={element.calendar.name} style={{ backgroundColor: element.calendar.color }} className={`rounded-[4px] text-white border-0 box_shadow`} />
+                                                <div  className='text-ellipsis max-w-[100%] overflow-hidden'>
+                                                    <Label htmlFor={element.calendar.name}>{element.calendar.name}</Label>
+                                                </div>
+                                            </div>
+                                            <PopoverTrigger asChild>
+                                                <Pencil1Icon className='cursor-pointer' />
+                                            </PopoverTrigger>
+                                        </div>
+                                    <PopoverContent className="ml-[40%] w-fit z-[20] bg-gray-100 border border-gray-400 rounded-[10px] p-[20px] box_shadow">
+                                        <EditCalendar calendar={element.calendar} />
+                                    </PopoverContent>
+                                </Popover>
                             ))}
                         </RadioGroup>
                     )}
                 </div>
                 
-
                 <Dialog>
                     <DialogTrigger asChild>
                         <ButtonBlue text={'New calendar'} />

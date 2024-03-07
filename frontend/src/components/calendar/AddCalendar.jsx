@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea'
 import React, { useState } from 'react'
 import { ColorPicker } from 'antd';
 import ButtonBlue from '@/components/buttons/ButtonBlue'
-import axios, { POST_CONFIG } from '../../API/axios'
+import axios, { POST_CONFIG } from '../../../API/axios'
 import { getSavedState } from '@/redux/store'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { useNavigate } from 'react-router-dom'
@@ -50,7 +50,7 @@ const AddCalendar = () => {
                                 <td className='text-right pr-[10px]'><Label htmlFor="title" className=''>Title</Label></td>
                                 <td className='flex gap-[5px] justify-between items-center'>
                                     <Input type='text' id='title' value={title} onChange={handleTitleChange} className='outline-none bg-transparent text-black w-auto' autoFocus />
-                                    <input type="color" class="h-7 w-6 block cursor-pointer rounded-[20px] bg-transparent disabled:opacity-50 disabled:pointer-events-none overflow-hidden" id="hs-color-input" value={color} onChange={(e) => {setColor(e.target.value)}} title="Choose your color"></input>
+                                    <input type="color" className="h-7 w-6 block cursor-pointer rounded-[20px] bg-transparent disabled:opacity-50 disabled:pointer-events-none overflow-hidden" id="hs-color-input" value={color} onChange={(e) => {setColor(e.target.value)}} title="Choose your color"></input>
                                 </td>
                             </tr>
                             <tr className=''>
