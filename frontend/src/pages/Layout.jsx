@@ -8,10 +8,10 @@ import {
     ResizablePanelGroup,
   } from "../components/ui/resizable"
 import ErrorPage from './ErrorPage';
-import { savedState } from '../redux/store';
+import { getSavedState } from '../redux/store';
 
 const Layout = ({ calendars, changeActiveEventTypes, activeCalendar, changeActiveCalendar }) => {
-  const isAuth = savedState?.isAuthenticated;
+  const isAuth = getSavedState()?.isAuthenticated;
 
   return (
         <div className='w-[100vw] h-[100vh]'>

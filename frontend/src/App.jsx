@@ -7,13 +7,13 @@ import Layout from './pages/Layout';
 import AddEvent from './pages/AddEvent';
 import axios from '../API/axios';
 import Auth from './pages/Auth';
-import store, { savedState } from './redux/store';
+import store, { getSavedState } from './redux/store';
 import ErrorPage from './pages/ErrorPage';
-import { enumEventTypes, enumEventTypesArray } from '../helper/enumEventTypes';
+import { enumEventTypes, enumEventTypesArray } from './helper/enumEventTypes';
 import { checkTokenExpiration } from './redux/actions/authActions';
 
 function App() {
-  const user = savedState?.user;
+  const user = getSavedState()?.user;
   const dispatch = useDispatch();
   const location = useLocation();
 

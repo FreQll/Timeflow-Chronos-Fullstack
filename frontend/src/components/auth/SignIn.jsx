@@ -4,10 +4,12 @@ import { Input } from '../ui/input'
 import ButtonGradient from '../buttons/ButtonGradient'
 import ButtonUnderscore from '../buttons/ButtonUnderscore'
 import axios, { GET_CONFIG, POST_CONFIG } from '../../../API/axios'
-import { objToJson } from '../../../helper/stringFunc'
+import { objToJson } from '../../helper/stringFunc'
 import { login } from '../../redux/actions/authActions';
 import { useNavigate } from 'react-router-dom';
-import { savedState } from '@/redux/store';
+import { getSavedState } from '@/redux/store';
+import { Button } from '../ui/button';
+import { toastError, toastMessage, toastSuccess } from '@/helper/toastrFunctions';
 
 const SignIn = ({ active, handleClick }) => {
   const dispatch = useDispatch();
@@ -34,11 +36,12 @@ const SignIn = ({ active, handleClick }) => {
       const response = await axios.post(`/api/auth/login`, objToJson(data), POST_CONFIG);
       if (response) {
         dispatch(login(response.data.user));
-        console.log(savedState);
-        if (savedState?.isAuthenticated) navigate('/');
+        console.log(getSavedState());
+        if (getSavedState().isAuthenticated) navigate('/');
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data.message);
+      toastError(error.response.data.message)
     }
 
   }
@@ -56,10 +59,10 @@ const SignIn = ({ active, handleClick }) => {
           <Input type="email" onChange={handleChangeEmail} placeholder="Email" className='w-[100%]' />
           <Input type="password" onChange={handleChangePassword} placeholder="Password" className='w-[100%]' />
         </div>             
-        <div type='submit' onClick={() => handleClick('reset_password')}>
-          <ButtonUnderscore text={'Forgot your password?'} className={'text-[#7B6CEA] p-0 h-auto'} />
+        <div onClick={() => handleClick('reset_password')}>
+          <ButtonUnderscore type="button" text={'Forgot your password?'} className={'text-[#7B6CEA] p-0 h-auto'} />
         </div>
-        <ButtonGradient type='submit' text={'Sign in'} className={'w-[100px]'} />
+        <ButtonGradient type='submit' text={'Sign in'} className={'w-[100px]'}  />
       </form>
     </div>
   )

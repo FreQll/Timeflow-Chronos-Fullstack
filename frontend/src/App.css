@@ -27,3 +27,7 @@
   border: 1px solid #7B6CEA;
   color: #7B6CEA;
 }
+
+.rrt-left-container .redux-toastr .toastr .rrt-left-container .rrt-holder {
+  width: auto;
+}

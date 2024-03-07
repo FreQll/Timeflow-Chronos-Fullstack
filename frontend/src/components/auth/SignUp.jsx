@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { Input } from '../ui/input'
 import ButtonGradient from '../buttons/ButtonGradient'
 import axios, { POST_CONFIG } from '../../../API/axios';
-import { objToJson } from '../../../helper/stringFunc';
-import { checkFormData } from '../../../helper/checkForm';
+import { objToJson } from '../../helper/stringFunc';
+import { checkFormData } from '../../helper/checkForm';
 
 const SignUp = ({ active, setActive }) => {
   const [ fullName, setFullName ] = useState('');

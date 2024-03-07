@@ -1,4 +1,3 @@
-import { savedState } from "../store";
 import Cookies from 'js-cookie';
 
 const initialState = {
@@ -24,8 +23,9 @@ const authReducer = (state = initialState, action) => {
                 login: action.payload.login
               }
             };
-            console.log(newState);
             localStorage.setItem('authState', JSON.stringify(newState));
+            const token = Cookies.get('token');
+            console.log(token);
             return newState;
         case 'LOGOUT':
             localStorage.removeItem('authState');

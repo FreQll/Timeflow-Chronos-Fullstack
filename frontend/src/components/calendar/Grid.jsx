@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { getCalendarDates, getStartAndEndDateOfMonth, getTodayDate, isDateBeforeDate, isCurrentDate } from '../../../helper/momentFunc';
+import { getCalendarDates, getStartAndEndDateOfMonth, getTodayDate, isDateBeforeDate, isCurrentDate } from '../../helper/momentFunc';
 import moment from 'moment';
 import EventsList from './EventsList';
 

@@ -3,7 +3,7 @@ import Monitor from '../components/calendar/Monitor'
 import ScheduleHeader from '../components/calendar/ScheduleHeader'
 import Grid from '../components/calendar/Grid'
 import moment from 'moment/moment'
-import { getStartAndEndDateOfCalendar, getTodayDate } from '../../helper/momentFunc';
+import { getStartAndEndDateOfCalendar, getTodayDate } from '../helper/momentFunc';
 import axios from '../../API/axios';
 import EventDetails from '../components/calendar/EventDetails'
 import AddEvent from './AddEvent'

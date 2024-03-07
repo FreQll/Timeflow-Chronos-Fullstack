@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import RadioInput from '../RadioInput'
 import { Button } from '../ui/button'
-import { enumEventTypes } from '../../../helper/enumEventTypes'
+import { enumEventTypes } from '../../helper/enumEventTypes'
 import ButtonBlue from '../buttons/ButtonBlue'
-import { savedState } from '@/redux/store'
+import { getSavedState } from '@/redux/store'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import { Label } from '../ui/label'
 import { Checkbox } from '../ui/checkbox'
@@ -12,8 +12,10 @@ import AddCalendar from '@/pages/AddCalendar'
 import axios from '../../../API/axios'
 
 const CalendarBlocks = ({ calendars, activeCalendar, changeActiveEventTypes, changeActiveCalendar }) => {
-    const user = savedState.user;
+    const user = getSavedState()?.user;
     const [ defaultCalendar, setDefaultCalendar ] = useState();
+
+    console.log(getSavedState());
 
     const clickCheckboxEventTypes = (keyTitle) => {
         changeActiveEventTypes(keyTitle);
@@ -55,10 +57,10 @@ const CalendarBlocks = ({ calendars, activeCalendar, changeActiveEventTypes, cha
                     <h3 className='opacity-50'>Calendars</h3>
 
                     {calendars && (
-                        <RadioGroup defaultValue={calendars[0].calendar.name} className='flex max-w-[100%] flex-col gap-0'>
+                        <RadioGroup defaultValue={calendars[0].calendar.id} className='flex max-w-[100%] flex-col gap-0'>
                             {calendars.map(element => (
                                 <div key={element.calendar.id} className="flex items-center space-x-2 max-w-[100%]" onClick={() => clickCheckboxCalendars(element.calendar.id)} onContextMenu={handleContextMenu} onTouchStart={handleTouchStart}>
-                                    <RadioGroupItem value={element.calendar.name} id={element.calendar.name} style={{ backgroundColor: element.calendar.color }} className={`rounded-[4px] text-white border-0 box_shadow`} />
+                                    <RadioGroupItem value={element.calendar.id} id={element.calendar.name} style={{ backgroundColor: element.calendar.color }} className={`rounded-[4px] text-white border-0 box_shadow`} />
                                     <div  className='text-ellipsis max-w-[100%] overflow-hidden'>
                                         <Label htmlFor={element.calendar.name}>{element.calendar.name}</Label>
                                     </div>

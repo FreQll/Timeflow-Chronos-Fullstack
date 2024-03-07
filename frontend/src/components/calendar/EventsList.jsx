@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import axios, { GET_CONFIG, POST_CONFIG } from '../../../API/axios';
-import { cutString, objToJson } from '../../../helper/stringFunc';
+import { cutString, objToJson } from '../../helper/stringFunc';
 import { Drawer, DrawerContent, DrawerTrigger } from '../ui/drawer';
 import EventDetails from './EventDetails';
 import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover'
 import { useLocation } from 'react-router-dom';
-import { formatDate } from '../../../helper/momentFunc';
+import { formatDate } from '../../helper/momentFunc';
 
 const EventsList = ({ date, currentEvent, setCurrentEvent, activeEventTypes, calendarId, calendars, selectedCalendar }) => {
     const [ events, setEvents ] = useState();

@@ -14,7 +14,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { enumEventTypes } from '../../helper/enumEventTypes'
+import { enumEventTypes } from '../helper/enumEventTypes'
 
 const ComboboxPopover = ({ statuses, selectedStatus, placeholder, selectedStatusName, setSelectedStatus, buttonColor }) => {
     const [open, setOpen] = useState(false);
