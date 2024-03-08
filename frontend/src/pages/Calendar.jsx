@@ -8,6 +8,7 @@ import axios from '../../API/axios';
 import EventDetails from '../components/calendar/EventDetails'
 import AddEvent from '../components/calendar/AddEvent'
 import { Input } from '@/components/ui/input'
+import { useLocation } from 'react-router-dom'
 
 const Calendar = ({ activeEventTypes, calendar, calendars }) => {
     moment.updateLocale('en', {week: {dow: 1}});
@@ -18,6 +19,7 @@ const Calendar = ({ activeEventTypes, calendar, calendars }) => {
     const [ events, setEvents ] = useState([]);
     const [ currentEvent, setCurrentEvent ] = useState(null);
     const [ isAddEventOpen, setIsAddEventOpen ] = useState(false);
+    const location = useLocation();
 
     const prevHandler = () => {
         setToday(prev => prev.clone().subtract(1, 'month'))
@@ -50,7 +52,7 @@ const Calendar = ({ activeEventTypes, calendar, calendars }) => {
 
     useEffect(() => {
         getCalendarEvents();
-    }, [calendar.id, activeEventTypes])
+    }, [calendar.id, activeEventTypes, location])
 
     return (
         <div className='flex w-[-webkit-fill-available] h-[-webkit-fill-available]'>

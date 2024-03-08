@@ -17,6 +17,23 @@ export const getCalendarById = async (req, res) => {
   return res.status(200).json(calendar);
 };
 
+export const getCalendarByEvent = async (req, res) => {
+  const eventId = req.params.eventId;
+  const calendar = await prisma.calendarEvents.findMany({
+    where: { eventId: eventId },
+  });
+
+  if (!calendar) {
+    return res.status(404).json({ message: "Calendar not found." });
+  }
+
+  const calendarInfo = await prisma.calendar.findUnique({
+    where: { id: calendar[0].calendarId },
+  });
+
+  return res.status(200).json(calendarInfo);
+};
+
 export const getUserCalendars = async (req, res) => {
   const userId = req.params.id;
 

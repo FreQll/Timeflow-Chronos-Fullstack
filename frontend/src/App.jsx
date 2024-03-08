@@ -30,12 +30,22 @@ function App() {
         withCredentials: true,
       });
       setCalendars(response.data);
-      setActiveCalendar(response.data[0].calendar);
     } catch (error) {
       // console.log("Error getting calendars");
       toastError("Error getting calendars");
     }
   };
+
+  const setDefaultCalendar = async (userId) => {
+    try {
+      const response = await axios.get(`/api/calendar/${userId}`, {
+        withCredentials: true,
+      });
+      setActiveCalendar(response.data[0].calendar);
+    } catch (error) {
+      toastError("Error getting calendars");
+    }
+  }
 
   const changeActiveEventTypes = (typeName) => {
     if (activeEventTypes?.includes(typeName)) {
@@ -64,9 +74,13 @@ function App() {
   };
 
   useEffect(() => {
+    if (user) setDefaultCalendar(user.id);
+  }, [])
+
+  useEffect(() => {
     dispatch(checkTokenExpiration());
     if (user) getCalendarsByUserId(user.id);
-  }, []);
+  }, [location]);
 
   return (
     <Routes>

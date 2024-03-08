@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { formatDate } from "../../helper/momentFunc";
 import {
   DrawerHeader,
@@ -17,15 +17,16 @@ import { enumEventTypesArray } from "../../helper/enumEventTypes";
 import { Input } from "../ui/input";
 import { DropdownMenuLabel } from "../ui/dropdown-menu";
 import axios, { GET_CONFIG, POST_CONFIG } from "../../../API/axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { toastError, toastSuccess } from "@/helper/toastFunctions";
 
 const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
   const [newTitle, setNewTitle] = useState(currentEvent?.name);
   const [newDescription, setNewDescription] = useState(currentEvent?.content);
-  const [eventCalendar, setEventCalendar] = useState(selectedCalendar);
+  const [eventCalendar, setEventCalendar] = useState();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [type, setType] = useState(currentEvent.type);
   const [date, setDate] = useState({
@@ -33,19 +34,27 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
     to: currentEvent.end,
   });
 
-  const setCalendar = async (calendar) => {
-    const response = await axios.get(
-      `/api/calendar/calendarInfo/${calendar.calendar.id}`,
-      { withCredentials: true }
-    );
-    if (response) {
-      console.log(response);
-      setEventCalendar(response.data);
-    } else {
-      console.log("Error creating event");
-      toastError("Error creating event");
-    }
-  };
+  const getSelectedCalendar = async () => {
+    const response = await axios.get(`/api/calendar/calendarByEvent/${currentEvent.id}`, GET_CONFIG);
+    if (response.status == 200) setEventCalendar(response.data)
+  }
+
+  useEffect(() => {
+    getSelectedCalendar();
+  }, [location])
+
+  // const setCalendar = async (calendar) => {
+  //   const response = await axios.get(
+  //     `/api/calendar/calendarInfo/${calendar.calendar.id}`,
+  //     { withCredentials: true }
+  //   );
+  //   if (response) {
+  //     console.log(response);
+  //     setEventCalendar(response.data);
+  //   } else {
+  //     toastError("Error creating event");
+  //   }
+  // };
 
   const updateData = async (data) => {
     const response = await axios.patch(
@@ -53,10 +62,9 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
       data,
       POST_CONFIG
     );
-    console.log(response);
     if (response) {
       navigate("/");
-      toastSuccess("Event updated successfully!");
+      // toastSuccess("Event updated successfully!");
     }
   };
 
@@ -94,10 +102,9 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
   };
 
   const handleCalendarChange = (e) => {
-    console.log(e);
-    setEventCalendar(e);
+    setEventCalendar(e.calendar);
     const data = {
-      calendarId: eventCalendar?.id,
+      calendarId: e.calendar.id,
     };
     updateData(data);
   };
@@ -162,14 +169,16 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
         </div>
         <div className="grid grid-cols-3 items-center gap-4">
           <Label htmlFor="calendar">Calendar</Label>
-          <ComboboxPopover
-            id="calendar"
-            statuses={calendars}
-            title={"Set calendar"}
-            selectedStatus={eventCalendar}
-            setSelectedStatus={handleCalendarChange}
-            buttonColor={"bg-white"}
-          />
+          {eventCalendar && (
+            <ComboboxPopover
+              id="calendar"
+              statuses={calendars}
+              title={"Set calendar"}
+              selectedStatus={eventCalendar}
+              setSelectedStatus={handleCalendarChange}
+              buttonColor={"bg-white"}
+            />
+          )}
         </div>
       </div>
     </div>
