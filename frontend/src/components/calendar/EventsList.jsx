@@ -11,6 +11,7 @@ import {
 import { useLocation } from "react-router-dom";
 import { formatDate } from "../../helper/momentFunc";
 import { toastError } from "@/helper/toastFunctions";
+import { enumEventTypes } from "@/helper/enumEventTypes";
 
 const EventsList = ({
   date,
@@ -23,21 +24,18 @@ const EventsList = ({
 }) => {
   const [events, setEvents] = useState();
   const location = useLocation();
+  const [isHovered, setIsHovered] = useState(false);
 
   const getEventByDay = async (date) => {
     try {
       const response = await axios.get(
-        `/api/calendar/getEventsByTime/${calendarId}?startDate=${formatDate(
-          date,
-          "DD-MM-YYYY"
-        )}&endDate=${formatDate(date, "DD-MM-YYYY")}`,
+        `/api/calendar/getEventsByTime/${calendarId}?startDate=${formatDate(date, "DD-MM-YYYY")}&endDate=${formatDate(date, "DD-MM-YYYY")}`,
         GET_CONFIG
       );
       if (response) {
         setEvents(response.data);
       }
     } catch (error) {
-      console.log("Error getting day events");
       toastError("Error getting day events");
     }
   };
@@ -49,7 +47,6 @@ const EventsList = ({
     if (response) {
       setCurrentEvent(response.data);
     } else {
-      console.log("Error getting event");
       toastError("Error getting event");
     }
   };
@@ -59,13 +56,18 @@ const EventsList = ({
     else getEventById(event.id);
   };
 
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
   useEffect(() => {
     getEventByDay(date);
   }, [calendarId, activeEventTypes, location]);
-
-  // events?.forEach(element => {
-  //     console.log(element);;
-  // });
+  
   return (
     <ol className="mt-1 mx-2 flex flex-col px-[4px]">
       {events?.map((element, id) => 
@@ -75,10 +77,14 @@ const EventsList = ({
               <Popover>
                 <PopoverTrigger asChild>
                   <div>
-                    <a href="#" className="hidden lg:flex group">
+                    <a href="#" className="hidden lg:flex group"
+                        onMouseEnter={handleMouseEnter}
+                        onMouseLeave={handleMouseLeave}>
                       <div className="w-[100%] flex items-center gap-[5px]">
-                        <div style={{backgroundColor: selectedCalendar?.color}} className="rounded-[50%] h-[5px] w-[5px]"></div>
-                        <p className="flex-auto truncate font-medium text-gray-900 group-hover:text-indigo-600">
+                        <div style={{backgroundColor: enumEventTypes[element?.event.type].color}} className="rounded-[50%] h-[5px] w-[5px]"></div>
+                        <p 
+                          style={{color: isHovered && enumEventTypes[element?.event.type].color}}
+                          className={`flex-auto truncate font-medium text-gray-900`}>
                           <span className="hidden lg:flex">
                             {cutString(element?.event.name, 20, "...")}
                           </span>
@@ -89,7 +95,9 @@ const EventsList = ({
                       </div>
                       <time
                         dateTime="2022-01-03T10:00"
-                        className="ml-3 hidden flex-none text-gray-500 group-hover:text-indigo-600 xl:block"
+                          style={{color: isHovered && enumEventTypes[element?.event.type].color}}
+                        className={`ml-3 hidden flex-none text-gray-500 xl:block`}
+                        
                       >
                         10AM
                       </time>
@@ -99,13 +107,11 @@ const EventsList = ({
                     </span>
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="w-[500px] z-[20] bg-gray-100 border border-gray-400 rounded-[10px] p-[20px] box_shadow">
-                  <EventDetails
-                    currentEvent={element?.event}
-                    calendars={calendars}
-                    selectedCalendar={selectedCalendar}
-                  />
-                </PopoverContent>
+                <EventDetails
+                  currentEvent={element?.event}
+                  calendars={calendars}
+                  selectedCalendar={selectedCalendar}
+                />
               </Popover>
 
               {/* <Drawer>

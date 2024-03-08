@@ -6,7 +6,7 @@ import DatePickerWithRange from '@/components/DatePicker';
 import ComboboxPopover from '@/components/ComboboxPopover';
 import { enumEventTypes, enumEventTypesArray } from '../../helper/enumEventTypes';
 import CloseButtonCircled from '@/components/buttons/CloseButtonCircled';
-import { getTodayDate } from '../../helper/momentFunc';
+import { formatDate, getTodayDate } from '../../helper/momentFunc';
 import axios, { POST_CONFIG } from '../../../API/axios';
 import { objToJson } from '../../helper/stringFunc';
 import { useToast } from '@/components/ui/use-toast';
@@ -15,6 +15,7 @@ import { getSavedState, savedState } from '@/redux/store';
 import { useNavigate } from 'react-router-dom';
 import { DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerClose } from '@/components/ui/drawer';
 import { Separator } from '@radix-ui/react-separator';
+import { Input } from '../ui/input';
 
 const AddEvent = ({ handleOpenAddEvent, calendars }) => {
   const user = savedState?.user;
@@ -27,8 +28,18 @@ const AddEvent = ({ handleOpenAddEvent, calendars }) => {
     from: new Date(getTodayDate()),
     to: new Date(getTodayDate().add(1, 'month')),
   });
+  const [ time, setTime ] = useState({
+    from: {
+      hour: '09',
+      minutes: '00'
+    },
+    to: {
+      hour: '10',
+      minutes: '00'
+    },
+  });
   const color = 'ffffff';
-  const [ selectedCalendar, setSelectedCalendar ] = useState(null); 
+  const [ selectedCalendar, setSelectedCalendar ] = useState(); 
 
   const setEventCalendar = async (calendar) => {
     if (calendar) {
@@ -46,16 +57,42 @@ const AddEvent = ({ handleOpenAddEvent, calendars }) => {
     setDescription(e.target.value)
   }
 
+  const handleChangeHour = (e, field) => {
+    setTime(prevTime => ({
+      ...prevTime,
+      [field]: {
+        ...prevTime[field],
+        hour: e.target.value
+      }
+    }));
+  };
+  
+  const handleChangeMinutes = (e, field) => {
+    setTime(prevTime => ({
+      ...prevTime,
+      [field]: {
+        ...prevTime[field],
+        minutes: e.target.value
+      }
+    }));
+  };
+
   const handleSave = async () => {
+    const timeStart = (time.from?.hour || '09') + ':' + (time.from?.minutes || '00') + ':00';
+    const timeEnd = (time.to?.hour || '10') + ':' + (time.to?.minutes || '00') + ':00';
+
+    const formatDateStart = formatDate(date.from, 'YYYY-MM-DD').toString() + 'T' + timeStart + '.000Z';
+    const formatDateEnd = formatDate(date.to || date.from, 'YYYY-MM-DD').toString() + 'T' + timeEnd + '.000Z';
+
     const options = {
       name: title,
       content: description,
       type: type?.key || type.title.toUpperCase(),
-      start: date.from,
-      end: date.to || date.from,
+      start: formatDateStart,
+      end: formatDateEnd,
       color: color,
       userId: user?.id,
-      calendarId: selectedCalendar?.id
+      calendarId: selectedCalendar?.id || calendars[0].calendar.id
     }
     
     try {
@@ -86,6 +123,22 @@ const AddEvent = ({ handleOpenAddEvent, calendars }) => {
               <tr>
                 <td className='text-right'><Label>Duration: </Label></td>
                 <td><DatePickerWithRange bgColor={'#ffffffab'} className={'w-max'} date={date} setDate={setDate} /></td>
+              </tr>
+              <tr>
+                <td className='text-right'><Label>Time: </Label></td>
+                <td className='flex items-center gap-[5px] text-[14px]'>
+                  <div className='flex'>
+                    <input className='w-[20px] bg-transparent text-end outline-none' value={time.from?.hour} onChange={(e) => handleChangeHour(e, 'from')} />
+                    <span>:</span>
+                    <input className='w-[20px] bg-transparent outline-none' value={time.from?.minutes} onChange={(e) => handleChangeMinutes(e, 'from')} />
+                  </div>
+                  <span>–</span>
+                  <div className='flex'>
+                    <input className='w-[20px] bg-transparent text-end outline-none' value={time.to?.hour} onChange={(e) => handleChangeHour(e, 'to')} />
+                    <span>:</span>
+                    <input className='w-[20px] bg-transparent outline-none' value={time.to?.minutes} onChange={(e) => handleChangeMinutes(e, 'to')} />
+                  </div>
+                </td>
               </tr>
               <tr>
                 <td className='text-right'><Label>Type: </Label></td>

@@ -1,4 +1,9 @@
-import { Fragment, useEffect, useRef } from 'react'
+import { formatDate } from '@/helper/momentFunc';
+import moment from 'moment';
+import { Fragment, useEffect, useRef, useState } from 'react'
+import EventDetails from './EventDetails';
+import { PopoverTrigger, Popover } from '@radix-ui/react-popover';
+import { useLocation } from 'react-router-dom';
 
 const days = [
   { date: '2021-12-27' },
@@ -45,25 +50,44 @@ const days = [
   { date: '2022-02-06' },
 ]
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
-const DayView = () => {
-    const container = useRef(null)
-    const containerOffset = useRef(null)
+const DayView = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent, activeEventTypes, calendars, selectedCalendar }) => {
+    const container = useRef(null);
+    const containerOffset = useRef(null);
+    const [ dailyEvents, setDailyEvents ] = useState([]);
+    const location = useLocation();
 
     const hours = ['12am', '1am', '2am', '3am', '4am', '5am', '6am', '7am', '8am', '9am', '10am', '11am',
     '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', '9pm', '10pm', '11pm'];
 
     useEffect(() => {
-        // Set the container scroll position based on the current time.
-        const currentMinute = new Date().getHours() * 60
-        container.current.scrollTop =
-        ((container.current.scrollHeight - - containerOffset.current.offsetHeight) *
-            currentMinute) /
-        1440
-    }, [])
+        events?.forEach(element => {
+            const startTime = formatDate(element.event.start, 'HH:mm') 
+            const startTimeHour = formatDate(element.event.start, 'HH');
+            const startTimeMinutes = formatDate(element.event.start, 'mm');
+            const endTime = formatDate(element.event.end, 'HH:mm');
+
+            const durationMinutes = moment(element.event.end).diff(moment(element.event.start), 'minutes') / 60;
+
+            console.log(durationMinutes);
+            setDailyEvents(prevState => {
+                return [
+                  ...prevState,
+                  {
+                    event: element.event,
+                    position: `${2 + 12 * startTimeHour + startTimeMinutes * 0.2} / span ${12 * durationMinutes}`
+                  }
+                ];
+              });
+        });
+    }, [location])
+
+    // useEffect(() => {
+    //     const currentMinute = new Date().getHours() * 60
+    //     container.current.scrollTop =
+    //     ((container.current.scrollHeight - - containerOffset.current.offsetHeight) *
+    //         currentMinute) /
+    //     1440
+    // }, [])
 
     return (
         <div className="flex h-full flex-col">
@@ -77,17 +101,16 @@ const DayView = () => {
                         style={{ gridTemplateRows: 'repeat(48, minmax(3.5rem, 1fr))' }}
                     >
                         <div ref={containerOffset} className="row-end-1 h-7"></div>
-                        {
-                            hours.map((hour, index) => (
-                                <>
-                                    <div>
-                                        <div className="sticky left-0 -ml-14 -mt-2.5 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-                                            {hour}
-                                        </div>
+                        {hours.map((hour, index) => (
+                            <>
+                                <div>
+                                    <div className="sticky left-0 -ml-14 -mt-2.5 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
+                                        {hour}
                                     </div>
-                                    <div />
-                                </>
-                            ))}
+                                </div>
+                                <div />
+                            </>
+                        ))}
                         <div />
                     </div>
 
@@ -96,43 +119,28 @@ const DayView = () => {
                         className="col-start-1 col-end-2 row-start-1 grid grid-cols-1"
                         style={{ gridTemplateRows: '1.75rem repeat(288, minmax(0, 1fr)) auto' }}
                     >
-                        <li className="relative mt-px flex" style={{ gridRow: '74 / span 12' }}>
-                        <a
-                            href="#"
-                            className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-blue-50 p-2 text-xs leading-5 hover:bg-blue-100"
-                        >
-                            <p className="order-1 font-semibold text-blue-700">Breakfast</p>
-                            <p className="text-blue-500 group-hover:text-blue-700">
-                            <time dateTime="2022-01-22T06:00">6:00 AM</time>
-                            </p>
-                        </a>
-                        </li>
-                        <li className="relative mt-px flex" style={{ gridRow: '92 / span 30' }}>
-                        <a
-                            href="#"
-                            className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-pink-50 p-2 text-xs leading-5 hover:bg-pink-100"
-                        >
-                            <p className="order-1 font-semibold text-pink-700">Flight to Paris</p>
-                            <p className="order-1 text-pink-500 group-hover:text-pink-700">
-                            John F. Kennedy International Airport
-                            </p>
-                            <p className="text-pink-500 group-hover:text-pink-700">
-                            <time dateTime="2022-01-22T07:30">7:30 AM</time>
-                            </p>
-                        </a>
-                        </li>
-                        <li className="relative mt-px flex" style={{ gridRow: '134 / span 18' }}>
-                        <a
-                            href="#"
-                            className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-indigo-50 p-2 text-xs leading-5 hover:bg-indigo-100"
-                        >
-                            <p className="order-1 font-semibold text-indigo-700">Sightseeing</p>
-                            <p className="order-1 text-indigo-500 group-hover:text-indigo-700">Eiffel Tower</p>
-                            <p className="text-indigo-500 group-hover:text-indigo-700">
-                            <time dateTime="2022-01-22T11:00">11:00 AM</time>
-                            </p>
-                        </a>
-                        </li>
+                        {dailyEvents?.map((element, index) => (
+                            <li key={index} className="relative mt-px flex" style={{ gridRow: element.position }}>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <a
+                                            href="#"
+                                            className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-blue-50 p-2 text-xs leading-5 hover:bg-blue-100"
+                                        >
+                                            <p className="order-1 font-semibold text-blue-700">{element.event?.name}</p>
+                                            <p className="text-blue-500 group-hover:text-blue-700">
+                                            <time>{formatDate(element.event.start, 'HH:mm')}</time>
+                                            </p>
+                                        </a>
+                                    </PopoverTrigger>
+                                    <EventDetails
+                                        currentEvent={element?.event}
+                                        calendars={calendars}
+                                        selectedCalendar={selectedCalendar}
+                                    />
+                                </Popover>
+                            </li>
+                        ))}
                     </ol>
                     </div>
                 </div>

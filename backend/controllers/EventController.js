@@ -201,7 +201,6 @@ export const createEvent = async (req, res) => {
 export const updateEvent = async (req, res) => {
   const eventId = req.params.id;
   const { name, color, content, start, end, type, calendarId } = req.body;
-
   const event = await prisma.event.update({
     where: {
       id: eventId,

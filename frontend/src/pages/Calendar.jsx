@@ -42,11 +42,13 @@ const Calendar = ({ activeEventTypes, calendar, calendars }) => {
             startDay: startDay,
             endDay: endDay
         }
-        try {
-            const response = await axios.get(`/api/calendar/allEvents/${calendar.id}`, { withCredentials: true, options });
-            if (response) { setEvents(response.data); } 
-        } catch (error) {
-            console.log('Error getting calendar events');
+        if (calendar.length != 0) {
+            try {
+                const response = await axios.get(`/api/calendar/allEvents/${calendar.id}`, { withCredentials: true, options });
+                if (response) { setEvents(response.data); } 
+            } catch (error) {
+                console.log('Error getting calendar events');
+            }
         }
     }
 
@@ -90,7 +92,15 @@ const Calendar = ({ activeEventTypes, calendar, calendars }) => {
                     </div>
                 )}
                 {scheduleMode == enumScheduleModes.DAY && (
-                    <DayView />
+                    <DayView 
+                        events={events}
+                        today={today} 
+                        startOfCalendar={startDay}
+                        currentEvent={currentEvent}
+                        setCurrentEvent={setCurrentEvent}
+                        activeEventTypes={activeEventTypes}
+                        calendars={calendars} 
+                        selectedCalendar={calendar}/>
                 )}
                 {/* {currentEvent && (
                     <EventDetails currentEvent={currentEvent} />
