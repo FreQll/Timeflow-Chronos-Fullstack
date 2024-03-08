@@ -34,15 +34,16 @@ const CalendarBlocks = ({
     changeActiveCalendar(calendarId);
   };
 
-  const getDefaultCalendar = async () => {
-    try {
-      const response = await axios.get(`/api/calendar/${user.id}`, {
-        withCredentials: true,
-      });
-      setDefaultCalendar(response.data[0].calendar);
-    } catch (error) {
-      console.log("Error getting calendars");
-      toastError("Error getting calendars");
+    const getDefaultCalendar = async () => {
+        try {
+        const response = await axios.get(`/api/calendar/${user.id}`, {
+            withCredentials: true,
+        });
+        setDefaultCalendar(response.data[0].calendar);
+        } catch (error) {
+        console.log("Error getting calendars");
+        toastError("Error getting calendars");
+        }
     }
     
       // Обработчик для открытия дропдаун меню при касании на тачпаде двумя пальцами
@@ -131,24 +132,6 @@ const CalendarBlocks = ({
       </div>
     </div>
   );
-};
+}
 
 export default CalendarBlocks;
-
-{
-  /* <RadioInput 
-key={element} 
-id={element.calendar.id}
-selected={activeCalendar.id}
-onChange={clickCheckboxCalendars}
-title={element.calendar.name} 
-color={element.calendar.color} /> */
-}
-
-{
-  /* <Checkbox key={type} 
-keyTitle={type} 
-clickCheckbox={clickCheckboxEventTypes} 
-title={enumEventTypes[type].title} 
-color={enumEventTypes[type].color} /> */
-}

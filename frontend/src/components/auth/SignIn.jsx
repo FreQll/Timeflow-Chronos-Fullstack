@@ -39,9 +39,7 @@ const SignIn = ({ active, handleClick }) => {
       );
       if (response) {
         dispatch(login(response.data.user));
-        console.log(getSavedState());
         if (getSavedState().isAuthenticated) navigate("/");
-        toastSuccess("Logged in successfully");
       }
     } catch (error) {
       // console.log(error.response.data.message);

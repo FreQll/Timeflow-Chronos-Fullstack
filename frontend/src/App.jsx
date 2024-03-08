@@ -4,7 +4,6 @@ import "./App.css";
 import Calendar from "./pages/Calendar";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Layout from "./pages/Layout";
-import AddEvent from "./pages/AddEvent";
 import axios from "../API/axios";
 import Auth from "./pages/Auth";
 import store, { getSavedState } from "./redux/store";
@@ -12,6 +11,7 @@ import ErrorPage from "./pages/ErrorPage";
 import { enumEventTypes, enumEventTypesArray } from "./helper/enumEventTypes";
 import { checkTokenExpiration } from "./redux/actions/authActions";
 import { toastError } from "./helper/toastFunctions";
+import AddEvent from "./components/calendar/AddEvent";
 
 function App() {
   const user = getSavedState()?.user;
