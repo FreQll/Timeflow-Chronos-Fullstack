@@ -12,7 +12,7 @@ import { Dialog, DialogTrigger } from '@radix-ui/react-dialog';
 import EditCalendar from './EditCalendar';
 // import Button from './Button';
 
-const Monitor = ({ today, prevHandler, todayHandler, nextHandler, handleOpenAddEvent, calendar, calendars }) => {
+const Monitor = ({ today, prevHandler, todayHandler, nextHandler, calendar, calendars }) => {
     const [ menuViewOpen, setMenuViewOpen ] = useState(false);
     const [ scheduleMode, setScheduleMode ] = useState(enumScheduleModes.MONTH);
 
@@ -76,7 +76,7 @@ const Monitor = ({ today, prevHandler, todayHandler, nextHandler, handleOpenAddE
                     <div className="ml-6 h-6 w-px bg-gray-300"></div>
                     <Drawer>
                         <DrawerTrigger asChild>
-                            <ButtonBlue text={'Add event'} onClick={handleOpenAddEvent} />
+                            <ButtonBlue text={'Add event'} />
                         </DrawerTrigger>
                         <AddEvent calendars={calendars} />
                     </Drawer>

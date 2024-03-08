@@ -11,13 +11,13 @@ import axios, { POST_CONFIG } from '../../../API/axios';
 import { objToJson } from '../../helper/stringFunc';
 import { useToast } from '@/components/ui/use-toast';
 import ButtonBlue from '@/components/buttons/ButtonBlue';
-import { getSavedState } from '@/redux/store';
+import { getSavedState, savedState } from '@/redux/store';
 import { useNavigate } from 'react-router-dom';
 import { DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerClose } from '@/components/ui/drawer';
 import { Separator } from '@radix-ui/react-separator';
 
 const AddEvent = ({ handleOpenAddEvent, calendars }) => {
-  const user = getSavedState?.user;
+  const user = savedState?.user;
   const navigate = useNavigate();
 
   const [ title, setTitle ] = useState('New event');
@@ -47,15 +47,14 @@ const AddEvent = ({ handleOpenAddEvent, calendars }) => {
   }
 
   const handleSave = async () => {
-    console.log(type);
     const options = {
       name: title,
       content: description,
       type: type?.key || type.title.toUpperCase(),
       start: date.from,
-      end: date.to,
+      end: date.to || date.from,
       color: color,
-      userId: user.id,
+      userId: user?.id,
       calendarId: selectedCalendar?.id
     }
     

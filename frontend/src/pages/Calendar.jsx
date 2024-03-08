@@ -18,7 +18,7 @@ const Calendar = ({ activeEventTypes, calendar, calendars }) => {
     const endDay = getStartAndEndDateOfCalendar(today).end;
     const [ events, setEvents ] = useState([]);
     const [ currentEvent, setCurrentEvent ] = useState(null);
-    const [ isAddEventOpen, setIsAddEventOpen ] = useState(false);
+    // const [ isAddEventOpen, setIsAddEventOpen ] = useState(false);
     const location = useLocation();
 
     const prevHandler = () => {
@@ -46,9 +46,9 @@ const Calendar = ({ activeEventTypes, calendar, calendars }) => {
         }
     }
 
-    const handleOpenAddEvent = () => {
-        setIsAddEventOpen(isAddEventOpen => !isAddEventOpen);
-    }
+    // const handleOpenAddEvent = () => {
+    //     setIsAddEventOpen(isAddEventOpen => !isAddEventOpen);
+    // }
 
     useEffect(() => {
         getCalendarEvents();
@@ -65,7 +65,6 @@ const Calendar = ({ activeEventTypes, calendar, calendars }) => {
                     prevHandler={prevHandler}
                     todayHandler={todayHandler}
                     nextHandler={nextHandler}
-                    handleOpenAddEvent={handleOpenAddEvent}
                     calendar={calendar} 
                     calendars={calendars} />
                 <div className="shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col relative">

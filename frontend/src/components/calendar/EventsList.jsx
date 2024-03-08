@@ -67,23 +67,26 @@ const EventsList = ({
   //     console.log(element);;
   // });
   return (
-    <ol className="mt-2">
-      {events?.map(
-        (element, id) =>
+    <ol className="mt-1 mx-2 flex flex-col px-[4px]">
+      {events?.map((element, id) => 
+        id < 2 && (
           activeEventTypes?.includes(element?.event.type) && (
-            <li key={id} onClick={() => handleClickEvent(element.event)}>
+            <li key={id} onClick={() => handleClickEvent(element.event)} className="rounded-[4px]">
               <Popover>
                 <PopoverTrigger asChild>
                   <div>
                     <a href="#" className="hidden lg:flex group">
-                      <p className="flex-auto truncate font-medium text-gray-900 group-hover:text-indigo-600">
-                        <span className="hidden lg:flex">
-                          {cutString(element?.event.name, 20, "...")}
-                        </span>
-                        <span className="flex lg:hidden">
-                          {cutString(element?.event.name, 10, "...")}
-                        </span>
-                      </p>
+                      <div className="w-[100%] flex items-center gap-[5px]">
+                        <div style={{backgroundColor: selectedCalendar?.color}} className="rounded-[50%] h-[5px] w-[5px]"></div>
+                        <p className="flex-auto truncate font-medium text-gray-900 group-hover:text-indigo-600">
+                          <span className="hidden lg:flex">
+                            {cutString(element?.event.name, 20, "...")}
+                          </span>
+                          <span className="flex lg:hidden">
+                            {cutString(element?.event.name, 10, "...")}
+                          </span>
+                        </p>
+                      </div>
                       <time
                         dateTime="2022-01-03T10:00"
                         className="ml-3 hidden flex-none text-gray-500 group-hover:text-indigo-600 xl:block"
@@ -126,6 +129,10 @@ const EventsList = ({
                         </Drawer> */}
             </li>
           )
+        ) 
+      )}
+      {events?.length > 2 && (
+        <div className="cursor-default">{events?.length - 2} more...</div>
       )}
     </ol>
   );

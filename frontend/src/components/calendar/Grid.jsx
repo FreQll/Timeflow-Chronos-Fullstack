@@ -3,7 +3,7 @@ import { getCalendarDates, getStartAndEndDateOfMonth, getTodayDate, isDateBefore
 import moment from 'moment';
 import EventsList from './EventsList';
 
-const Grid = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent, activeEventTypes, calendars, selectedCalendar }) => {
+const Grid = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent, activeEventTypes, calendars, selectedCalendar, handleOpenAddEvent }) => {
     const totalDays = 42;
     const calendarId = selectedCalendar?.id;
 
@@ -31,10 +31,11 @@ const Grid = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent, a
     return (
         <div className="w-full grid grid-cols-7 grid-rows-6 gap-px">
             {datesArray.map((date) => (
-                <div key={date} className={`relative px-3 py-2
+                <div 
+                    key={date} className={`relative py-2
                     ${isDateBeforeDate(date, startOfMonth) || isDateBeforeDate(endOfMonth, date) ? 'bg-gray-50 text-gray-500' : 'bg-white text-gray-900'} 
                 `}>
-                    <time className={`flex justify-end items-center md:justify-start 
+                    <time className={`flex justify-end items-center md:justify-start mx-3
                         ${isCurrentDate(date) && 'md:h-6 md:w-6 md:justify-center rounded-full md:bg-indigo-600 font-semibold md:text-white text-indigo-600'}
                     `}>{date.date()}</time>
                     
