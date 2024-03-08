@@ -1,40 +1,48 @@
-import React, { useEffect, useState } from 'react'
-import RadioInput from '../RadioInput'
-import { Button } from '../ui/button'
-import { enumEventTypes } from '../../helper/enumEventTypes'
-import ButtonBlue from '../buttons/ButtonBlue'
-import { getSavedState } from '@/redux/store'
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
-import { Label } from '../ui/label'
-import { Checkbox } from '../ui/checkbox'
-import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
-import AddCalendar from '@/components/calendar/AddCalendar'
-import axios from '../../../API/axios'
+import React, { useEffect, useState } from "react";
+import RadioInput from "../RadioInput";
+import { Button } from "../ui/button";
+import { enumEventTypes } from "../../helper/enumEventTypes";
+import ButtonBlue from "../buttons/ButtonBlue";
+import { getSavedState } from "@/redux/store";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Label } from "../ui/label";
+import { Checkbox } from "../ui/checkbox";
+import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
+import AddCalendar from "@/components/calendar/AddCalendar";
+import axios from "../../../API/axios";
+import { toastError } from "@/helper/toastFunctions";
 import { Popover, PopoverTrigger, PopoverContent } from '@radix-ui/react-popover'
 import EditCalendar from '../calendar/EditCalendar'
 import { Pencil1Icon } from "@radix-ui/react-icons"
 
-const CalendarBlocks = ({ calendars, activeCalendar, changeActiveEventTypes, changeActiveCalendar }) => {
-    const user = getSavedState()?.user;
-    const [ defaultCalendar, setDefaultCalendar ] = useState();
+const CalendarBlocks = ({
+  calendars,
+  activeCalendar,
+  changeActiveEventTypes,
+  changeActiveCalendar,
+}) => {
+  const user = getSavedState()?.user;
+  const [defaultCalendar, setDefaultCalendar] = useState();
 
-    console.log(getSavedState());
+  console.log(getSavedState());
 
-    const clickCheckboxEventTypes = (keyTitle) => {
-        changeActiveEventTypes(keyTitle);
-    }
+  const clickCheckboxEventTypes = (keyTitle) => {
+    changeActiveEventTypes(keyTitle);
+  };
 
-    const clickCheckboxCalendars = (calendarId) => {
-        changeActiveCalendar(calendarId)
-    }
+  const clickCheckboxCalendars = (calendarId) => {
+    changeActiveCalendar(calendarId);
+  };
 
-    const getDefaultCalendar = async () => {
-        try {
-          const response = await axios.get(`/api/calendar/${user.id}`, { withCredentials: true });
-          setDefaultCalendar(response.data[0].calendar)
-        } catch (error) {
-          console.log('Error getting calendars');
-        }
+  const getDefaultCalendar = async () => {
+    try {
+      const response = await axios.get(`/api/calendar/${user.id}`, {
+        withCredentials: true,
+      });
+      setDefaultCalendar(response.data[0].calendar);
+    } catch (error) {
+      console.log("Error getting calendars");
+      toastError("Error getting calendars");
     }
     
       // Обработчик для открытия дропдаун меню при касании на тачпаде двумя пальцами
@@ -44,15 +52,15 @@ const CalendarBlocks = ({ calendars, activeCalendar, changeActiveEventTypes, cha
         }
       };
 
-    useEffect(() => {
-        getDefaultCalendar();
-    }, [])
+  useEffect(() => {
+    getDefaultCalendar();
+  }, []);
 
-    return (
-        <div className='flex flex-col gap-[15px]'>
-            <div className='flex flex-col gap-[15px] p-[10px] rounded-[10px] bg-[#ffffff99]'>
-                <div className='flex flex-col gap-[10px] w-[100%]'>
-                    <h3 className='opacity-50'>Calendars</h3>
+  return (
+    <div className="flex flex-col gap-[15px]">
+      <div className="flex flex-col gap-[15px] p-[10px] rounded-[10px] bg-[#ffffff99]">
+        <div className="flex flex-col gap-[10px] w-[100%]">
+          <h3 className="opacity-50">Calendars</h3>
 
                     {calendars && (
                         <RadioGroup defaultValue={calendars[0].calendar.id} className='flex max-w-[100%] flex-col gap-0'>
@@ -85,51 +93,62 @@ const CalendarBlocks = ({ calendars, activeCalendar, changeActiveEventTypes, cha
                     <AddCalendar />
                 </Dialog>
 
-                {/* <Drawer>
+        {/* <Drawer>
                     <DrawerTrigger asChild>
                         <ButtonBlue text={'Add event'} onClick={handleOpenAddEvent} />
                     </DrawerTrigger>
                     <AddEvent calendars={calendars} />
                 </Drawer> */}
-                
-            </div>
+      </div>
 
-            <div className='p-[10px] rounded-[10px] bg-[#ffffff99]'>
-                <div>
-                    <h3 className='mb-[10px] opacity-50'>Events</h3>
+      <div className="p-[10px] rounded-[10px] bg-[#ffffff99]">
+        <div>
+          <h3 className="mb-[10px] opacity-50">Events</h3>
 
-                    <div className='flex flex-col gap-[5px]'>
-                        {Object.keys(enumEventTypes).map(type => (
-                            <div key={type} className="flex items-center space-x-2" onClick={() => clickCheckboxEventTypes(type)}>
-                                <Checkbox id={type} style={{ backgroundColor: enumEventTypes[type].color }} className='border-0 text-white' defaultChecked />
-                                <label
-                                    htmlFor={type}
-                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                >
-                                    {enumEventTypes[type].title} 
-                                </label>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
+          <div className="flex flex-col gap-[5px]">
+            {Object.keys(enumEventTypes).map((type) => (
+              <div
+                key={type}
+                className="flex items-center space-x-2"
+                onClick={() => clickCheckboxEventTypes(type)}
+              >
+                <Checkbox
+                  id={type}
+                  style={{ backgroundColor: enumEventTypes[type].color }}
+                  className="border-0 text-white"
+                  defaultChecked
+                />
+                <label
+                  htmlFor={type}
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {enumEventTypes[type].title}
+                </label>
+              </div>
+            ))}
+          </div>
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
-export default CalendarBlocks
+export default CalendarBlocks;
 
-{/* <RadioInput 
+{
+  /* <RadioInput 
 key={element} 
 id={element.calendar.id}
 selected={activeCalendar.id}
 onChange={clickCheckboxCalendars}
 title={element.calendar.name} 
-color={element.calendar.color} /> */}
+color={element.calendar.color} /> */
+}
 
-
-{/* <Checkbox key={type} 
+{
+  /* <Checkbox key={type} 
 keyTitle={type} 
 clickCheckbox={clickCheckboxEventTypes} 
 title={enumEventTypes[type].title} 
-color={enumEventTypes[type].color} /> */}
+color={enumEventTypes[type].color} /> */
+}
