@@ -24,7 +24,7 @@ const EventsList = ({
 }) => {
   const [events, setEvents] = useState();
   const location = useLocation();
-  const [isHovered, setIsHovered] = useState(false);
+  const [isHovered, setIsHovered] = useState();
 
   const getEventByDay = async (date) => {
     try {
@@ -56,12 +56,12 @@ const EventsList = ({
     else getEventById(event.id);
   };
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
+  const handleMouseEnter = (event) => {
+    setIsHovered(event);
   };
 
   const handleMouseLeave = () => {
-    setIsHovered(false);
+    setIsHovered(null);
   };
 
   useEffect(() => {
@@ -78,12 +78,12 @@ const EventsList = ({
                 <PopoverTrigger asChild>
                   <div>
                     <a href="#" className="hidden lg:flex group"
-                        onMouseEnter={handleMouseEnter}
+                        onMouseEnter={() => handleMouseEnter(element?.event)}
                         onMouseLeave={handleMouseLeave}>
                       <div className="w-[100%] flex items-center gap-[5px]">
                         <div style={{backgroundColor: enumEventTypes[element?.event.type].color}} className="rounded-[50%] h-[5px] w-[5px]"></div>
                         <p 
-                          style={{color: isHovered && enumEventTypes[element?.event.type].color}}
+                          style={{color: isHovered?.id == element?.event.id && enumEventTypes[element?.event.type].color}}
                           className={`flex-auto truncate font-medium text-gray-900`}>
                           <span className="hidden lg:flex">
                             {cutString(element?.event.name, 20, "...")}

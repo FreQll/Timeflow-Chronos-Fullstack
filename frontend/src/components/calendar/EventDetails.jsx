@@ -92,12 +92,30 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
   };
 
   const handleDurationChange = (e) => {
-    setDate(e);
-    const data = {
-      start: moment(e.from),
-      end: moment(e.to),
-    };
-    updateData(data);
+    // let startDate = e?.from
+    // let endDate = e?.to
+    // if (!e) {
+    //   console.log(date.from);
+    //   startDate = date.from;
+    //   endDate = date.from;
+    //   setDate({from: date.from, to: date.from});
+    // } else {
+    //   setDate(e);
+    // }
+    if (e) {
+      console.log(e);
+      if (!e.from) setDate({from: e.to, to: e.to});
+      else if (!e.to) setDate({from: e.from, to: e.from});
+      else setDate(e);
+      const { formatDateStart, formatDateEnd } = formatStringToIso(time.from?.hour, time.from?.minutes, time.to?.hour, time.to?.minutes, e?.from || e?.to, e?.to || e?.from);
+      const data = {
+        start: formatDateStart,
+        end: formatDateEnd,
+      };
+      updateData(data)
+    } else {
+      setDate(e);
+    }
   };
 
   const changeTime = (time, field, timeType) => {
@@ -111,17 +129,23 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
   }
 
   const handleChangeStartHour = (e) => {
-    changeTime(e.target.value, 'from', 'hour');
-    if (e.target.value.length != 2) return;
+    let value = e.target.value;
+    if (parseInt(value) > 24) value = '24';
+    if (!parseInt(value)) value = '0';
+    if (value.length >= 3 && value.charAt(0) == '0') value = value.charAt(1) + value.charAt(2)
+    if (value.length == 1) value = '0' + value
 
-    const { formatDateStart } = formatStringToIso(e.target.value, time.from?.minutes, time.to?.hour, time.to?.minutes, date.from, date.to);
+    changeTime(value, 'from', 'hour');
+    if (value.length != 2) return;
+
+    const { formatDateStart } = formatStringToIso(value, time.from?.minutes, time.to?.hour, time.to?.minutes, date.from, date.to);
     let data = {
       start: new Date(formatDateStart),
     };
 
-    if (e.target.value > time.to.hour) {
-      changeTime(parseInt(e.target.value) + 1, 'to', 'hour');
-      const { formatDateEnd } = formatStringToIso(time.from?.hour, time.from?.minutes, parseInt(e.target.value) + 1, time.to?.minutes, date.from, date.to);
+    if (value > time.to.hour) {
+      changeTime(parseInt(value) + 1, 'to', 'hour');
+      const { formatDateEnd } = formatStringToIso(time.from?.hour, time.from?.minutes, parseInt(value) + 1, time.to?.minutes, date.from, date.to);
       data = {
         start: new Date(formatDateStart),
         end: new Date(formatDateEnd),
@@ -132,10 +156,16 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
   };
 
   const handleChangeStartMinutes = (e) => {
-    changeTime(e.target.value, 'from', 'minutes');
-    if (e.target.value.length != 2) return
+    let value = e.target.value;
+    if (parseInt(value) > 59) value = '59';
+    if (!parseInt(value)) value = '0';
+    if (value.length >= 3 && value.charAt(0) == '0') value = value.charAt(1) + value.charAt(2)
+    if (value.length == 1) value = '0' + value
 
-    const { formatDateStart } = formatStringToIso(time.from?.hour, e.target.value, time.to?.hour, time.to?.minutes, date.from, date.to);
+    changeTime(value, 'from', 'minutes');
+    if (value.length != 2) return
+
+    const { formatDateStart } = formatStringToIso(time.from?.hour, value, time.to?.hour, time.to?.minutes, date.from, date.to);
     const data = {
       start: new Date(formatDateStart),
     };
@@ -143,17 +173,23 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
   };
 
   const handleChangeEndHour = (e) => {
-    changeTime(e.target.value, 'to', 'hour');
-    if (e.target.value.length != 2) return
+    let value = e.target.value;
+    if (parseInt(value) > 24) value = '24';
+    if (!parseInt(value)) value = '0';
+    if (value.length >= 3 && value.charAt(0) == '0') value = value.charAt(1) + value.charAt(2)
+    if (value.length == 1) value = '0' + value
 
-    const { formatDateEnd } = formatStringToIso(time.from?.hour, time.from?.minutes, e.target.value, time.to?.minutes, date.from, date.to);
+    changeTime(value, 'to', 'hour');
+    if (value.length != 2) return
+
+    const { formatDateEnd } = formatStringToIso(time.from?.hour, time.from?.minutes, value, time.to?.minutes, date.from, date.to);
     let data = {
       end: new Date(formatDateEnd),
     };
 
-    if (e.target.value < time.from.hour) {
-      changeTime(parseInt(e.target.value) - 1, 'from', 'hour');
-      const { formatDateStart } = formatStringToIso(parseInt(e.target.value) - 1, time.from?.minutes, time.to?.hour, time.to?.minutes, date.from, date.to);
+    if (value < time.from.hour) {
+      changeTime(parseInt(value) - 1, 'from', 'hour');
+      const { formatDateStart } = formatStringToIso(parseInt(value) - 1, time.from?.minutes, time.to?.hour, time.to?.minutes, date.from, date.to);
       data = {
         start: new Date(formatDateStart),
         end: new Date(formatDateEnd),
@@ -164,17 +200,16 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
   };
 
   const handleChangeEndMinutes = (e) => {
-    setTime(prevTime => ({
-      ...prevTime,
-      'to': {
-        ...prevTime['to'],
-        minutes: e.target.value
-      }
-    }));
+    let value = e.target.value;
+    if (parseInt(value) > 59) value = '59';
+    if (!parseInt(value)) value = '0';
+    if (value.length >= 3 && value.charAt(0) == '0') value = value.charAt(1) + value.charAt(2)
+    if (value.length == 1) value = '0' + value
 
-    if (e.target.value.length != 2) return
+    changeTime(value, 'to', 'minutes');
+    if (value.length != 2) return
 
-    const { formatDateEnd } = formatStringToIso(time.from?.hour, time.from?.minutes, time.to?.hour, e.target.value, date.from, date.to);
+    const { formatDateEnd } = formatStringToIso(time.from?.hour, time.from?.minutes, time.to?.hour, value, date.from, date.to);
     const data = {
       end: new Date(formatDateEnd),
     };

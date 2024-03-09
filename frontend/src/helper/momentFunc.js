@@ -51,8 +51,8 @@ export const formatStringToIso = (startHour, startMinutes, endHour, endMinutes, 
     const timeStart = (startHour || '09') + ':' + (startMinutes || '00') + ':00';
     const timeEnd = (endHour || '10') + ':' + (endMinutes || '00') + ':00';
 
-    const formatDateStart = formatDate(startDay, 'YYYY-MM-DD').toString() + 'T' + timeStart + '.000Z';
-    const formatDateEnd = formatDate(endDay || startDay, 'YYYY-MM-DD').toString() + 'T' + timeEnd + '.000Z';
+    const formatDateStart = moment(startDay).format('YYYY-MM-DD').toString() + 'T' + timeStart + '.000Z';
+    const formatDateEnd = moment(endDay || startDay).format('YYYY-MM-DD').toString() + 'T' + timeEnd + '.000Z';
     
     return {
         formatDateStart: formatDateStart,

@@ -58,21 +58,33 @@ const AddEvent = ({ handleOpenAddEvent, calendars }) => {
   }
 
   const handleChangeHour = (e, field) => {
+    let value = e.target.value;
+    if (parseInt(value) > 24) value = '24';
+    if (!parseInt(value)) value = '0';
+    if (value.length >= 3 && value.charAt(0) == '0') value = value.charAt(1) + value.charAt(2)
+    if (value.length == 1) value = '0' + value;
+
     setTime(prevTime => ({
       ...prevTime,
       [field]: {
         ...prevTime[field],
-        hour: e.target.value
+        hour: value
       }
     }));
   };
   
   const handleChangeMinutes = (e, field) => {
+    let value = e.target.value;
+    if (parseInt(value) > 59) value = '59';
+    if (!parseInt(value)) value = '0';
+    if (value.length >= 3 && value.charAt(0) == '0') value = value.charAt(1) + value.charAt(2)
+    if (value.length == 1) value = '0' + value
+
     setTime(prevTime => ({
       ...prevTime,
       [field]: {
         ...prevTime[field],
-        minutes: e.target.value
+        minutes: value
       }
     }));
   };
