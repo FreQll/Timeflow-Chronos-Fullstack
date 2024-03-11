@@ -62,15 +62,11 @@ const DayView = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent
     '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', '9pm', '10pm', '11pm'];
 
     const isOverlap = (start1, end1, start2, end2) => {
-        console.log(start1 + '\n' + end2);
-        console.log(start1 < end2);
         return start1 < end2 && end1 > start2;
     };
 
     useEffect(() => {
-        let overlappingCount = 1;
-        events?.forEach(element => {
-            console.log(element);
+        events?.forEach((element, index) => {
             const startTime = formatDate(element.event.start, 'HH:mm') 
             const startTimeHour = formatDate(element.event.start, 'HH');
             const startTimeMinutes = formatDate(element.event.start, 'mm');
@@ -78,26 +74,32 @@ const DayView = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent
     
             const durationMinutes = moment(element.event.end).diff(moment(element.event.start), 'minutes') / 60;
     
-            events?.forEach(item => {
+            let overlappingIndex = 0;
+            let overlappingCount = 1;
+            events?.forEach((item, i) => {
                 if (item !== element) {
                     if (isOverlap(element.event.start, element.event.end, item.event.start, item.event.end)) {
                         overlappingCount++;
+                        if (index < i) overlappingIndex++;
                     }
                 }
             });
-
-            console.log(overlappingCount);
     
             // Добавляем обновленное событие в состояние dailyEvents с учетом количества пересекающихся событий
             setDailyEvents(prevState => {
+                console.log('name – ' + element.event.name);
+                // overlappingIndex++;
+                // if (overlappingCount == 1) overlappingIndex = 0;
+                console.log(overlappingCount);
+                console.log(overlappingIndex);
                 const newDailyEvents = prevState.filter(item => item.event.id !== element.event.id);
-                console.log(`${overlappingCount <= 2 ? 1 : parseInt(48 / (overlappingCount - 1))} / span ${overlappingCount <= 2 ? parseInt(24 - 1/48) : parseInt(48 / (overlappingCount))}`);
+                console.log(`${overlappingIndex == 0 ? 1 : parseInt(overlappingIndex * 48 / overlappingCount + 1)} / span ${overlappingCount == 1 ? 48 : parseInt(48 / (overlappingCount))}`);
                 return [
                     ...newDailyEvents,
                     {
                         event: element.event,
                         gridRow: `${2 + 12 * startTimeHour + startTimeMinutes * 0.2} / span ${parseInt(12 * durationMinutes)}`,
-                        gridColumn: `${overlappingCount <= 2 ? 1 : parseInt(48 / (overlappingCount - 1))} / span ${overlappingCount <= 2 ? parseInt(24 - 1/48) : parseInt(48 / (overlappingCount))}`,
+                        gridColumn: `${overlappingIndex == 0 ? 1 : parseInt(overlappingIndex * 48 / overlappingCount + 1)} / span ${overlappingCount == 1 ? 48 : parseInt(48 / (overlappingCount))}`,
                         overlappingCount: overlappingCount
                     }
                 ];

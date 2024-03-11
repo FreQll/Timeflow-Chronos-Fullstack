@@ -103,7 +103,6 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
     //   setDate(e);
     // }
     if (e) {
-      console.log(e);
       if (!e.from) setDate({from: e.to, to: e.to});
       else if (!e.to) setDate({from: e.from, to: e.from});
       else setDate(e);
