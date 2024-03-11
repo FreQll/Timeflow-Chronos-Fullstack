@@ -24,8 +24,6 @@ const CalendarBlocks = ({
   const user = getSavedState()?.user;
   const [defaultCalendar, setDefaultCalendar] = useState();
 
-  console.log(getSavedState());
-
   const clickCheckboxEventTypes = (keyTitle) => {
     changeActiveEventTypes(keyTitle);
   };
@@ -45,13 +43,6 @@ const CalendarBlocks = ({
         toastError("Error getting calendars");
         }
     }
-    
-      // Обработчик для открытия дропдаун меню при касании на тачпаде двумя пальцами
-      const handleTouchStart = (event) => {
-        if (event.touches.length === 2) {
-            console.log(event.target);
-        }
-      };
 
   useEffect(() => {
     getDefaultCalendar();
@@ -62,12 +53,11 @@ const CalendarBlocks = ({
       <div className="flex flex-col gap-[15px] p-[10px] rounded-[10px] bg-[#ffffff99]">
         <div className="flex flex-col gap-[10px] w-[100%]">
           <h3 className="opacity-50">Calendars</h3>
-
                     {calendars && (
                         <RadioGroup defaultValue={calendars[0].calendar.id} className='flex max-w-[100%] flex-col gap-0'>
                             {calendars.map(element => (
                                 <Popover key={element.calendar.id}>
-                                        <div className="flex items-center justify-between max-w-[100%]" onClick={() => clickCheckboxCalendars(element.calendar.id)} onContextMenu={(event) => handleContextMenu(event, element.calendar)} onTouchStart={handleTouchStart}>
+                                        <div className="flex items-center justify-between max-w-[100%]" onClick={() => clickCheckboxCalendars(element.calendar.id)} onContextMenu={(event) => handleContextMenu(event, element.calendar)} >
                                             <div className='flex items-center gap-[10px] max-w-[90%]'>
                                                 <RadioGroupItem value={element.calendar.id} id={element.calendar.name} style={{ backgroundColor: element.calendar.color }} className={`rounded-[4px] text-white border-0 box_shadow`} />
                                                 <div  className='text-ellipsis max-w-[100%] overflow-hidden'>
@@ -106,7 +96,7 @@ const CalendarBlocks = ({
         <div>
           <h3 className="mb-[10px] opacity-50">Events</h3>
 
-          <div className="flex flex-col gap-[5px]">
+          <div className="flex flex-col gap-[10px]">
             {Object.keys(enumEventTypes).map((type) => (
               <div
                 key={type}

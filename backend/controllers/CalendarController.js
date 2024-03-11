@@ -23,15 +23,16 @@ export const getCalendarByEvent = async (req, res) => {
     where: { eventId: eventId },
   });
 
-  if (!calendar) {
-    return res.status(404).json({ message: "Calendar not found." });
+  if (!calendar || calendar.length == 0) {
+    return;
+  } else {
+    console.log(calendar);
+    const calendarInfo = await prisma.calendar.findUnique({
+      where: { id: calendar[0].calendarId },
+    });
+  
+    return res.status(200).json(calendarInfo);
   }
-
-  const calendarInfo = await prisma.calendar.findUnique({
-    where: { id: calendar[0].calendarId },
-  });
-
-  return res.status(200).json(calendarInfo);
 };
 
 export const getUserCalendars = async (req, res) => {
@@ -106,20 +107,17 @@ export const getCalendarEventsByTime = async (req, res) => {
   //   moment(endDate, "DD-MM-YYYY").toISOString()
   // );
 
-  console.log("\nDATE:");
-  console.log(moment(startDate, "DD-MM-YYYY").toDate());
-  console.log(moment(endDate, "DD-MM-YYYY").toDate());
+  console.log('\nDATE:');
+  console.log(moment(startDate, "DD-MM-YYYY").toISOString());
+  console.log(moment(endDate, "DD-MM-YYYY").toISOString());
+
 
   const calendarEvents = await prisma.calendarEvents.findMany({
     where: {
       calendarId: calendarId,
       event: {
         AND: [
-          {
-            start: {
-              lte: moment(endDate, "DD-MM-YYYY").add(1, "day").toISOString(),
-            },
-          },
+          { start: { lte: moment(endDate, "DD-MM-YYYY").add(2, 'day').toISOString() } }, 
           { end: { gte: moment(startDate, "DD-MM-YYYY").toISOString() } },
         ],
       },

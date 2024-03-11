@@ -3,7 +3,7 @@ import { getCalendarDates, getStartAndEndDateOfMonth, getTodayDate, isDateBefore
 import moment from 'moment';
 import EventsList from './EventsList';
 
-const Grid = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent, activeEventTypes, calendars, selectedCalendar, handleOpenAddEvent }) => {
+const MonthView = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent, activeEventTypes, calendars, selectedCalendar }) => {
     const totalDays = 42;
     const calendarId = selectedCalendar?.id;
 
@@ -17,7 +17,6 @@ const Grid = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent, a
         events.forEach(element => {
             const start = moment(element.event.start);
             const end = moment(element.event.end);
-
             // console.log(date.format('DD MM') + ' ' + isDateBeforeDate(start, date));
             
             if (isDateBeforeDate(start, date) && isDateBeforeDate(date, end)) {
@@ -55,7 +54,7 @@ const Grid = ({ events, today, startOfCalendar, currentEvent, setCurrentEvent, a
     )
 }
 
-export default Grid
+export default MonthView
 
 
 // <div className="hidden w-full lg:grid lg:grid-cols-7 lg:grid-rows-6 lg:gap-px">

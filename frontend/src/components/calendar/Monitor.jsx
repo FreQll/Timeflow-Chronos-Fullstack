@@ -12,9 +12,8 @@ import { Dialog, DialogTrigger } from '@radix-ui/react-dialog';
 import EditCalendar from './EditCalendar';
 // import Button from './Button';
 
-const Monitor = ({ today, prevHandler, todayHandler, nextHandler, calendar, calendars }) => {
+const Monitor = ({ scheduleMode, setScheduleMode, today, prevHandler, todayHandler, nextHandler, calendar, calendars }) => {
     const [ menuViewOpen, setMenuViewOpen ] = useState(false);
-    const [ scheduleMode, setScheduleMode ] = useState(enumScheduleModes.MONTH);
 
     const currentMonth = today.format('MMMM YYYY');
     const currentDateFormat = today.format('YYYY-MM');
