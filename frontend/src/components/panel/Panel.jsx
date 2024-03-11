@@ -25,7 +25,7 @@ const Panel = ({ calendars, changeActiveEventTypes, activeCalendar, changeActive
           <CalendarBlocks calendars={calendars} activeCalendar={activeCalendar} changeActiveEventTypes={changeActiveEventTypes} changeActiveCalendar={changeActiveCalendar} />
         </TabsContent>
         <TabsContent value="profile" className='mt-[20px]'>
-          <ProfileBlocks />
+          <ProfileBlocks calendars={calendars} />
         </TabsContent>
       </Tabs>
 

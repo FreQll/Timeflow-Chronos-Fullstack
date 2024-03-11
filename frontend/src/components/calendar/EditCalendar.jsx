@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea'
 import React, { useEffect, useState } from 'react'
 import { ColorPicker } from 'antd';
 import ButtonBlue from '@/components/buttons/ButtonBlue'
-import axios, { POST_CONFIG } from '../../../API/axios'
+import axios, { GET_CONFIG, POST_CONFIG } from '../../../API/axios'
 import { getSavedState } from '@/redux/store'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { useNavigate } from 'react-router-dom'

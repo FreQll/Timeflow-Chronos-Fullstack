@@ -3,8 +3,10 @@ import { useDispatch } from 'react-redux';
 import { Separator } from '../ui/separator'
 import { logout } from '@/redux/actions/authActions';
 import { useNavigate } from 'react-router-dom';
+import InviteUsers from './InviteUsers';
+import { Dialog, DialogTrigger } from '../ui/dialog';
 
-const ProfileBlocks = () => {
+const ProfileBlocks = ({ calendars }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -20,7 +22,12 @@ const ProfileBlocks = () => {
           <div>
             <div className='p-[5px] rounded-[5px] text-[15px] hover:bg-[#00000011]'>Edit profile</div>
           </div>
-          <div className='p-[5px] rounded-[5px] text-[15px] hover:bg-[#00000011]'>Invite users</div>
+          <Dialog>
+              <DialogTrigger asChild>
+                <div className='p-[5px] rounded-[5px] text-[15px] hover:bg-[#00000011]'>Invite users</div>
+              </DialogTrigger>
+              <InviteUsers calendars={calendars} />
+          </Dialog>
           <Separator className='bg-black opacity-20' />
           <div className='p-[5px] rounded-[5px] text-[15px] hover:bg-[#00000011]' onClick={handleLogout}>Logout</div>
         </div>
