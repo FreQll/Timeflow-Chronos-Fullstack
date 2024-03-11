@@ -23,7 +23,7 @@ router.post("/", isAuth, createUser);
 router.patch("/:id", isAuth, updateUser);
 router.delete("/:id", isAuth, deleteUser);
 
-router.get("/avatar/:login", getUserAvatar);
+router.get("/avatar/:email", getUserAvatar);
 router.patch("/avatar/:userId", upload.single("avatar"), updateUserAvatar);
 
 export default router;

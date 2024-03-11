@@ -160,11 +160,11 @@ export const deleteUser = async (req, res) => {
 };
 
 export const getUserAvatar = async (req, res) => {
-  const { login } = req.params;
+  const { email } = req.params;
 
   const user = await prisma.user.findUnique({
     where: {
-      login: login,
+      email: email,
     },
   });
 

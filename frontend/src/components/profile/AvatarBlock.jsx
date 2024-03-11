@@ -1,13 +1,14 @@
-import React from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
-const AvatarBlock = () => {
+const AvatarBlock = ({ email }) => {
+  const link = `http://localhost:3000/api/user/avatar/${email}`;
+
   return (
     <Avatar>
-        <AvatarImage src="https://github.com/shadcn.png" />
-        <AvatarFallback>CN</AvatarFallback>
+      <AvatarImage src={link} />
+      <AvatarFallback>{email.slice(0, 2)}</AvatarFallback>
     </Avatar>
-  )
-}
+  );
+};
 
-export default AvatarBlock
+export default AvatarBlock;
