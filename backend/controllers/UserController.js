@@ -17,6 +17,34 @@ export const getAllUsers = async (req, res) => {
   return res.status(200).json(users);
 };
 
+export const findUsersByEmail = async (req, res) => {
+  const email = req.params.email;
+
+  if (!email || email.length < 3) {
+    return res.status(400).json({});
+  }
+
+  const user = await prisma.user.findMany({
+    where: {
+      email: {
+        startsWith: email,
+      },
+    },
+    select: {
+      id: true,
+      login: true,
+      email: true,
+      full_name: true,
+    },
+  });
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  return res.status(200).json(user);
+};
+
 export const getUserById = async (req, res) => {
   const userId = req.params.id;
 
