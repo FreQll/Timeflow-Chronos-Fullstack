@@ -85,7 +85,7 @@ const EventsList = ({
                         <p 
                           style={{color: isHovered?.id == element?.event.id && enumEventTypes[element?.event.type].color}}
                           className={`flex-auto truncate font-medium text-gray-900`}>
-                          <span className="hidden lg:flex">
+                          <span className="hidden lg:flex leading-[150%]">
                             {cutString(element?.event.name, 20, "...")}
                           </span>
                           <span className="flex lg:hidden">
@@ -93,14 +93,14 @@ const EventsList = ({
                           </span>
                         </p>
                       </div>
-                      <time
+                      {/* <time
                         dateTime="2022-01-03T10:00"
                           style={{color: isHovered && enumEventTypes[element?.event.type].color}}
                         className={`ml-3 hidden flex-none text-gray-500 xl:block`}
                         
                       >
                         10AM
-                      </time>
+                      </time> */}
                     </a>
                     <span className="flex flex-wrap-reverse lg:hidden -mx-0.5 mt-auto">
                       <span className="mx-0.5 mb-1 h-1.5 w-1.5 rounded-full bg-gray-400"></span>

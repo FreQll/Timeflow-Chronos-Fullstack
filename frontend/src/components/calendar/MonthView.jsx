@@ -28,7 +28,7 @@ const MonthView = ({ events, today, startOfCalendar, currentEvent, setCurrentEve
     } 
 
     return (
-        <div className="w-full grid grid-cols-7 grid-rows-6 gap-px">
+        <div className="w-full grid grid-cols-7 grid-rows-6 gap-px h-[-webkit-fill-available]">
             {datesArray.map((date) => (
                 <div 
                     key={date} className={`relative py-2

@@ -20,11 +20,11 @@ const ProfileBlocks = ({ calendars }) => {
         <div className='flex flex-col gap-[10px]'>
           <div className='font-semibold mb-[5px]'>Settings</div>
           <div>
-            <div className='p-[5px] rounded-[5px] text-[15px] hover:bg-[#00000011]'>Edit profile</div>
+            <div className='p-[5px] rounded-[5px] text-[15px] hover:bg-[#00000011] cursor-pointer'>Edit profile</div>
           </div>
           <Dialog>
               <DialogTrigger asChild>
-                <div className='p-[5px] rounded-[5px] text-[15px] hover:bg-[#00000011]'>Invite users</div>
+                <div className='p-[5px] rounded-[5px] text-[15px] hover:bg-[#00000011] cursor-pointer'>Invite users</div>
               </DialogTrigger>
               <InviteUsers calendars={calendars} />
           </Dialog>

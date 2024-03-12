@@ -12,7 +12,7 @@ dotenv.config();
 export const register = async (req, res) => {
   const { email, password, full_name } = req.body;
 
-  // const login = full_name;
+  const login = full_name;
 
   if (!email || !password || !full_name) {
     return res.status(400).json({ message: "Missing parameters." });
@@ -54,7 +54,7 @@ export const register = async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await prisma.user.create({
     data: {
-      // login: login,
+      login: login,
       email: email,
       password: hashedPassword,
       full_name: full_name,

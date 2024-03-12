@@ -20,5 +20,5 @@ export const toastSuccess = (mes, title = null) => {
 export const toastMessage = (mes, title = null) => {
   const message = mes || mes.message;
 
-  toast.message(message);
+  toast.info(message);
 };

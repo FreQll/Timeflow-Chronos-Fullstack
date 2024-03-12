@@ -86,7 +86,7 @@ const Calendar = ({ activeEventTypes, calendar, calendars }) => {
           setScheduleMode={setScheduleMode}
         />
         {scheduleMode == enumScheduleModes.MONTH && (
-          <div className="shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col relative">
+          <div className="shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col relative h-[-webkit-fill-available]">
             <ScheduleHeader />
             <div className="flex bg-gray-200 text-xs leading-6 text-gray-700 lg:flex-auto">
               <MonthView

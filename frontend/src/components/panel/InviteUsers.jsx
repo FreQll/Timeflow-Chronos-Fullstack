@@ -5,20 +5,36 @@ import { Input } from '../ui/input'
 import ButtonBlue from '../buttons/ButtonBlue'
 import { Button } from '../ui/button'
 import ComboboxPopover from '../ComboboxPopover';
-import axios, { GET_CONFIG } from '../../../API/axios';
+import axios, { GET_CONFIG, POST_CONFIG } from '../../../API/axios';
+import { savedState } from '@/redux/store';
+import { enumUsersRoles, enumUsersRolesArray } from '@/helper/enumUsersRoles';
+import { toastMessage } from '@/helper/toastFunctions';
 
 const InviteUsers = ({ calendars }) => {
     const [ email, setEmail ] = useState('');
-    const [ selectedCalendar, setSelectedCalendar ] = useState(calendars && calendars[0].calendar)
+    const [ selectedCalendar, setSelectedCalendar ] = useState(calendars && calendars[0].calendar);
+    const [ selectedRole, setSelectedRole ] = useState(enumUsersRoles.GUEST);
+    const user = savedState?.user;
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
     }
 
     const handleInvite = async () => {
-        console.log(email);
-        const isEmailExist = await axios.get(`/api/user/email/${email}`, GET_CONFIG);
-        console.log(isEmailExist);
+        const inviteEmail = await axios.get(`/api/user/email/${email}`, GET_CONFIG);
+
+        const data = {
+            email: inviteEmail.data[0].email,
+            ownerId: user.id,
+            calendarId: selectedCalendar.id,
+            role: selectedRole.title.toUpperCase(),
+        }
+
+        try {
+            await axios.post('/api/calendar/addUserToCalendar', data, POST_CONFIG);
+        } catch (error) {
+            toastMessage(error.response.data.message)
+        }
     }
 
     return (
@@ -44,6 +60,20 @@ const InviteUsers = ({ calendars }) => {
                                 selectedStatusName={selectedCalendar?.name}
                                 selectedStatus={selectedCalendar}
                                 setSelectedStatus={setSelectedCalendar}
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="text-right"><Label>Role: </Label></td>
+                        <td>
+                            <ComboboxPopover
+                                className='w-[100%]'
+                                buttonColor={"bg-[#ffffffab]"}
+                                statuses={enumUsersRolesArray}
+                                placeholder={"Set role"}
+                                selectedStatusName={selectedRole.title}
+                                selectedStatus={selectedRole}
+                                setSelectedStatus={setSelectedRole}
                             />
                         </td>
                     </tr>
