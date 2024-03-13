@@ -50,6 +50,7 @@ const Panel = ({
           <ProfileBlocks
             isSettingsOpen={isSettingsOpen}
             setIsSettingsOpen={setIsSettingsOpen}
+            calendars={calendars}
           />
         </TabsContent>
       </Tabs>
