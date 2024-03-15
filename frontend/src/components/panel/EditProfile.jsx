@@ -23,7 +23,7 @@ export const EditProfile = () => {
   const [userEmail, setUserEmail] = useState(getSavedState().user?.email);
   const [userFullName, setUserFullName] = useState(getSavedState().user?.fullName);
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const saveUpdates = async () => {
     try {
@@ -42,7 +42,6 @@ export const EditProfile = () => {
             id: savedState.user.id,
           })
         );
-        //! тут нужно ебануть диспатчем обновление данных про юзера
       }
     } catch (error) {
       toastError(error);
