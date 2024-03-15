@@ -27,7 +27,7 @@ export const AvatarUpload = () => {
           />
         </div>
         <label className="cursor-pointer mt-6">
-          <span className="mt-2 text-sm leading-normal px-4 py-2 bg-blue-600 text-white rounded-md font-bold">
+          <span className="mt-2 text-sm leading-normal px-4 py-2 bg-indigo-600 hover:bg-indigo-500 transition-colors text-white rounded-md font-bold">
             Select Avatar
           </span>
           <input
