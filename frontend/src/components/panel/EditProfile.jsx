@@ -2,7 +2,7 @@ import { AvatarUpload } from "./AvatarUpload";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
-import { savedState } from "@/redux/store";
+import { getSavedState, savedState } from "@/redux/store";
 import { useState } from "react";
 import { toastError, toastSuccess } from "@/helper/toastFunctions";
 import axios, { POST_CONFIG } from "../../../API/axios";
@@ -19,10 +19,9 @@ import { Separator } from "../ui/separator";
 import ButtonBlue from "../buttons/ButtonBlue";
 
 export const EditProfile = () => {
-  console.log(savedState.user);
-  const [userLogin, setUserLogin] = useState(savedState.user.login);
-  const [userEmail, setUserEmail] = useState(savedState.user.email);
-  const [userFullName, setUserFullName] = useState(savedState.user.fullName);
+  const [userLogin, setUserLogin] = useState(getSavedState().user?.login);
+  const [userEmail, setUserEmail] = useState(getSavedState().user?.email);
+  const [userFullName, setUserFullName] = useState(getSavedState().user?.fullName);
 
   // const dispatch = useDispatch();
 
@@ -35,14 +34,14 @@ export const EditProfile = () => {
       });
       if (response.status === 200) {
         toastSuccess("Profile updated");
-        // dispatch(
-        //   login({
-        //     login: userLogin,
-        //     email: userEmail,
-        //     full_name: userFullName,
-        //     id: savedState.user.id,
-        //   })
-        // );
+        dispatch(
+          login({
+            login: userLogin,
+            email: userEmail,
+            full_name: userFullName,
+            id: savedState.user.id,
+          })
+        );
         //! тут нужно ебануть диспатчем обновление данных про юзера
       }
     } catch (error) {
