@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import path from "path";
 import Jimp from "jimp";
 import fs from "fs";
+import mime from "mime-types";
 
 export const getAllUsers = async (req, res) => {
   const users = await prisma.user.findMany({
@@ -200,6 +201,13 @@ export const updateUserAvatar = async (req, res) => {
     return res.status(400).json({ message: "No file provided." });
   }
 
+  const mimeType = mime.lookup(req.file.originalname);
+  if (!mimeType || !mimeType.startsWith("image/")) {
+    return res
+      .status(400)
+      .json({ message: "Invalid file format. Only images are allowed." });
+  }
+
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -214,13 +222,17 @@ export const updateUserAvatar = async (req, res) => {
     process.cwd(),
     "public",
     "avatars",
-    `${userId}.png`
+    `${user.id}.png`
   );
 
   const resizeSize = 512;
 
   const avatarImage = await Jimp.read(req.file.path);
   await avatarImage.cover(resizeSize, resizeSize).write(avatarPath);
+  fs.unlinkSync(req.file.path);
+
+  console.log(avatarPath);
+  console.log(req.file.path);
 
   return res.status(200).json({ message: "Avatar updated successfully." });
 };

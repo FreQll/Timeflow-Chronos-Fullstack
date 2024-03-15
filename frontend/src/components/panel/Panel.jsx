@@ -16,8 +16,6 @@ const Panel = ({
   activeCalendar,
   changeActiveCalendar,
 }) => {
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-
   return (
     <div className="min-w-[200px] bg_gradient_2 h-[100%] p-[20px] z-30 flex flex-col gap-[20px]">
       <Tabs defaultValue="calendar" className="w-[100%]">
@@ -47,11 +45,7 @@ const Panel = ({
           />
         </TabsContent>
         <TabsContent value="profile" className="mt-[20px]">
-          <ProfileBlocks
-            isSettingsOpen={isSettingsOpen}
-            setIsSettingsOpen={setIsSettingsOpen}
-            calendars={calendars}
-          />
+          <ProfileBlocks calendars={calendars} />
         </TabsContent>
       </Tabs>
     </div>
