@@ -1,23 +1,18 @@
-// import { toastr } from "react-redux-toastr";
 import { toast } from "react-toastify";
 
-export const toastError = (error, title = null) => {
+export const toastError = (error) => {
   const message = error || error.message;
 
-  // toastr.error(title || 'Error request', message);
   toast.error(message);
-  throw message;
 };
 
-export const toastSuccess = (mes, title = null) => {
+export const toastSuccess = (mes) => {
   const message = mes || mes.message;
 
-  // toastr.success(title || 'Success', message);
   toast.success(message);
-  throw message;
 };
 
-export const toastMessage = (mes, title = null) => {
+export const toastMessage = (mes) => {
   const message = mes || mes.message;
 
   toast.info(message);

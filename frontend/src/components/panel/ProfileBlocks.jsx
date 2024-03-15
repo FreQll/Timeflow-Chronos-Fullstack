@@ -7,7 +7,7 @@ import { EditProfile } from "./EditProfile";
 import InviteUsers from "./InviteUsers";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 
-const ProfileBlocks = ({ isSettingsOpen, setIsSettingsOpen, calendars }) => {
+const ProfileBlocks = ({ calendars }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -16,23 +16,19 @@ const ProfileBlocks = ({ isSettingsOpen, setIsSettingsOpen, calendars }) => {
     navigate("/authentication");
   };
 
-  console.log(isSettingsOpen);
-
-  if (isSettingsOpen) {
-    return <EditProfile setIsSettingsOpen={setIsSettingsOpen} />;
-  }
-
   return (
     <div className="flex flex-col gap-[15px] p-[10px] rounded-[10px] bg-[#ffffff99]">
       <div className="flex flex-col gap-[10px]">
         <div className="font-semibold mb-[5px]">Settings</div>
         <div className="flex flex-col gap-[10px]">
-          <div
-            className="p-[5px] rounded-[5px] text-[15px] hover:bg-[#00000011] cursor-pointer"
-            onClick={() => setIsSettingsOpen(true)}
-          >
-            Edit profile
-          </div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <div className="p-[5px] rounded-[5px] text-[15px] hover:bg-[#00000011] cursor-pointer">
+                Edit profile
+              </div>
+            </DialogTrigger>
+            <EditProfile />
+          </Dialog>
           <Dialog>
             <DialogTrigger asChild>
               <div className="p-[5px] rounded-[5px] text-[15px] hover:bg-[#00000011] cursor-pointer">
