@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { getSavedState, savedState } from "@/redux/store";
 import { useState } from "react";
 import { toastError, toastSuccess } from "@/helper/toastFunctions";
-import axios, { POST_CONFIG } from "../../../API/axios";
+import axios from "../../../API/axios";
 import { useDispatch } from "react-redux";
 import { login } from "@/redux/actions/authActions";
 import {
@@ -21,7 +21,9 @@ import ButtonBlue from "../buttons/ButtonBlue";
 export const EditProfile = () => {
   const [userLogin, setUserLogin] = useState(getSavedState().user?.login);
   const [userEmail, setUserEmail] = useState(getSavedState().user?.email);
-  const [userFullName, setUserFullName] = useState(getSavedState().user?.fullName);
+  const [userFullName, setUserFullName] = useState(
+    getSavedState().user?.fullName
+  );
 
   const dispatch = useDispatch();
 

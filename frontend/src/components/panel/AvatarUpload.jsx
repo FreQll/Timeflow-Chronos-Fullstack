@@ -1,5 +1,5 @@
 import { savedState } from "@/redux/store";
-import { toastSuccess } from "@/helper/toastFunctions";
+import { toastError, toastSuccess } from "@/helper/toastFunctions";
 import axios from "../../../API/axios";
 
 export const AvatarUpload = () => {
@@ -13,7 +13,8 @@ export const AvatarUpload = () => {
       });
       await toastSuccess("Avatar updated");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toastError(error.message);
     }
   };
 
