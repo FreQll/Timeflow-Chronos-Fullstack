@@ -334,12 +334,16 @@ export const addUserToCalendar = async (req, res) => {
     return res.status(404).json({ message: "Owner not found." });
   }
 
+  console.log(userToAdd.id + " " + calendarId + " " + role + " !!!!!!");
+
   const userCalendar = await prisma.userCalendars.findFirst({
     where: {
       userId: userToAdd.id,
       calendarId: calendarId,
     },
   });
+
+  console.log(userCalendar);
 
   if (userCalendar) {
     return res

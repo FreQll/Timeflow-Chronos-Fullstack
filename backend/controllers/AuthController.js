@@ -105,7 +105,7 @@ export const login = async (req, res) => {
   }
 
   const token = jwtGenerator(user.id, user.email, user.full_name);
-  res.cookie("token", token, { httpOnly: true, expiresIn: "2h" });
+  res.cookie("token", token, { httpOnly: false, expiresIn: "2h" });
   return res.status(200).json({
     user: {
       id: user.id,
