@@ -61,17 +61,13 @@ export const addToCalendarHTML = (
         
         .cta-button {
           display: inline-block;
-          background-color: #4267B2;
-          color: white;
+          border: dashed 1px;
+          color: black;
           padding: 10px 20px;
           text-decoration: none;
           border-radius: 5px;
           margin-top: 10px;
           margin-bottom: 20px;
-        }
-        
-        a, a:hover, a:active {
-          color: white;
         }
       </style>
     </head>

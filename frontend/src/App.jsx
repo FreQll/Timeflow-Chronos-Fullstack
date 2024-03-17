@@ -12,6 +12,7 @@ import { enumEventTypes, enumEventTypesArray } from "./helper/enumEventTypes";
 import { checkTokenExpiration } from "./redux/actions/authActions";
 import { toastError } from "./helper/toastFunctions";
 import AddEvent from "./components/calendar/AddEvent";
+import ConfirmAdding from "./pages/ConfirmAdding";
 
 function App() {
   const user = getSavedState()?.user;
@@ -45,7 +46,7 @@ function App() {
     } catch (error) {
       toastError("Error getting calendars");
     }
-  }
+  };
 
   const changeActiveEventTypes = (typeName) => {
     if (activeEventTypes?.includes(typeName)) {
@@ -75,7 +76,7 @@ function App() {
 
   useEffect(() => {
     if (user) setDefaultCalendar(user.id);
-  }, [])
+  }, []);
 
   useEffect(() => {
     dispatch(checkTokenExpiration());
@@ -110,6 +111,7 @@ function App() {
           }
         />
         <Route path="/add-event" element={<AddEvent />} />
+        <Route path="/confirmAdding/:id/:token" element={<ConfirmAdding />} />
 
         {/* <Route path='/settings' element={<Settings />}>
           <Route path='/settings' element={<SettingsMain />} />

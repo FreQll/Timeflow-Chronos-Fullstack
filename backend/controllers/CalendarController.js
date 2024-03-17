@@ -371,7 +371,7 @@ export const addUserToCalendar = async (req, res) => {
   };
   const token = await jwt.sign(payload, secret, { expiresIn: "1h" });
 
-  const link = `http://${process.env.HOST}:${process.env.PORT}/api/calendar/addUserToCalendar/${userToAdd.id}/${token}`;
+  const link = `http://${process.env.HOST}:5173/confirmAdding/${userToAdd.id}/${token}`;
 
   await sendEmail(
     userToAdd.email,

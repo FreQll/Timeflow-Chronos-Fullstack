@@ -15,7 +15,7 @@ import ComboboxPopover from "../ComboboxPopover";
 import axios, { GET_CONFIG, POST_CONFIG } from "../../../API/axios";
 import { savedState } from "@/redux/store";
 import { enumUsersRoles, enumUsersRolesArray } from "@/helper/enumUsersRoles";
-import { toastMessage } from "@/helper/toastFunctions";
+import { toastMessage, toastSuccess } from "@/helper/toastFunctions";
 
 const InviteUsers = ({ calendars }) => {
   const [email, setEmail] = useState("");
@@ -26,6 +26,8 @@ const InviteUsers = ({ calendars }) => {
   const [selectedRole, setSelectedRole] = useState(enumUsersRoles.GUEST);
   const user = savedState?.user;
 
+  console.log(selectedCalendar);
+
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -33,15 +35,18 @@ const InviteUsers = ({ calendars }) => {
   const handleInvite = async () => {
     const inviteEmail = await axios.get(`/api/user/email/${email}`, GET_CONFIG);
 
+    console.log(selectedCalendar.calendar.id);
+
     const data = {
       email: inviteEmail.data[0].email,
       ownerId: user.id,
-      calendarId: selectedCalendar.id,
+      calendarId: selectedCalendar.calendar.id,
       role: selectedRole.title.toUpperCase(),
     };
 
     try {
       await axios.post("/api/calendar/addUserToCalendar", data, POST_CONFIG);
+      await toastSuccess("User invited successfully!");
     } catch (error) {
       toastMessage(error.response.data.message);
     }
