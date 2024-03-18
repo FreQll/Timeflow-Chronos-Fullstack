@@ -6,7 +6,7 @@ const AvatarBlock = ({ email }) => {
   return (
     <Avatar>
       <AvatarImage src={link} />
-      <AvatarFallback>{email.slice(0, 2)}</AvatarFallback>
+      <AvatarFallback>{email?.slice(0, 2)}</AvatarFallback>
     </Avatar>
   );
 };

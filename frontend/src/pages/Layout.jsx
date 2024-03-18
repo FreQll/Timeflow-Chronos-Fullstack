@@ -15,7 +15,7 @@ const Layout = ({ calendars, changeActiveEventTypes, activeCalendar, changeActiv
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuth) navigate('/auth')
+    if (!isAuth) navigate('/authentication')
   }, [])
 
   return (
