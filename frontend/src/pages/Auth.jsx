@@ -28,7 +28,7 @@ const Auth = () => {
 
         <SignUp active={active} setActive={setActive} />
         <SignIn active={active} handleClick={handleClick} />
-        <ResetPassword active={active} />
+        <ResetPassword active={active} setActive={setActive} />
 
         <div
           className={`flex flex-col gap-[20px] py-[20px] px-[40px] mt-[10%] text-left

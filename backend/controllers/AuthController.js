@@ -199,6 +199,8 @@ export const logout = async (req, res) => {
 export const resetPassword = async (req, res) => {
   const { email } = req.body;
 
+  console.log(email);
+
   if (!email) {
     return res.status(400).json({ message: "Missing parameters." });
   }

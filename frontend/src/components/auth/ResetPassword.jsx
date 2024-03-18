@@ -2,13 +2,56 @@ import React, { useState } from 'react'
 import ButtonGradient from '../buttons/ButtonGradient'
 import { Input } from '../ui/input'
 import ButtonWithBorder from '../buttons/ButtonWithBorder';
+import axios, { POST_CONFIG } from '../../../API/axios';
+import { getSavedState } from '@/redux/store';
+import { toastError } from '@/helper/toastFunctions';
+import CodeInput from './CodeInput';
 
-const ResetPassword = ({ active }) => {
+const ResetPassword = ({ active, setActive }) => {
     const [ state, setState ] = useState('send_email');
     const [ email, setEmail ] = useState();
+    const [ code, setCode ] = useState('');
+    const [ password, setPassword ] = useState('');
+    const [ confirmPassword, setConfirmPassword ] = useState('');
+    const savedState = getSavedState();
 
     const handleChangeEmail = (e) => {
         setEmail(e.target.value);
+    }
+
+    const handleClickNext = async () => {
+        const response = await axios.get('/api/user/email/' + email);
+        if (response.data.length == 0) {
+            toastError('This email is not registered');
+            setState('send_email')
+        } else {
+            setState('confirm_code');
+            const data = {
+                email: email
+            }
+            const response = await axios.post('/api/auth/reset-password', data, POST_CONFIG);
+            // if ()
+        }
+    }
+
+    const handleReset = async () => {
+        if (password !== confirmPassword) {
+            toastError("Passwords don't match");
+        } else {
+            const data = {
+                newPassword: password,
+                code: code,
+                email: email
+            }
+            try {
+                await axios.post('/api/auth/reset-password/confirm', data, POST_CONFIG)
+                setActive('login');
+                setState('send_email')
+                
+            } catch (error) {
+                toastError(error.response.data.message)
+            }
+        }
     }
 
     return (
@@ -24,8 +67,8 @@ const ResetPassword = ({ active }) => {
                 <form className='flex flex-col gap-[10px] w-[100%]'>              
                     <Input type="email" placeholder="Email" className='w-[100%]' onChange={handleChangeEmail} />
                 </form>
-                <div onClick={() => { if(email) setState('confirm_code')}}>
-                    <ButtonWithBorder arrowType={'right'} text={'Next'} className={'w-[100px]'} />
+                <div>
+                    <ButtonWithBorder onClick={handleClickNext} arrowType={'right'} text={'Next'} className={'w-[100px]'} />
                 </div>
             </div>
 
@@ -34,18 +77,19 @@ const ResetPassword = ({ active }) => {
             ${active == 'reset_password' && state == 'confirm_code' && 'z-[6] translate-x-[100%] opacity-100'}`}>
                 <div>
                     <h1 className='uppercase text-[#7B6CEA] font-[600] text-[24px]'>Reset password</h1>
-                    <div className='text-[14px] opacity-60'>Enter code and reset password</div>
+                    <div className='text-[14px] opacity-60'>Check your mail, enter code and reset password</div>
                 </div>
                 <form className='flex flex-col gap-[10px] w-[100%]'>              
-                    <Input type="text" placeholder="Code" className='w-[100%]' />
-                    <Input type="password" placeholder="New password" className='w-[100%]' />
-                    <Input type="password" placeholder="Confirm password" className='w-[100%]' />
+                    {/* <Input type="text" placeholder="Code" className='w-[100%]' /> */}
+                    <CodeInput value={code} setValue={setCode} />
+                    <Input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="New password" className='w-[100%]' />
+                    <Input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} type="password" placeholder="Confirm password" className='w-[100%]' />
                 </form>
                 <div className='flex gap-[10px]'>
                     <div onClick={() => setState('send_email')}>
                         <ButtonWithBorder arrowType={'left'} text={'Back'} className={'w-[100px]'} />
                     </div>
-                    <ButtonGradient text={'Reset'} className={'w-[100px]'} />
+                    <ButtonGradient onClick={handleReset} text={'Reset'} className={'w-[100px]'} />
                 </div>
             </div>
         </>

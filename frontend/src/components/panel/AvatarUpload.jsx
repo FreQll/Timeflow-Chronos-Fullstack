@@ -1,17 +1,18 @@
-import { savedState } from "@/redux/store";
+import { getSavedState } from "@/redux/store";
 import { toastError, toastSuccess } from "@/helper/toastFunctions";
 import axios from "../../../API/axios";
 import { useNavigate } from "react-router-dom";
 
 export const AvatarUpload = () => {
   const navigate = useNavigate();
+  const user = getSavedState().user;
 
   const handleFileChange = async (e) => {
     const formData = new FormData();
     formData.append("avatar", e.target.files[0]);
 
     try {
-      await axios.patch(`/api/user/avatar/${savedState.user.id}`, formData, {
+      await axios.patch(`/api/user/avatar/${user?.id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       toastSuccess("Avatar updated");
@@ -27,7 +28,7 @@ export const AvatarUpload = () => {
       <div className="px-4 py-5 rounded-lg text-center flex justify-center flex-col items-center">
         <div className="mb-4">
           <img
-            src={`http://localhost:3000/api/user/avatar/${savedState.user.email}`}
+            src={`http://localhost:3000/api/user/avatar/${user?.email}`}
             className="h-24 w-24 rounded-full object-cover"
           />
         </div>

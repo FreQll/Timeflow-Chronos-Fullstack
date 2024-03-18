@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import CalendarBlocks from "./CalendarBlocks";
 import { CalendarIcon, HomeIcon } from "@radix-ui/react-icons";
 import ProfileBlocks from "./ProfileBlocks";
-import { savedState } from "@/redux/store";
+import { getSavedState, savedState } from "@/redux/store";
 
 const Panel = ({
   calendars,
@@ -16,11 +16,12 @@ const Panel = ({
   activeCalendar,
   changeActiveCalendar,
 }) => {
+  const user = getSavedState().user;
   return (
     <div className="min-w-[200px] bg_gradient_2 h-[100%] p-[20px] z-30 flex flex-col gap-[20px]">
       <Tabs defaultValue="calendar" className="w-[100%]">
         <div className="flex gap-[20px] items-center justify-between">
-          <AvatarBlock email={savedState?.user?.email} />
+          <AvatarBlock email={user?.email} />
           <TabsList className="bg-transparent">
             <TabsTrigger
               value="calendar"

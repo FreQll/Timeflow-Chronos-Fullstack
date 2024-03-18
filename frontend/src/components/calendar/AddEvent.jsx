@@ -21,7 +21,7 @@ import axios, { POST_CONFIG } from "../../../API/axios";
 import { objToJson } from "../../helper/stringFunc";
 import { useToast } from "@/components/ui/use-toast";
 import ButtonBlue from "@/components/buttons/ButtonBlue";
-import { getSavedState, savedState } from "@/redux/store";
+import { getSavedState } from "@/redux/store";
 import { useNavigate } from "react-router-dom";
 import {
   DrawerContent,
@@ -35,7 +35,7 @@ import { Separator } from "@radix-ui/react-separator";
 import { Input } from "../ui/input";
 
 const AddEvent = ({ handleOpenAddEvent, calendars }) => {
-  const user = savedState?.user;
+  const user = getSavedState().user;
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("New event");

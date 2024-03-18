@@ -13,7 +13,7 @@ import ButtonBlue from "../buttons/ButtonBlue";
 import { Button } from "../ui/button";
 import ComboboxPopover from "../ComboboxPopover";
 import axios, { GET_CONFIG, POST_CONFIG } from "../../../API/axios";
-import { savedState } from "@/redux/store";
+import { getSavedState } from "@/redux/store";
 import { enumUsersRoles, enumUsersRolesArray } from "@/helper/enumUsersRoles";
 import { toastMessage, toastSuccess } from "@/helper/toastFunctions";
 
@@ -24,7 +24,7 @@ const InviteUsers = ({ calendars }) => {
     calendars && calendars[0].calendar
   );
   const [selectedRole, setSelectedRole] = useState(enumUsersRoles.GUEST);
-  const user = savedState?.user;
+  const user = getSavedState()?.user;
 
   console.log(selectedCalendar);
 

@@ -19,17 +19,18 @@ import { Separator } from "../ui/separator";
 import ButtonBlue from "../buttons/ButtonBlue";
 
 export const EditProfile = () => {
-  const [userLogin, setUserLogin] = useState(getSavedState().user?.login);
-  const [userEmail, setUserEmail] = useState(getSavedState().user?.email);
+  const user = getSavedState().user;
+  const [userLogin, setUserLogin] = useState(user?.login);
+  const [userEmail, setUserEmail] = useState(user?.email);
   const [userFullName, setUserFullName] = useState(
-    getSavedState().user?.fullName
+    user?.fullName
   );
 
   const dispatch = useDispatch();
 
   const saveUpdates = async () => {
     try {
-      const response = await axios.patch(`/api/user/${savedState.user.id}`, {
+      const response = await axios.patch(`/api/user/${user?.id}`, {
         login: userLogin,
         email: userEmail,
         full_name: userFullName,
@@ -41,7 +42,7 @@ export const EditProfile = () => {
             login: userLogin,
             email: userEmail,
             full_name: userFullName,
-            id: savedState.user.id,
+            id: user.id,
           })
         );
       }
