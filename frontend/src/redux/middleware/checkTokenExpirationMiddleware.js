@@ -4,6 +4,7 @@ import { jwtDecode } from "jwt-decode";
 
 const checkTokenExpirationMiddleware = (store) => (next) => (action) => {
   console.log(Cookies.get("token") + " token");
+  console.log(document.cookies)
   if (action.type === "CHECK_TOKEN_EXPIRATION") {
     if (savedState?.isAuthenticated) {
       const token = Cookies.get("token");

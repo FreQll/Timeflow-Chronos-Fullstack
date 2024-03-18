@@ -65,9 +65,7 @@ const Monitor = ({ scheduleMode, setScheduleMode, today, prevHandler, todayHandl
                             <div className="absolute right-0 z-10 mt-3 w-36 origin-top-right overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex="-1">
                                 <div className="py-1" role="none">
                                     <a href="#" onClick={() => handleClickMode(enumScheduleModes.DAY)} className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabIndex="-1" id="menu-item-0">Day view</a>
-                                    <a href="#" onClick={() => handleClickMode(enumScheduleModes.WEEK)} className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabIndex="-1" id="menu-item-1">Week view</a>
                                     <a href="#" onClick={() => handleClickMode(enumScheduleModes.MONTH)} className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabIndex="-1" id="menu-item-2">Month view</a>
-                                    <a href="#" onClick={() => handleClickMode(enumScheduleModes.YEAR)} className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabIndex="-1" id="menu-item-3">Year view</a>
                                 </div>
                             </div>
                         )}
@@ -99,9 +97,7 @@ const Monitor = ({ scheduleMode, setScheduleMode, today, prevHandler, todayHandl
                             </div>
                             <div className="py-1" role="none">
                                 <a href="#" onClick={() => handleClickMode(enumScheduleModes.DAY)} className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabIndex="-1" id="menu-item-0">Day view</a>
-                                <a href="#" onClick={() => handleClickMode(enumScheduleModes.WEEK)} className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabIndex="-1" id="menu-item-1">Week view</a>
                                 <a href="#" onClick={() => handleClickMode(enumScheduleModes.MONTH)} className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabIndex="-1" id="menu-item-2">Month view</a>
-                                <a href="#" onClick={() => handleClickMode(enumScheduleModes.YEAR)} className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabIndex="-1" id="menu-item-3">Year view</a>
                             </div>
                         </div>
                     )}

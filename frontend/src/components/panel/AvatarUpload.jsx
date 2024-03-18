@@ -1,8 +1,11 @@
 import { savedState } from "@/redux/store";
 import { toastError, toastSuccess } from "@/helper/toastFunctions";
 import axios from "../../../API/axios";
+import { useNavigate } from "react-router-dom";
 
 export const AvatarUpload = () => {
+  const navigate = useNavigate();
+
   const handleFileChange = async (e) => {
     const formData = new FormData();
     formData.append("avatar", e.target.files[0]);
@@ -11,7 +14,8 @@ export const AvatarUpload = () => {
       await axios.patch(`/api/user/avatar/${savedState.user.id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      await toastSuccess("Avatar updated");
+      toastSuccess("Avatar updated");
+      navigate('/');
     } catch (error) {
       // console.log(error);
       toastError(error.message);

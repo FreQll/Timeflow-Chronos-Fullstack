@@ -89,6 +89,8 @@ function App() {
       {/* <Route path='/registration' element={<Registration />} />
       <Route path='/reset-password' element={<ResetPasswordPage />} />  */}
 
+      <Route path="/confirmAdding/:id/:token" element={<ConfirmAdding />} />
+      
       <Route
         path="/"
         element={
@@ -111,7 +113,6 @@ function App() {
           }
         />
         <Route path="/add-event" element={<AddEvent />} />
-        <Route path="/confirmAdding/:id/:token" element={<ConfirmAdding />} />
 
         {/* <Route path='/settings' element={<Settings />}>
           <Route path='/settings' element={<SettingsMain />} />
