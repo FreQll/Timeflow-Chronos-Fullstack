@@ -20,7 +20,7 @@ const Panel = ({
     <div className="min-w-[200px] bg_gradient_2 h-[100%] p-[20px] z-30 flex flex-col gap-[20px]">
       <Tabs defaultValue="calendar" className="w-[100%]">
         <div className="flex gap-[20px] items-center justify-between">
-          <AvatarBlock email={savedState.user.email} />
+          <AvatarBlock email={savedState?.user?.email} />
           <TabsList className="bg-transparent">
             <TabsTrigger
               value="calendar"
@@ -53,14 +53,3 @@ const Panel = ({
 };
 
 export default Panel;
-
-{
-  /*             
-            <input id={`checkbox_for_${element.calendar.name}`} type='checkbox' className='hidden' />
-            <label 
-              className='relative pl-[30px]
-                before:absolute before:left-0 before:top-0 before:translate-y-[50%] before:w-[10px] before:h-[10px] before:border before:border-black before:rounded-[3px]
-               checked:before:bg-black'
-               htmlFor={`checkbox_for_${element.calendar.name}`}
-              >{element.calendar.name}</label> */
-}

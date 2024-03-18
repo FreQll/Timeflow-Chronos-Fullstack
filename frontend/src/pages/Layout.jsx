@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { createContext, useEffect, useState } from 'react';
 import Panel from '../components/panel/Panel';
 import Monitor from '../components/calendar/Monitor';
@@ -12,10 +12,15 @@ import { getSavedState } from '../redux/store';
 
 const Layout = ({ calendars, changeActiveEventTypes, activeCalendar, changeActiveCalendar }) => {
   const isAuth = getSavedState()?.isAuthenticated;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuth) navigate('/auth')
+  }, [])
 
   return (
         <div className='w-[100vw] h-[100vh]'>
-            {isAuth ? (
+            {isAuth && (
                 <ResizablePanelGroup
                     direction="horizontal"
                     className="min-h-[200px]"
@@ -28,8 +33,6 @@ const Layout = ({ calendars, changeActiveEventTypes, activeCalendar, changeActiv
                         <Outlet />
                     </ResizablePanel>
                 </ResizablePanelGroup>
-            ) : (
-                <ErrorPage errorCode={'401'} />
             )}
         </div>
     )
