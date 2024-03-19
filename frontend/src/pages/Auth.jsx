@@ -1,11 +1,8 @@
-import ButtonGradient from "@/components/buttons/ButtonGradient";
 import ButtonUnderscore from "@/components/buttons/ButtonUnderscore";
 import ResetPassword from "@/components/auth/ResetPassword";
 import SignIn from "@/components/auth/SignIn";
 import SignUp from "@/components/auth/SignUp";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const Auth = () => {
   const [active, setActive] = useState(null);

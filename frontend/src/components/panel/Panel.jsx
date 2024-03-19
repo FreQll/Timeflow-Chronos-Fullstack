@@ -1,14 +1,9 @@
-import React, { useReducer, useState } from "react";
-import { enumEventTypes } from "../../helper/enumEventTypes";
-import RadioInput from "../RadioInput";
-import { Button } from "../ui/button";
-import Dropdown from "../profile/Dropdown";
 import AvatarBlock from "../profile/AvatarBlock";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import CalendarBlocks from "./CalendarBlocks";
 import { CalendarIcon, HomeIcon } from "@radix-ui/react-icons";
 import ProfileBlocks from "./ProfileBlocks";
-import { getSavedState, savedState } from "@/redux/store";
+import { getSavedState } from "@/redux/store";
 
 const Panel = ({
   calendars,

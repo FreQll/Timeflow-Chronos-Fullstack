@@ -26,7 +26,6 @@ export const getCalendarByEvent = async (req, res) => {
   if (!calendar || calendar.length == 0) {
     return;
   } else {
-    console.log(calendar);
     const calendarInfo = await prisma.calendar.findUnique({
       where: { id: calendar[0].calendarId },
     });
@@ -102,15 +101,6 @@ export const getCalendarEventsByTime = async (req, res) => {
     return res.status(400).json({ message: "Missing parameters." });
   }
 
-  // console.log(
-  //   moment(startDate, "DD-MM-YYYY").toISOString(),
-  //   moment(endDate, "DD-MM-YYYY").toISOString()
-  // );
-
-  console.log("\nDATE:");
-  console.log(moment(startDate, "DD-MM-YYYY").toISOString());
-  console.log(moment(endDate, "DD-MM-YYYY").toISOString());
-
   const calendarEvents = await prisma.calendarEvents.findMany({
     where: {
       calendarId: calendarId,
@@ -132,93 +122,6 @@ export const getCalendarEventsByTime = async (req, res) => {
 
   return res.status(200).json(calendarEvents);
 };
-
-// export const getCalendarEvents = async (req, res) => {
-//   const calendarId = req.params.id;
-
-//   const timeSegment = req.query.timeSegment;
-//   let { startDate, endDate } = req.query;
-//   const momentDate = moment(new Date());
-
-//   if (timeSegment) {
-//     switch (timeSegment) {
-//       case "day":
-//         startDate = momentDate.clone().startOf("day");
-//         endDate = momentDate.clone().endOf("day");
-//         break;
-//       case "week":
-//         startDate = momentDate.clone().startOf("week");
-//         endDate = momentDate.clone().endOf("week");
-//         break;
-//       case "month":
-//         startDate = momentDate.clone().startOf("month");
-//         endDate = momentDate.clone().endOf("month");
-//         break;
-//       case "year":
-//         startDate = momentDate.clone().startOf("year");
-//         endDate = momentDate.clone().endOf("year");
-//         break;
-//       default:
-//         startDate = momentDate.clone().startOf("day");
-//         endDate = momentDate.clone().endOf("day");
-//         break;
-//     }
-//   }
-
-//   if (startDate && endDate) {
-//     startDate = moment(startDate, "DD-MM-YYYY").toDate();
-//     endDate = moment(endDate, "DD-MM-YYYY").toDate();
-//   }
-
-//   console.log(startDate, endDate);
-
-//   let calendar;
-
-//   if (timeSegment) {
-//     calendar = await prisma.calendarEvents.findMany({
-//       where: {
-//         calendarId: calendarId,
-//         event: {
-//           AND: [
-//             { start: { gte: startDate, lte: endDate } },
-//             // Uncomment the line below if you want to include events that started before the start date but end within the range
-//             // { end: { gte: startDate.toDate(), lte: endDate.toDate() } },
-//           ],
-//         },
-//       },
-//       select: {
-//         event: true,
-//       },
-//     });
-//   } else if (startDate && endDate) {
-//     calendar = await prisma.calendarEvents.findMany({
-//       where: {
-//         calendarId: calendarId,
-//         event: {
-//           AND: [{ start: { gte: startDate, lte: endDate } }],
-//         },
-//       },
-//       select: {
-//         event: true,
-//       },
-//     });
-//   } else {
-//     calendar = await prisma.calendarEvents.findMany({
-//       where: {
-//         calendarId: calendarId,
-//       },
-//       select: {
-//         event: true,
-//       },
-//     });
-//   }
-
-//   if (!calendar) {
-//     return res.status(404).json({ message: "Calendar not found." });
-//   }
-
-//   return res.status(200).json(calendar);
-// };
 
 export const createCalendar = async (req, res) => {
   const { name, color, description, userId } = req.body;
@@ -318,8 +221,6 @@ export const addUserToCalendar = async (req, res) => {
     },
   });
 
-  console.log(userToAdd);
-
   if (!userToAdd) {
     return res.status(404).json({ message: "User not found." });
   }
@@ -334,16 +235,12 @@ export const addUserToCalendar = async (req, res) => {
     return res.status(404).json({ message: "Owner not found." });
   }
 
-  console.log(userToAdd.id + " " + calendarId + " " + role + " !!!!!!");
-
   const userCalendar = await prisma.userCalendars.findFirst({
     where: {
       userId: userToAdd.id,
       calendarId: calendarId,
     },
   });
-
-  console.log(userCalendar);
 
   if (userCalendar) {
     return res
@@ -362,7 +259,6 @@ export const addUserToCalendar = async (req, res) => {
   }
 
   // *Send email
-
   const secret = process.env.SECRET_KEY + userToAdd.password;
   const payload = {
     email: userToAdd.email,
@@ -416,9 +312,6 @@ export const confirmAddingToCalendar = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized." });
     }
 
-    // console.log(payload);
-    // console.log(user.id + " " + payload.calendarId);
-
     const userCalendar = await prisma.userCalendars.findFirst({
       where: {
         userId: user.id,
@@ -434,8 +327,6 @@ export const confirmAddingToCalendar = async (req, res) => {
         isConfirmed: true,
       },
     });
-
-    // console.log(userCalendar);
 
     return res
       .status(200)

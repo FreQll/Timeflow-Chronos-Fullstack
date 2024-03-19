@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Input } from "../ui/input";
 import ButtonGradient from "../buttons/ButtonGradient";
 import axios, { POST_CONFIG } from "../../../API/axios";

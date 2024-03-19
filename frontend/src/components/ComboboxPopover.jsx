@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,8 +25,6 @@ const ComboboxPopover = ({
   buttonColor,
 }) => {
   const [open, setOpen] = useState(false);
-
-  console.log(statuses, selectedStatus);
 
   return (
     <div className="flex items-center space-x-4">
@@ -59,7 +57,7 @@ const ComboboxPopover = ({
               <CommandGroup>
                 {statuses?.map((status, index) => (
                   <CommandItem
-                    key={index} // Use index as the key
+                    key={index}
                     value={status.title || status.calendar.id}
                     onSelect={(value) => {
                       setSelectedStatus(

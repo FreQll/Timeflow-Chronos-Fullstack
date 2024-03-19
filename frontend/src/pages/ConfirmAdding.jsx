@@ -1,8 +1,6 @@
-import ButtonBlue from "@/components/buttons/ButtonBlue";
 import ButtonWithBorder from "@/components/buttons/ButtonWithBorder";
-import { Button } from "@/components/ui/button";
 import axios from "../../API/axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 const ConfirmAdding = () => {

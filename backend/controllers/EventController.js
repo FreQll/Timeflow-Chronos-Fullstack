@@ -37,8 +37,6 @@ export const getUserEvents = async (req, res) => {
     return res.status(404).json({ message: "User not found." });
   }
 
-  // ? User can see only confirmed events? Right?
-
   const events = await prisma.userEvents.findMany({
     where: {
       userId: userId,
@@ -114,8 +112,6 @@ export const createEvent = async (req, res) => {
     endDate = moment(start).endOf("day");
   }
 
-  //console.log(startDate, endDate);
-
   const event = await prisma.event.create({
     data: {
       name,
@@ -143,7 +139,7 @@ export const createEvent = async (req, res) => {
   });
 
   if (type === "REMINDER") {
-    const delay = remindDelay || "15 minutes"; //! remindDelay should be in format "15 minutes", "2 hours", "2 days", "2 weeks", "2 months", "2 years"
+    const delay = remindDelay || "15 minutes";
     const delayArray = delay.split(" ");
 
     const scheduledTime = moment(start)
@@ -151,7 +147,7 @@ export const createEvent = async (req, res) => {
       .format();
     const reminderDate = new Date(
       moment(scheduledTime).utc().format("YYYY-MM-DDTHH:mm:ss")
-    ); //! need to test this times more
+    );
 
     const month = reminderDate.getMonth() + 1;
     const day = reminderDate.getDate();
@@ -215,16 +211,16 @@ export const updateEvent = async (req, res) => {
     },
   });
 
-  const calendarEvent = await prisma.calendarEvents.updateMany({
+  await prisma.calendarEvents.updateMany({
     where: {
       eventId: eventId,
     },
     data: {
-      calendarId: calendarId
-    }
+      calendarId: calendarId,
+    },
   });
 
-  return res.status(200).json({event: event, calendarId: calendarId});
+  return res.status(200).json({ event: event, calendarId: calendarId });
 };
 
 export const deleteEvent = async (req, res) => {
@@ -313,17 +309,7 @@ export const addUserToEvent = async (req, res) => {
   };
   const token = await jwt.sign(payload, secret, { expiresIn: "1h" });
 
-  // console.log(token);
-
   const link = `http://${process.env.HOST}:${process.env.PORT}/api/event/addUserToEvent/${userToAdd.id}/${token}`;
-  // const message = `<b>${owner.login}</b> wants to add you to the event <b>"${event.name}"</b>.
-  // Here is <a href="${link}">link to confirm adding to the event</a>, remember it is valid for 1 hour and can be used only once.`;
-  // await sendEmail(
-  //   userToAdd.email,
-  //   `${owner.login} wants to add you to the event.`,
-  //   message
-  // );
-
   await sendEmail(
     userToAdd.email,
     `📅 ${owner.full_name} wants to add you to the event 📅`,

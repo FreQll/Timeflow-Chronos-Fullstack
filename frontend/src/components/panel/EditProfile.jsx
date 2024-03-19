@@ -2,7 +2,7 @@ import { AvatarUpload } from "./AvatarUpload";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
-import { getSavedState, savedState } from "@/redux/store";
+import { getSavedState } from "@/redux/store";
 import { useState } from "react";
 import { toastError, toastSuccess } from "@/helper/toastFunctions";
 import axios from "../../../API/axios";
@@ -22,9 +22,7 @@ export const EditProfile = () => {
   const user = getSavedState().user;
   const [userLogin, setUserLogin] = useState(user?.login);
   const [userEmail, setUserEmail] = useState(user?.email);
-  const [userFullName, setUserFullName] = useState(
-    user?.fullName
-  );
+  const [userFullName, setUserFullName] = useState(user?.fullName);
 
   const dispatch = useDispatch();
 

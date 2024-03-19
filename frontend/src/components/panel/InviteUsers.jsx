@@ -2,12 +2,11 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogFooter,
   DialogClose,
 } from "../ui/dialog";
 import { Label, Separator } from "@radix-ui/react-dropdown-menu";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Input } from "../ui/input";
 import ButtonBlue from "../buttons/ButtonBlue";
 import { Button } from "../ui/button";
@@ -19,14 +18,11 @@ import { toastMessage, toastSuccess } from "@/helper/toastFunctions";
 
 const InviteUsers = ({ calendars }) => {
   const [email, setEmail] = useState("");
-  console.log(calendars);
   const [selectedCalendar, setSelectedCalendar] = useState(
     calendars && calendars[0].calendar
   );
   const [selectedRole, setSelectedRole] = useState(enumUsersRoles.GUEST);
   const user = getSavedState()?.user;
-
-  console.log(selectedCalendar);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -34,8 +30,6 @@ const InviteUsers = ({ calendars }) => {
 
   const handleInvite = async () => {
     const inviteEmail = await axios.get(`/api/user/email/${email}`, GET_CONFIG);
-
-    console.log(selectedCalendar.calendar.id);
 
     const data = {
       email: inviteEmail.data[0].email,

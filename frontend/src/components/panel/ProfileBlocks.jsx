@@ -1,4 +1,3 @@
-import React from "react";
 import { useDispatch } from "react-redux";
 import { Separator } from "../ui/separator";
 import { logout } from "@/redux/actions/authActions";

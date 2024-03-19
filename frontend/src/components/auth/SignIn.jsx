@@ -8,7 +8,7 @@ import { objToJson } from "../../helper/stringFunc";
 import { login } from "../../redux/actions/authActions";
 import { useNavigate } from "react-router-dom";
 import { getSavedState } from "@/redux/store";
-import { toastError, toastSuccess } from "@/helper/toastFunctions";
+import { toastError } from "@/helper/toastFunctions";
 
 const SignIn = ({ active, handleClick }) => {
   const dispatch = useDispatch();
@@ -42,7 +42,6 @@ const SignIn = ({ active, handleClick }) => {
         if (getSavedState().isAuthenticated) navigate("/");
       }
     } catch (error) {
-      // console.log(error.response.data.message);
       toastError(error.response.data.message);
     }
   };

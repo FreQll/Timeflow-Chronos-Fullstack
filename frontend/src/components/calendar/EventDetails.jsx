@@ -1,25 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { formatDate, formatStringToIso } from "../../helper/momentFunc";
-import {
-  DrawerHeader,
-  DrawerTitle,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerClose,
-} from "../ui/drawer";
-import { Button } from "../ui/button";
-import { MinusIcon, PlusIcon } from "@radix-ui/react-icons";
 import DatePickerWithRange from "../DatePicker";
-import moment from "moment";
 import { Label, Separator } from "@radix-ui/react-dropdown-menu";
 import ComboboxPopover from "../ComboboxPopover";
 import { enumEventTypesArray } from "../../helper/enumEventTypes";
-import { Input } from "../ui/input";
-import { DropdownMenuLabel } from "../ui/dropdown-menu";
 import axios, { GET_CONFIG, POST_CONFIG } from "../../../API/axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { TrashIcon } from "@radix-ui/react-icons";
-import { toastError, toastSuccess } from "@/helper/toastFunctions";
+import { toastSuccess } from "@/helper/toastFunctions";
 import { PopoverContent } from "@radix-ui/react-popover";
 
 const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
@@ -34,44 +22,37 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
     from: currentEvent.start,
     to: currentEvent.end,
   });
-  const [ time, setTime ] = useState({
+  const [time, setTime] = useState({
     from: {
-      hour: formatDate(currentEvent?.start, 'HH'),
-      minutes: formatDate(currentEvent?.start, 'mm'),
+      hour: formatDate(currentEvent?.start, "HH"),
+      minutes: formatDate(currentEvent?.start, "mm"),
     },
     to: {
-      hour: formatDate(currentEvent?.end, 'HH'),
-      minutes: formatDate(currentEvent?.end, 'mm'),
+      hour: formatDate(currentEvent?.end, "HH"),
+      minutes: formatDate(currentEvent?.end, "mm"),
     },
-  })
+  });
 
   const getSelectedCalendar = async () => {
-    const response = await axios.get(`/api/calendar/calendarByEvent/${currentEvent.id}`, GET_CONFIG);
-    if (response.status == 200) setEventCalendar(response.data)
-  }
+    const response = await axios.get(
+      `/api/calendar/calendarByEvent/${currentEvent.id}`,
+      GET_CONFIG
+    );
+    if (response.status == 200) setEventCalendar(response.data);
+  };
 
   useEffect(() => {
     getSelectedCalendar();
-  }, [location])
-
-  // const setCalendar = async (calendar) => {
-  //   const response = await axios.get(
-  //     `/api/calendar/calendarInfo/${calendar.calendar.id}`,
-  //     { withCredentials: true }
-  //   );
-  //   if (response) {
-  //     console.log(response);
-  //     setEventCalendar(response.data);
-  //   } else {
-  //     toastError("Error creating event");
-  //   }
-  // };
+  }, [location]);
 
   const updateData = async (data) => {
-    const response = await axios.patch(`/api/event/${currentEvent.id}`, data, POST_CONFIG);
+    const response = await axios.patch(
+      `/api/event/${currentEvent.id}`,
+      data,
+      POST_CONFIG
+    );
     if (response) {
       navigate("/");
-      // toastSuccess("Event updated successfully!");
     }
   };
 
@@ -92,79 +73,99 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
   };
 
   const handleDurationChange = (e) => {
-    // let startDate = e?.from
-    // let endDate = e?.to
-    // if (!e) {
-    //   console.log(date.from);
-    //   startDate = date.from;
-    //   endDate = date.from;
-    //   setDate({from: date.from, to: date.from});
-    // } else {
-    //   setDate(e);
-    // }
     if (e) {
-      if (!e.from) setDate({from: e.to, to: e.to});
-      else if (!e.to) setDate({from: e.from, to: e.from});
+      if (!e.from) setDate({ from: e.to, to: e.to });
+      else if (!e.to) setDate({ from: e.from, to: e.from });
       else setDate(e);
-      const { formatDateStart, formatDateEnd } = formatStringToIso(time.from?.hour, time.from?.minutes, time.to?.hour, time.to?.minutes, e?.from || e?.to, e?.to || e?.from);
+      const { formatDateStart, formatDateEnd } = formatStringToIso(
+        time.from?.hour,
+        time.from?.minutes,
+        time.to?.hour,
+        time.to?.minutes,
+        e?.from || e?.to,
+        e?.to || e?.from
+      );
       const data = {
         start: formatDateStart,
         end: formatDateEnd,
       };
-      updateData(data)
+      updateData(data);
     } else {
       setDate(e);
     }
   };
 
   const changeTime = (time, field, timeType) => {
-    setTime(prevTime => ({
+    setTime((prevTime) => ({
       ...prevTime,
       [field]: {
         ...prevTime[field],
-        [timeType]: time
-      }
+        [timeType]: time,
+      },
     }));
-  }
+  };
 
   const handleChangeStartHour = (e) => {
     let value = e.target.value;
-    if (parseInt(value) > 24) value = '24';
-    if (!parseInt(value)) value = '0';
-    if (value.length >= 3 && value.charAt(0) == '0') value = value.charAt(1) + value.charAt(2)
-    if (value.length == 1) value = '0' + value
+    if (parseInt(value) > 24) value = "24";
+    if (!parseInt(value)) value = "0";
+    if (value.length >= 3 && value.charAt(0) == "0")
+      value = value.charAt(1) + value.charAt(2);
+    if (value.length == 1) value = "0" + value;
 
-    changeTime(value, 'from', 'hour');
+    changeTime(value, "from", "hour");
     if (value.length != 2) return;
 
-    const { formatDateStart } = formatStringToIso(value, time.from?.minutes, time.to?.hour, time.to?.minutes, date.from, date.to);
+    const { formatDateStart } = formatStringToIso(
+      value,
+      time.from?.minutes,
+      time.to?.hour,
+      time.to?.minutes,
+      date.from,
+      date.to
+    );
     let data = {
       start: new Date(formatDateStart),
     };
 
     if (value > time.to.hour) {
-      changeTime(parseInt(value) + 1, 'to', 'hour');
-      const { formatDateEnd } = formatStringToIso(time.from?.hour, time.from?.minutes, parseInt(value) + 1, time.to?.minutes, date.from, date.to);
+      changeTime(parseInt(value) + 1, "to", "hour");
+      const { formatDateEnd } = formatStringToIso(
+        time.from?.hour,
+        time.from?.minutes,
+        parseInt(value) + 1,
+        time.to?.minutes,
+        date.from,
+        date.to
+      );
       data = {
         start: new Date(formatDateStart),
         end: new Date(formatDateEnd),
       };
-    } 
+    }
 
     updateData(data);
   };
 
   const handleChangeStartMinutes = (e) => {
     let value = e.target.value;
-    if (parseInt(value) > 59) value = '59';
-    if (!parseInt(value)) value = '0';
-    if (value.length >= 3 && value.charAt(0) == '0') value = value.charAt(1) + value.charAt(2)
-    if (value.length == 1) value = '0' + value
+    if (parseInt(value) > 59) value = "59";
+    if (!parseInt(value)) value = "0";
+    if (value.length >= 3 && value.charAt(0) == "0")
+      value = value.charAt(1) + value.charAt(2);
+    if (value.length == 1) value = "0" + value;
 
-    changeTime(value, 'from', 'minutes');
-    if (value.length != 2) return
+    changeTime(value, "from", "minutes");
+    if (value.length != 2) return;
 
-    const { formatDateStart } = formatStringToIso(time.from?.hour, value, time.to?.hour, time.to?.minutes, date.from, date.to);
+    const { formatDateStart } = formatStringToIso(
+      time.from?.hour,
+      value,
+      time.to?.hour,
+      time.to?.minutes,
+      date.from,
+      date.to
+    );
     const data = {
       start: new Date(formatDateStart),
     };
@@ -173,42 +174,65 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
 
   const handleChangeEndHour = (e) => {
     let value = e.target.value;
-    if (parseInt(value) > 24) value = '24';
-    if (!parseInt(value)) value = '0';
-    if (value.length >= 3 && value.charAt(0) == '0') value = value.charAt(1) + value.charAt(2)
-    if (value.length == 1) value = '0' + value
+    if (parseInt(value) > 24) value = "24";
+    if (!parseInt(value)) value = "0";
+    if (value.length >= 3 && value.charAt(0) == "0")
+      value = value.charAt(1) + value.charAt(2);
+    if (value.length == 1) value = "0" + value;
 
-    changeTime(value, 'to', 'hour');
-    if (value.length != 2) return
+    changeTime(value, "to", "hour");
+    if (value.length != 2) return;
 
-    const { formatDateEnd } = formatStringToIso(time.from?.hour, time.from?.minutes, value, time.to?.minutes, date.from, date.to);
+    const { formatDateEnd } = formatStringToIso(
+      time.from?.hour,
+      time.from?.minutes,
+      value,
+      time.to?.minutes,
+      date.from,
+      date.to
+    );
     let data = {
       end: new Date(formatDateEnd),
     };
 
     if (value < time.from.hour) {
-      changeTime(parseInt(value) - 1, 'from', 'hour');
-      const { formatDateStart } = formatStringToIso(parseInt(value) - 1, time.from?.minutes, time.to?.hour, time.to?.minutes, date.from, date.to);
+      changeTime(parseInt(value) - 1, "from", "hour");
+      const { formatDateStart } = formatStringToIso(
+        parseInt(value) - 1,
+        time.from?.minutes,
+        time.to?.hour,
+        time.to?.minutes,
+        date.from,
+        date.to
+      );
       data = {
         start: new Date(formatDateStart),
         end: new Date(formatDateEnd),
       };
-    } 
+    }
 
     updateData(data);
   };
 
   const handleChangeEndMinutes = (e) => {
     let value = e.target.value;
-    if (parseInt(value) > 59) value = '59';
-    if (!parseInt(value)) value = '0';
-    if (value.length >= 3 && value.charAt(0) == '0') value = value.charAt(1) + value.charAt(2)
-    if (value.length == 1) value = '0' + value
+    if (parseInt(value) > 59) value = "59";
+    if (!parseInt(value)) value = "0";
+    if (value.length >= 3 && value.charAt(0) == "0")
+      value = value.charAt(1) + value.charAt(2);
+    if (value.length == 1) value = "0" + value;
 
-    changeTime(value, 'to', 'minutes');
-    if (value.length != 2) return
+    changeTime(value, "to", "minutes");
+    if (value.length != 2) return;
 
-    const { formatDateEnd } = formatStringToIso(time.from?.hour, time.from?.minutes, time.to?.hour, value, date.from, date.to);
+    const { formatDateEnd } = formatStringToIso(
+      time.from?.hour,
+      time.from?.minutes,
+      time.to?.hour,
+      value,
+      date.from,
+      date.to
+    );
     const data = {
       end: new Date(formatDateEnd),
     };
@@ -279,18 +303,34 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
             date={date}
             setDate={handleDurationChange}
           />
-          
-          <div className='flex items-center gap-[5px] text-[14px]'>
-            <div className='flex'>
-              <input className='w-[20px] bg-transparent text-end outline-none' value={time.from?.hour} onChange={(e) => handleChangeStartHour(e)} />
+
+          <div className="flex items-center gap-[5px] text-[14px]">
+            <div className="flex">
+              <input
+                className="w-[20px] bg-transparent text-end outline-none"
+                value={time.from?.hour}
+                onChange={(e) => handleChangeStartHour(e)}
+              />
               <span>:</span>
-              <input className='w-[20px] bg-transparent outline-none' value={time.from?.minutes} onChange={(e) => handleChangeStartMinutes(e)} />
+              <input
+                className="w-[20px] bg-transparent outline-none"
+                value={time.from?.minutes}
+                onChange={(e) => handleChangeStartMinutes(e)}
+              />
             </div>
             <span>–</span>
-            <div className='flex'>
-              <input className='w-[20px] bg-transparent text-end outline-none' value={time.to?.hour} onChange={(e) => handleChangeEndHour(e)} />
+            <div className="flex">
+              <input
+                className="w-[20px] bg-transparent text-end outline-none"
+                value={time.to?.hour}
+                onChange={(e) => handleChangeEndHour(e)}
+              />
               <span>:</span>
-              <input className='w-[20px] bg-transparent outline-none' value={time.to?.minutes} onChange={(e) => handleChangeEndMinutes(e)} />
+              <input
+                className="w-[20px] bg-transparent outline-none"
+                value={time.to?.minutes}
+                onChange={(e) => handleChangeEndMinutes(e)}
+              />
             </div>
           </div>
         </div>
@@ -325,25 +365,3 @@ const EventDetails = ({ currentEvent, calendars, selectedCalendar }) => {
   );
 };
 export default EventDetails;
-
-{
-  /* <div className="mx-auto w-full max-w-sm">
-<DrawerHeader>
-  <DrawerTitle>{currentEvent?.name}</DrawerTitle>
-  <DrawerDescription>{currentEvent?.content || 'No description'}</DrawerDescription>
-</DrawerHeader>
-<div>
-  <DatePickerWithRange date={date} setDate={setDate} />
-  <div>
-      <Label>Type: </Label>
-      <ComboboxPopover statuses={enumEventTypesArray} title={'Set type'} selectedStatus={type} setSelectedStatus={setType} />
-  </div>
-</div>
-<DrawerFooter>
-  <Button>Submit</Button>
-  <DrawerClose asChild>
-    <Button variant="outline">Cancel</Button>
-  </DrawerClose>
-</DrawerFooter>
-</div> */
-}

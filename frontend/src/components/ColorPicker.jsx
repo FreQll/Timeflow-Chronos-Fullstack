@@ -1,16 +1,12 @@
-import React, { useState } from 'react'
-import {
-    List,
-    ListInput,
-    Page
-  } from 'framework7-react';
+import { useState } from "react";
+import { List, ListInput, Page } from "framework7-react";
 
 const ColorPicker = () => {
-  const [wheePickerValue, setWheePickerValue] = useState({ hex: '#00ff00' });
+  const [wheePickerValue, setWheePickerValue] = useState({ hex: "#00ff00" });
 
   return (
     <Page>
-    <List>
+      <List>
         <ListInput
           type="colorpicker"
           placeholder="Color"
@@ -18,7 +14,7 @@ const ColorPicker = () => {
           value={wheePickerValue}
           onColorPickerChange={(value) => setWheePickerValue(value)}
           colorPickerParams={{
-            targetEl: '.wheel-picker-target',
+            targetEl: ".wheel-picker-target",
           }}
         >
           <i
@@ -28,8 +24,8 @@ const ColorPicker = () => {
           />
         </ListInput>
       </List>
-      </Page>
-  )
-}
+    </Page>
+  );
+};
 
-export default ColorPicker
+export default ColorPicker;

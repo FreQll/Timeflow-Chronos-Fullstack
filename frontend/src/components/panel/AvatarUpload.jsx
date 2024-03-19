@@ -16,9 +16,8 @@ export const AvatarUpload = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
       toastSuccess("Avatar updated");
-      navigate('/');
+      navigate("/");
     } catch (error) {
-      // console.log(error);
       toastError(error.message);
     }
   };

@@ -1,17 +1,20 @@
-import * as React from "react"
-import { CalendarIcon } from "@radix-ui/react-icons"
-import { addDays, format } from "date-fns"
- 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverTrigger, PopoverContent } from "./ui/popover"
-import moment from "moment"
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { format } from "date-fns";
 
-const DatePickerWithRange = ({ className, date, setDate, onChange, bgColor }) => {
-  
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverTrigger, PopoverContent } from "./ui/popover";
+
+const DatePickerWithRange = ({
+  className,
+  date,
+  setDate,
+  onChange,
+  bgColor,
+}) => {
   return (
-    <div className={cn("grid gap-2", className,)}>
+    <div className={cn("grid gap-2", className)}>
       <Popover>
         <PopoverTrigger style={{ backgroundColor: bgColor }} asChild>
           <Button
@@ -50,7 +53,7 @@ const DatePickerWithRange = ({ className, date, setDate, onChange, bgColor }) =>
         </PopoverContent>
       </Popover>
     </div>
-  )
-}
+  );
+};
 
 export default DatePickerWithRange;
