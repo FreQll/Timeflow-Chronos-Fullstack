@@ -16,7 +16,7 @@ import {
   enumEventTypesArray,
 } from "../../helper/enumEventTypes";
 import CloseButtonCircled from "@/components/buttons/CloseButtonCircled";
-import { formatDate, getTodayDate } from "../../helper/momentFunc";
+import { formatDate, formatStringToIso, getTodayDate } from "../../helper/momentFunc";
 import axios, { POST_CONFIG } from "../../../API/axios";
 import { objToJson } from "../../helper/stringFunc";
 import { useToast } from "@/components/ui/use-toast";
@@ -115,21 +115,7 @@ const AddEvent = ({ handleOpenAddEvent, calendars }) => {
   };
 
   const handleSave = async () => {
-    const timeStart =
-      (time.from?.hour || "09") + ":" + (time.from?.minutes || "00") + ":00";
-    const timeEnd =
-      (time.to?.hour || "10") + ":" + (time.to?.minutes || "00") + ":00";
-
-    const formatDateStart =
-      formatDate(date.from, "YYYY-MM-DD").toString() +
-      "T" +
-      timeStart +
-      ".000Z";
-    const formatDateEnd =
-      formatDate(date.to || date.from, "YYYY-MM-DD").toString() +
-      "T" +
-      timeEnd +
-      ".000Z";
+    const { formatDateStart, formatDateEnd } = formatStringToIso(time.from?.hour, time.from?.minutes, time.to?.hour, time.to?.minutes, date.from || date.to, date.to || date.from)
 
     const options = {
       name: title,

@@ -26,8 +26,6 @@ const ComboboxPopover = ({
 }) => {
   const [open, setOpen] = useState(false);
 
-  console.log(statuses, selectedStatus);
-
   return (
     <div className="flex items-center space-x-4">
       <Popover open={open} onOpenChange={setOpen}>
