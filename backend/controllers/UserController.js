@@ -231,8 +231,5 @@ export const updateUserAvatar = async (req, res) => {
   await avatarImage.cover(resizeSize, resizeSize).write(avatarPath);
   fs.unlinkSync(req.file.path);
 
-  console.log(avatarPath);
-  console.log(req.file.path);
-
   return res.status(200).json({ message: "Avatar updated successfully." });
 };

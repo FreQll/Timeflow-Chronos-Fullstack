@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -57,7 +57,7 @@ const ComboboxPopover = ({
               <CommandGroup>
                 {statuses?.map((status, index) => (
                   <CommandItem
-                    key={index} // Use index as the key
+                    key={index}
                     value={status.title || status.calendar.id}
                     onSelect={(value) => {
                       setSelectedStatus(

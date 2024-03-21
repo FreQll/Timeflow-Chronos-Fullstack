@@ -3,8 +3,6 @@ import { savedState } from "../store";
 import { jwtDecode } from "jwt-decode";
 
 const checkTokenExpirationMiddleware = (store) => (next) => (action) => {
-  console.log(Cookies.get("token") + " token");
-  console.log(document.cookies)
   if (action.type === "CHECK_TOKEN_EXPIRATION") {
     if (savedState?.isAuthenticated) {
       const token = Cookies.get("token");
@@ -14,9 +12,7 @@ const checkTokenExpirationMiddleware = (store) => (next) => (action) => {
       }
       const currentTime = new Date().getTime();
       const tokenExpiration = jwtDecode(token).exp * 1000;
-      //   console.log(currentTime, tokenExpiration + " time");
       if (currentTime > tokenExpiration) {
-        console.log("Logout");
         localStorage.removeItem("authState");
         Cookies.remove("token");
         action.type = "LOGOUT";

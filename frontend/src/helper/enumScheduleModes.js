@@ -1,4 +1,4 @@
 export const enumScheduleModes = {
-    DAY: 'Day',
-    MONTH: 'Month',
-}
+  DAY: "Day",
+  MONTH: "Month",
+};

@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import "./App.css";
 import Calendar from "./pages/Calendar";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Layout from "./pages/Layout";
 import axios from "../API/axios";
 import Auth from "./pages/Auth";
-import store, { getSavedState } from "./redux/store";
-import ErrorPage from "./pages/ErrorPage";
-import { enumEventTypes, enumEventTypesArray } from "./helper/enumEventTypes";
+import { getSavedState } from "./redux/store";
+import { enumEventTypes } from "./helper/enumEventTypes";
 import { checkTokenExpiration } from "./redux/actions/authActions";
 import { toastError } from "./helper/toastFunctions";
 import AddEvent from "./components/calendar/AddEvent";
@@ -32,7 +31,6 @@ function App() {
       });
       setCalendars(response.data);
     } catch (error) {
-      // console.log("Error getting calendars");
       toastError("Error getting calendars");
     }
   };
@@ -69,7 +67,6 @@ function App() {
       );
       setActiveCalendar(response.data);
     } catch (error) {
-      // console.log("Error get calendar info");
       toastError("Error get calendar info");
     }
   };
@@ -86,11 +83,9 @@ function App() {
   return (
     <Routes>
       <Route path="/authentication" element={<Auth />} />
-      {/* <Route path='/registration' element={<Registration />} />
-      <Route path='/reset-password' element={<ResetPasswordPage />} />  */}
 
       <Route path="/confirmAdding/:id/:token" element={<ConfirmAdding />} />
-      
+
       <Route
         path="/"
         element={
@@ -113,13 +108,6 @@ function App() {
           }
         />
         <Route path="/add-event" element={<AddEvent />} />
-
-        {/* <Route path='/settings' element={<Settings />}>
-          <Route path='/settings' element={<SettingsMain />} />
-          <Route path='/settings/change-password' element={<ChangePassword />} />
-          <Route path='/settings/change-email' element={<ChangeEmail />} />
-          <Route path='/settings/change-name' element={<ChangeName />} />
-        </Route> */}
       </Route>
     </Routes>
   );

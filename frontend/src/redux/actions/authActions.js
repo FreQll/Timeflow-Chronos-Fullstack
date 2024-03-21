@@ -1,12 +1,12 @@
-export const login = ( {email, login, full_name, id} ) => ({
-    type: 'LOGIN',
-    payload: { email, login, full_name, id },
-})
+export const login = ({ email, login, full_name, id }) => ({
+  type: "LOGIN",
+  payload: { email, login, full_name, id },
+});
 
 export const logout = () => ({
-    type: 'LOGOUT',
-})
+  type: "LOGOUT",
+});
 
 export const checkTokenExpiration = () => ({
-    type: 'CHECK_TOKEN_EXPIRATION',
-})
+  type: "CHECK_TOKEN_EXPIRATION",
+});

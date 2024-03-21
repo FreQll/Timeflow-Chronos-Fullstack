@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import RadioInput from "../RadioInput";
-import { Button } from "../ui/button";
+import { useEffect, useState } from "react";
 import { enumEventTypes } from "../../helper/enumEventTypes";
 import ButtonBlue from "../buttons/ButtonBlue";
 import { getSavedState } from "@/redux/store";
@@ -11,9 +9,13 @@ import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import AddCalendar from "@/components/calendar/AddCalendar";
 import axios from "../../../API/axios";
 import { toastError } from "@/helper/toastFunctions";
-import { Popover, PopoverTrigger, PopoverContent } from '@radix-ui/react-popover'
-import EditCalendar from '../calendar/EditCalendar'
-import { Pencil1Icon } from "@radix-ui/react-icons"
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@radix-ui/react-popover";
+import EditCalendar from "../calendar/EditCalendar";
+import { Pencil1Icon } from "@radix-ui/react-icons";
 
 const CalendarBlocks = ({
   calendars,
@@ -32,17 +34,16 @@ const CalendarBlocks = ({
     changeActiveCalendar(calendarId);
   };
 
-    const getDefaultCalendar = async () => {
-        try {
-        const response = await axios.get(`/api/calendar/${user.id}`, {
-            withCredentials: true,
-        });
-        setDefaultCalendar(response.data[0].calendar);
-        } catch (error) {
-        console.log("Error getting calendars");
-        toastError("Error getting calendars");
-        }
+  const getDefaultCalendar = async () => {
+    try {
+      const response = await axios.get(`/api/calendar/${user.id}`, {
+        withCredentials: true,
+      });
+      setDefaultCalendar(response.data[0].calendar);
+    } catch (error) {
+      toastError("Error getting calendars");
     }
+  };
 
   useEffect(() => {
     getDefaultCalendar();
@@ -53,43 +54,52 @@ const CalendarBlocks = ({
       <div className="flex flex-col gap-[15px] p-[10px] rounded-[10px] bg-[#ffffff99]">
         <div className="flex flex-col gap-[10px] w-[100%]">
           <h3 className="opacity-50">Calendars</h3>
-                    {calendars && (
-                        <RadioGroup defaultValue={calendars[0].calendar.id} className='flex max-w-[100%] flex-col gap-0'>
-                            {calendars.map(element => (
-                                <Popover key={element.calendar.id}>
-                                        <div className="flex items-center justify-between max-w-[100%]" onClick={() => clickCheckboxCalendars(element.calendar.id)} onContextMenu={(event) => handleContextMenu(event, element.calendar)} >
-                                            <div className='flex items-center gap-[10px] max-w-[90%]'>
-                                                <RadioGroupItem value={element.calendar.id} id={element.calendar.name} style={{ backgroundColor: element.calendar.color }} className={`rounded-[4px] text-white border-0 box_shadow`} />
-                                                <div  className='text-ellipsis max-w-[100%] overflow-hidden'>
-                                                    <Label htmlFor={element.calendar.name}>{element.calendar.name}</Label>
-                                                </div>
-                                            </div>
-                                            <PopoverTrigger asChild>
-                                                <Pencil1Icon className='cursor-pointer' />
-                                            </PopoverTrigger>
-                                        </div>
-                                    <PopoverContent className="ml-[40%] w-fit z-[20] bg-gray-100 border border-gray-400 rounded-[10px] p-[20px] box_shadow">
-                                        <EditCalendar calendar={element.calendar} />
-                                    </PopoverContent>
-                                </Popover>
-                            ))}
-                        </RadioGroup>
-                    )}
-                </div>
-                
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <ButtonBlue text={'New calendar'} />
-                    </DialogTrigger>
-                    <AddCalendar />
-                </Dialog>
+          {calendars && (
+            <RadioGroup
+              defaultValue={calendars[0].calendar.id}
+              className="flex max-w-[100%] flex-col gap-0"
+            >
+              {calendars.map((element) => (
+                <Popover key={element.calendar.id}>
+                  <div
+                    className="flex items-center justify-between max-w-[100%]"
+                    onClick={() => clickCheckboxCalendars(element.calendar.id)}
+                    onContextMenu={(event) =>
+                      handleContextMenu(event, element.calendar)
+                    }
+                  >
+                    <div className="flex items-center gap-[10px] max-w-[90%]">
+                      <RadioGroupItem
+                        value={element.calendar.id}
+                        id={element.calendar.name}
+                        style={{ backgroundColor: element.calendar.color }}
+                        className={`rounded-[4px] text-white border-0 box_shadow`}
+                      />
+                      <div className="text-ellipsis max-w-[100%] overflow-hidden">
+                        <Label htmlFor={element.calendar.name}>
+                          {element.calendar.name}
+                        </Label>
+                      </div>
+                    </div>
+                    <PopoverTrigger asChild>
+                      <Pencil1Icon className="cursor-pointer" />
+                    </PopoverTrigger>
+                  </div>
+                  <PopoverContent className="ml-[40%] w-fit z-[20] bg-gray-100 border border-gray-400 rounded-[10px] p-[20px] box_shadow">
+                    <EditCalendar calendar={element.calendar} />
+                  </PopoverContent>
+                </Popover>
+              ))}
+            </RadioGroup>
+          )}
+        </div>
 
-        {/* <Drawer>
-                    <DrawerTrigger asChild>
-                        <ButtonBlue text={'Add event'} onClick={handleOpenAddEvent} />
-                    </DrawerTrigger>
-                    <AddEvent calendars={calendars} />
-                </Drawer> */}
+        <Dialog>
+          <DialogTrigger asChild>
+            <ButtonBlue text={"New calendar"} />
+          </DialogTrigger>
+          <AddCalendar />
+        </Dialog>
       </div>
 
       <div className="p-[10px] rounded-[10px] bg-[#ffffff99]">
@@ -122,6 +132,6 @@ const CalendarBlocks = ({
       </div>
     </div>
   );
-}
+};
 
 export default CalendarBlocks;

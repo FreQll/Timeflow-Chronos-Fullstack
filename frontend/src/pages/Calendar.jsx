@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Monitor from "../components/calendar/Monitor";
 import ScheduleHeader from "../components/calendar/ScheduleHeader";
 import MonthView from "../components/calendar/MonthView";
@@ -8,9 +8,6 @@ import {
   getTodayDate,
 } from "../helper/momentFunc";
 import axios from "../../API/axios";
-import EventDetails from "../components/calendar/EventDetails";
-import AddEvent from "../components/calendar/AddEvent";
-import { Input } from "@/components/ui/input";
 import { useLocation } from "react-router-dom";
 import { enumScheduleModes } from "@/helper/enumScheduleModes";
 import DayView from "@/components/calendar/DayView";
@@ -61,19 +58,12 @@ const Calendar = ({ activeEventTypes, calendar, calendars }) => {
     }
   };
 
-  // const handleOpenAddEvent = () => {
-  //     setIsAddEventOpen(isAddEventOpen => !isAddEventOpen);
-  // }
-
   useEffect(() => {
     getCalendarEvents();
   }, [calendar.id, activeEventTypes, location]);
 
   return (
     <div className="flex w-[-webkit-fill-available] h-[-webkit-fill-available]">
-      {/* {isAddEventOpen && (
-                <AddEvent handleOpenAddEvent={handleOpenAddEvent} calendar={calendar} calendars={calendars} />
-            )} */}
       <div className="lg:flex lg:flex-col lg:h-full w-[-webkit-fill-available]">
         <Monitor
           today={today}
@@ -126,9 +116,6 @@ const Calendar = ({ activeEventTypes, calendar, calendars }) => {
             selectedCalendar={calendar}
           />
         )}
-        {/* {currentEvent && (
-                    <EventDetails currentEvent={currentEvent} />
-                )} */}
       </div>
     </div>
   );
