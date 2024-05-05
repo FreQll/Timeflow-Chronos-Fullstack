@@ -1,8 +1,8 @@
 # Timeflow
 
-### What is it? | [TimeFlow in Action](https://youtu.be/AOfKTPDs7r8?si=fbf64SAhms6WiGlX)
+### What is it? | [TimeFlow in Action](https://youtu.be/NWO5AE3KszI?si=QXqBJjd8AXXdGT3v)
 
-Introducing TimeFlow – Your Ultimate Event Management Calendar
+Introducing Uevent – Your Ultimate Event Management Calendar
 
 TimeFlow is a cutting-edge event management calendar meticulously designed to streamline the scheduling process for events. 
 Built with advanced technologies including React, Tailwind CSS, Shadcn/ui, and backend by the robust PostgreSQL database coupled with Prisma ORM and Express.js, 
@@ -15,7 +15,7 @@ TimeFlow offers an unparalleled experience in event coordination and organizatio
 1. Firstly download project from this page, something like this and move to folder:
 
 ```bash
-git clone https://github.com/FreQll/Usof-DevTalk.git
+git clone https://github.com/FreQll/Timeflow-Chronos-Fullstack.git
 cd chronos-api
 ```
 
